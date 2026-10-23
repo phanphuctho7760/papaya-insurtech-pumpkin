@@ -1,0 +1,7 @@
+.gitignore
+.DS_Store
+
+/.agent/tmp
+/.claude/worktrees
+/.vscode
+/.tmp
