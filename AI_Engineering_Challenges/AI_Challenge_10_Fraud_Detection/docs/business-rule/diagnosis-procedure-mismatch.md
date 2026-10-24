@@ -30,6 +30,8 @@ Mọi cặp nằm ngoài bảng là mismatch.
 
 Tổng: 35 cặp (đề yêu cầu >= 10).
 
+claim_type của diagnosis (`icd-10.md`) chỉ để tham khảo; claim_type của claim lấy theo mã procedure / bundle. Vì vậy cặp hợp lệ có thể khác claim_type: `K80.2 - P-1005` (siêu âm bụng ngoại trú cho bệnh nhân sỏi mật), `J18.9 - P-1004` (X-quang ngực ngoại trú cho bệnh nhân viêm phổi) tạo claim OUTPATIENT.
+
 Ràng buộc: diagnosis hợp lệ của một bundle phải hợp lệ với **mọi** thành phần của bundle đó, nếu không claim unbundled sẽ dính thêm mismatch. Vì vậy có 3 cặp `J06.9 - P-1003`, `I10 - P-1003` (khám tổng quát có xét nghiệm nước tiểu) và `E11.9 - P-1002` (theo dõi đái tháo đường có công thức máu); thêm ngày 2026-10-24 khi đối chiếu thành phần B-1001, B-1002.
 
 ## Quy tắc sinh fraud

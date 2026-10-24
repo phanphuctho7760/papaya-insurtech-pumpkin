@@ -33,7 +33,7 @@
 
 ```
 src/
-|-- config/      # weights.json, catalog.json (procedure, bundle, giá, cặp hợp lệ)
+|-- config/      # weights.json, catalog.json (procedure, bundle, giá, cặp hợp lệ), providers.json (50 provider, chỉ generator đọc)
 |-- generator/   # sinh dataset + nhãn ground truth
 |-- rules/       # 8 rule, mỗi rule 1 file, hàm thuần
 |-- scoring/     # tổng trọng số, chuẩn hóa 0-100, xếp hạng

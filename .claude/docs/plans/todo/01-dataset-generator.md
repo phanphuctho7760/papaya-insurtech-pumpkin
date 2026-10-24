@@ -26,12 +26,13 @@ Nguồn business: `docs/business-rule/fraud-injection.md`, `catalog.md`, `icd-10
 **Tiến độ (2026-10-24): xong.**
 - Bundle có thêm trường `claim_type` (plan ban đầu không ghi), để Phase 5 kiểm "claim_type khớp mã" cả với mã bundle; `catalog.py` kiểm nó trùng với claim_type của mọi thành phần.
 - `catalog.py` kiểm thêm ràng buộc "diagnosis hợp lệ của bundle phải hợp lệ với mọi thành phần" (mục 1 ở trên); bỏ 2 cặp `J06.9 - P-1003`, `E11.9 - P-1002` thì validate báo đúng 2 lỗi.
-- Còn mở cho Phase 2: 2 cặp hợp lệ khác claim_type (`K80.2 - P-1005`, `J18.9 - P-1004`, diagnosis INPATIENT + procedure OUTPATIENT). claim_type của claim lấy theo mã; cần chốt claim_type của diagnosis chỉ để tham khảo hay generator phải tránh.
+- Bổ sung (2026-10-24, chưa làm): `src/config/providers.json` gồm 50 provider (`id`, `name`, `type`: HOSPITAL / CLINIC / DENTAL), ID cố định nhưng xen kẽ loại (không để `PRV-001..020` toàn bệnh viện) để ID không lộ loại provider. Tên không dấu, không chứa `,`, không trùng. Chỉ generator đọc; danh sách weekday-only **không** ghi ở đây (generator chọn theo seed, ghi vào `generation_summary.json`), vì engine phải tự phát hiện từ dữ liệu. Thay cho cách "xáo rồi gán ID theo seed" ở Phase 2.
+- Đã chốt: 2 cặp hợp lệ khác claim_type (`K80.2 - P-1005`, `J18.9 - P-1004`, diagnosis INPATIENT + procedure OUTPATIENT) giữ nguyên. claim_type của diagnosis chỉ để tham khảo; claim_type của claim lấy theo mã procedure / bundle. Phase 5 không kiểm claim_type của diagnosis.
 
 ## Phase 2 - Provider và claim hợp lệ (1,800 claim)
 
-- **Provider (50):** 20 bệnh viện (OUTPATIENT + INPATIENT), 20 phòng khám (OUTPATIENT), 10 nha khoa (DENTAL). `PRV-001`..`PRV-050` gán sau khi xáo theo seed. 10 bệnh viện weekday-only chọn theo seed.
-- **Member:** `MEM-0001`..`MEM-0500`, chọn đều.
+- **Provider (50):** đọc từ `src/config/providers.json`: 20 bệnh viện (OUTPATIENT + INPATIENT), 20 phòng khám (OUTPATIENT), 10 nha khoa (DENTAL). 10 bệnh viện weekday-only chọn theo seed.
+- **Member:** `MEM-0001`..`MEM-0500`, chọn đều (không chia trước; kỳ vọng ~491 member xuất hiện, Phase 5 kiểm >= 480).
 - **Hạn mức theo mã:** mỗi mã trong 21 mã (16 procedure + 5 bundle) nhận trước 30 claim; 1,170 claim còn lại chia theo trọng số tần suất (ngoại trú nhiều hơn nội trú). Trọng số tần suất là hằng số đặt ở đầu module generator.
 - **Diagnosis:** chọn ngẫu nhiên trong các diagnosis hợp lệ của mã.
 - **Provider cho claim:** đúng loại theo claim_type. Mỗi bệnh viện weekday-only được gán trước 62 claim (OUTPATIENT / INPATIENT) để chắc chắn >= 60; phần còn lại chia ngẫu nhiên.
@@ -64,7 +65,10 @@ Nguồn business: `docs/business-rule/fraud-injection.md`, `catalog.md`, `icd-10
 ## Phase 5 - Kiểm cấu trúc (chạy cuối lệnh generate, lỗi thì dừng)
 
 - 2,000 claim, `claim_id` duy nhất, đúng 10 cột; 200 fraud, đúng số theo pattern.
-- Số member khoảng 500, đúng 50 provider, mọi ngày trong 2024, `is_weekend` khớp ngày, claim_type khớp mã.
+- Số member khác nhau trong 480-500, đúng 50 provider, mọi ngày trong 2024, `is_weekend` khớp ngày, claim_type khớp mã.
+- Mỗi `provider_id` luôn đi với đúng 1 `provider_name` và ngược lại.
+- `procedure_codes`: mọi mã có trong catalog; claim không phải unbundling có đúng 1 mã; claim unbundling có đúng đủ thành phần của 1 bundle.
+- `submitted_amount`: số nguyên dương; chia hết cho 1,000, riêng claim clustering chia hết cho 100 và nằm trong 47,500-49,999.
 - Mỗi mã >= 30 claim 1 mã.
 - Mỗi bệnh viện weekday-only >= 60 claim, không có claim hợp lệ cuối tuần.
 - Nhóm theo unique key duplicate: đúng 15 nhóm có 2 claim, không nhóm nào khác > 1.
