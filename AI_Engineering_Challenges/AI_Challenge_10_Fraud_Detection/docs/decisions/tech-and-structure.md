@@ -49,14 +49,15 @@ output/          # scored_output.json, metrics_report.md
 ```
 conversations/
 |-- README.md                      # mục lục
-|-- 00-cowork-analysis.md          # Cowork: phân tích đề, chốt business rule (luôn ở vị trí đầu)
 |-- 01-chat-research-domain.md     # Claude Chat
-|-- 02-code-phase1-generator.md    # Claude Code
-`-- 03-code-phase2-rules.md        # Claude Code
+|-- 02-code-setup-project.txt      # Claude Code: chốt kỹ thuật, backlog, plan 01
+|-- 03-code-phase1-generator.txt   # Claude Code (dự kiến)
+`-- 04-code-phase2-rules.txt       # Claude Code (dự kiến)
 ```
 
-- Claude Chat / Cowork: lưu bằng skill `/noteconversaion-clacowo-bunhy` (đang cân nhắc).
-- Claude Code: lưu bằng tính năng export.
+- Claude Chat: lưu bằng skill `/noteconversaion-clacowo-bunhy` (đang cân nhắc).
+- Claude Code: lưu bằng lệnh `/export`, giữ nguyên file `.txt` (không đổi sang `.md` để giữ nguyên văn).
+- Đặt tên `NN-<công cụ>-<chủ đề>`, `NN` theo thứ tự thời gian; `README.md` liệt kê từng file.
 - Log giữ nguyên văn, không chỉnh sửa.
 
 ## Định dạng dữ liệu
