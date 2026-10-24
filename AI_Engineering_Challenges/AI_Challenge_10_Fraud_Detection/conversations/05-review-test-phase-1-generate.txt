@@ -1,0 +1,2834 @@
+ ▐▛███▛█   Claude Code v2.1.310
+▝▜██████▀  Opus 5.5 · Claude Pro
+ ▝▝   ▝▝   /…/AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection
+
+
+❯ chạy reviewer trên toàn bộ code của #01                                       
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin/AI_Engineering_Challenges/AI_Chall
+      enge_10_Fraud_Detection && ls docs docs/* 2>/dev/null | head -50; find src
+      tests -name…)
+  ⎿  docs/handbook-notes.md
+
+     docs:
+     … +91 lines (ctrl+o to expand)
+
+  Listed 1 directory (ctrl+o to expand)
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin && ls .claude/docs/plans/*; cat
+      .claude/agents/reviewer.md)
+  ⎿  .claude/docs/plans/README.md
+
+     .claude/docs/plans/done:
+     … +54 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin/AI_Engineering_Challenges/AI_Chall
+      enge_10_Fraud_Detection && cat docs/backlog/done/01-dataset-generator.md;
+      ls data)
+  ⎿  # 01 - A: Generate the dataset
+
+     **Status:** done
+     … +27 lines (ctrl+o to expand)
+
+⏺ reviewer(Review ticket 01 code)
+  ⎿  Backgrounded agent (↓ to manage · ctrl+o to expand)
+
+⏺ Tôi đã giao cho reviewer xem lại toàn bộ code của ticket #01, gồm 9 file
+  Python, 2 file config JSON và pyproject.toml. Nó đang chạy ngầm và sẽ:
+
+  - so code với acceptance criteria của ticket và các file fraud-injection.md,
+    dataset-format.md, dataset-checks.md, dataset-generation-pitfalls.md;
+  - chạy lệnh generate 2 lần với cùng seed vào thư mục tạm, để kiểm 2 lần có ra
+    file giống hệt nhau không và số đếm thực tế có khớp không.
+
+  Khi có kết quả, tôi sẽ mở từng file:line mà nó chỉ ra để xác nhận hoặc loại
+  từng lỗi, rồi mới báo lại cho bạn.
+
+✻ Crunched for 29s · done 21:00
+
+› Message from reviewer
+  Review của ticket #01 (dataset generator): có 1 lỗi High, 2 lỗi Medium và 4
+  lỗi Low. Lỗi High làm nhãn fraud lộ ra qua giá trị amount, nên cần sửa trước
+  khi nộp.
+
+  Base gates: chưa chạy được pytest vì chưa có `tests/`. Chưa có formatter /
+  linter nào được cấu hình trong `pyproject.toml`.
+
+  Phần đạt:
+  - Tái lập đúng. Tôi chạy `generate` seed 2024 hai lần với `PYTHONHASHSEED=1`
+  và `PYTHONHASHSEED=999`: cả `claims.csv`, `ground_truth.csv`,
+  `generation_summary.json` giống nhau từng byte, và giống bản đang commit trong
+  `data/`.
+  - `check` pass với seed 2024 và với các seed 1, 7, 42, 123, 99999.
+  - Thứ tự `claim_id` không lộ nhãn: fraud rải đều theo decile, chỉ có một cụm ở
+  ngày phantom (31 claim cùng ngày, điều này khó tránh).
+  - Các ngưỡng biên khớp business rule: cửa sổ rapid `<= 7` có tính cả 0 ngày,
+  provider-day `> 30`, dải clustering 47,500-49,900, upcoding chỉ dùng mã >= 60
+  claim và tối đa 2 claim mỗi mã.
+
+  ## Findings
+
+  [High] src/generator/fraud.py:112-114 - Hệ số amount bị kẹp cứng
+  (`min(max(factor, 0.85), 1.15)`), nên mọi giá trị rơi ra ngoài dồn về đúng hai
+  điểm `round_amount(price*0.85)` và `round_amount(price*1.15)`. Số tiền nằm
+  đúng hai mốc đó gần như chắc chắn là fraud.
+  Failure scenario: tôi đo trên `data/` (seed 2024): 42 claim có amount đúng
+  bằng mốc kẹp, trong đó 40 là fraud và 2 là hợp lệ. Seed 42: 54 fraud và 3 hợp
+  lệ. Ai đọc dataset chỉ cần lọc `amount == price*1.15` (ví dụ P-1001 230000) là
+  bắt được fraud với precision khoảng 95%, không cần rule nào.
+  Fix: thay việc kẹp bằng rejection sampling: rút lại `gauss` cho tới khi hệ số
+  nằm trong [0.85, 1.15] (phân phối cắt cụt, không có điểm dồn). Sau đó đếm lại
+  số amount trùng mốc ở fraud và ở claim hợp lệ để chắc tỷ lệ đã tương đương.
+  Source: docs/experiences/dataset-generation-pitfalls.md mục 5 "Bài học" và mục
+  "Rule derived" ("Generator không được để thứ tự hay định dạng của dữ liệu
+  tiết lộ nhãn"); docs/business-rule/fraud-injection.md, "Nguyên tắc chung"
+  (dòng clamp +-15%).
+
+  [Medium] src/generator/legit.py:30,61-66 (cộng thêm fraud.py:97-100) - 10 bệnh
+  viện weekday-only vẫn là 10 bệnh viện lớn nhất, trái với mục tiêu ghi trong
+  doc.
+  Failure scenario: seed 2024 cho số claim của bệnh viện như sau:
+  - weekday-only: 67-78;
+  - bệnh viện thường: 33-49;
+  - ngoại lệ duy nhất là PRV-006 với 77, vì có 31 claim của ngày phantom.
+
+  Seed 42 cũng tách y như vậy. Nguyên nhân: nhóm weekday-only nhận trước 62-70
+  claim hợp lệ. Còn 10 bệnh viện thường phải chia phần OUTPATIENT/INPATIENT còn
+  lại (khoảng 690 claim) với 20 phòng khám, nên chỉ được khoảng 41. Fraud lại
+  cộng thêm khoảng 5-8 claim cho mỗi bệnh viện (`_provider` không loại nhóm
+  weekday-only). Xếp bệnh viện theo số claim là lộ ngay nhóm chứa 20 claim
+  weekend_anomaly, và nhìn là biết dữ liệu giả.
+  Fix: cho mọi bệnh viện cùng một phân phối số claim, chẳng hạn chia trước 62-70
+  claim cho cả 20 bệnh viện rồi giảm phần của phòng khám, hoặc chuyển bớt số
+  lượng mã OUTPATIENT về phía bệnh viện. Nếu giữ nguyên thiết kế thì phải sửa
+  doc cho đúng thực tế và ghi rõ là giới hạn đã biết.
+  Source: docs/business-rule/weekday-only-providers.md, "Weekend ratio
+  (settled)" ("so this group does not become the 10 largest hospitals");
+  docs/experiences/dataset-generation-pitfalls.md mục 6 (doc ghi 63-69, còn
+  `check` thực tế in 67-78).
+
+  [Medium] src/generator/checks.py:110-128 - Check chỉ đếm cấu trúc, không kiểm
+  nhãn có nằm đúng chỗ của cấu trúc đó không.
+  Failure scenario: tôi chuyển nhãn `phantom_billing` của CLM-01656 sang
+  CLM-00001 (một claim hợp lệ ngày khác) trên bản copy trong scratchpad: `check`
+  vẫn PASS, exit 0. Tương tự, check không xác nhận:
+  - 15 nhóm duplicate đúng là các claim mang nhãn `duplicate_claim`;
+  - 20 claim `weekend_anomaly` thật sự là claim cuối tuần, mã surgical, tại bệnh
+  viện weekday-only.
+
+  `ground_truth.csv` lệch như vậy sẽ làm sai metrics ở #03 mà không ai biết.
+  Fix: thêm các check thuần cấu trúc, không cần logic rule:
+  - các claim `phantom_billing` đều nằm trên provider-day phantom, và ngày đó có
+  đúng 25 claim phantom cộng 6 claim upcoding/mismatch;
+  - tập claim thuộc các nhóm duplicate key bằng đúng tập claim nhãn
+  `duplicate_claim`;
+  - mỗi claim `weekend_anomaly` có `is_weekend=1`, thuộc nhóm weekday-only, có
+  mã surgical; mỗi bệnh viện weekday-only có đúng 2 claim như vậy.
+
+  Source: docs/decisions/dataset-checks.md checks 9, 10, 11;
+  docs/business-rule/fraud-injection.md bảng "Số lượng và cách sinh" (Phantom:
+  25 + 6 trong cùng provider-day).
+
+  [Low] src/generator/checks.py:111,126,138 - `check` tin hoàn toàn vào
+  `generation_summary.json` và không tự kiểm danh sách trong đó.
+  Failure scenario:
+  - `weekday_only_providers` rỗng hoặc chỉ có 1 provider: check 9 pass vô điều
+  kiện. Khi không còn lỗi nào khác, dòng 138 gọi `min()` trên chuỗi rỗng và ném
+  `ValueError` (traceback thay vì báo lỗi).
+  - Thiếu file hoặc thiếu key: ra traceback `FileNotFoundError` / `KeyError`
+  thay vì danh sách problem và exit 1.
+
+  Fix: kiểm danh sách có đúng 10 phần tử, tất cả là HOSPITAL trong
+  `providers.json`, không trùng nhau. Kiểm file và key tồn tại rồi báo thành
+  problem.
+  Source: docs/decisions/dataset-checks.md, "Result" (lỗi phải in ra stderr và
+  exit 1).
+
+  [Low] src/generator/checks.py:30-33,88 - `csv.DictReader` xử lý dòng sai số
+  cột không nhất quán.
+  Failure scenario:
+  - Dòng dư cột (ví dụ `provider_name` chứa dấu `,` mà không được quote): cột
+  thừa bị cất vào key `None`, các cột đầu vẫn đúng, nên check có thể pass mà
+  không ai biết.
+  - Dòng thiếu cột: giá trị thành `None`, `.split("|")` ném `AttributeError`.
+
+  Fix: trong `_read_csv`, báo problem cho mọi dòng có `None in row` hoặc `None
+  in row.values()`.
+  Source: docs/decisions/dataset-format.md, "Chung" (RFC 4180, tên không chứa
+  `,`).
+
+  [Low] src/generator/checks.py:73,80 - Dict `days` được ghi nhưng không bao giờ
+  đọc (code chết).
+  Fix: xóa nó, hoặc dùng nó cho các check ngày ở trên.
+
+  [Low] pyproject.toml - Chưa có formatter / linter (ruff chẳng hạn) và chưa có
+  `tests/`. Các lỗi ở trên (clamp, nhãn lệch chỗ) đều không có test bắt lại.
+  Fix: thêm ruff vào nhóm dev. Khi làm #03, viết test cho `check_dataset` bằng
+  các bản dataset cố ý làm hỏng (11 trường hợp đã kiểm tay trong
+  dataset-checks.md, cộng trường hợp chuyển nhãn phantom ở trên) và test tái lập
+  (chạy 2 lần, so byte).
+
+  ## Đã kiểm
+  - Đọc hết các file trong phạm vi: `pyproject.toml`,
+  `src/{catalog,rule_names,cli}.py`, `src/config/{catalog,providers}.json`,
+  `src/generator/{models,legit,fraud,dataset,checks}.py`.
+  - Đọc docs: backlog/done/01, business-rule/fraud-injection.md,
+  decisions/dataset-format.md, decisions/dataset-checks.md, ADR-001,
+  experiences/dataset-generation-pitfalls.md; chỉ các phần liên quan của
+  duplicate-and-rapid-resubmission.md, weekday-only-providers.md, upcoding.md,
+  amount-clustering.md.
+  - Đã chạy, mọi output chỉ ghi vào scratchpad, không chạm `data/` của repo:
+    - generate 2 lần với 2 giá trị `PYTHONHASHSEED`, so byte với nhau và với
+  `data/`;
+    - check với 6 seed;
+    - script đo leak, đo trên `data/` và seed 42 (amount trùng mốc kẹp, số claim
+  theo bệnh viện, vị trí ID của fraud): /private/tmp/claude-501/-Volumes-D-papa
+  ya-insurtech-pumpkin/f116e248-e856-4d47-8a42-763d9dfea1c7/scratchpad/leak.py
+    - thử chuyển nhãn phantom sang claim khác trên bản copy để xem check có bắt
+  không.
+
+⏺ Bash(sed -n 92,118p src/generator/fraud.py; echo ---; sed -n 25,35p
+      src/generator/legit.py; sed -n 55,70p src/generator/legit.py; echo ---;
+      sed -n 25,35p src/generat…)
+  ⎿          self._index(claim)
+             self.claims.append(claim)
+     … +137 lines (ctrl+o to expand)
+
+⏺ Bash(uv run python -I - <<'EOF'
+      import csv,json,collections…)
+  ⎿  dict_keys(['claim_id', 'member_id', 'provider_id', 'provider_name', 'c
+     laim_date', 'claim_type', 'diagnosis_code', 'procedure_codes', 'submit
+     ted_amount', 'is_weekend'])
+     … +6 lines (ctrl+o to expand)
+
+⏺ Agent "Review ticket 01 code" finished · 3m 50s
+
+⏺ Bash(uv run python - <<'EOF'
+      import csv,sys…)
+  ⎿  src/catalog.py:71:def load_catalog(path: Path = DEFAULT_PATH) -> Catal
+     og:
+     src/catalog.py:94:def validate(catalog: Catalog) -> list[str]:
+     … +19 lines (ctrl+o to expand)
+
+⏺ Bash(uv run python - <<'EOF'
+      import csv…)
+  ⎿  Error: Exit code 1
+     Traceback (most recent call last):
+       File "<stdin>", line 3, in <module>
+       File "/Volumes/D/papaya-insurtech-pumpkin/AI_Engineering_Challenges/AI_Ch
+     allenge_10_Fraud_Detection/src/generator/legit.py", line 7, in <module>
+         from catalog import Catalog
+     ModuleNotFoundError: No module named 'catalog'
+
+⏺ Bash(grep -n "price\|class " src/catalog.py | head; PYTHONPATH=src uv run
+      python - <<'EOF'
+      import csv…)
+  ⎿  4:so they can never disagree on prices, bundle contents or valid diagn
+     osis-procedure pairs.
+     15:class CatalogError(ValueError):
+     … +10 lines (ctrl+o to expand)
+
+⏺ Reviewer đã xem xong code của ticket #01: có 1 lỗi High, 2 lỗi Medium và 4 lỗi
+  Low. Tôi đã mở từng dòng nó chỉ ra và tự đo lại trên data/ đang commit. Cả 7
+  lỗi đều đúng, chưa lỗi nào được sửa.
+
+  Những phần đạt: chạy lại cùng seed ra file giống từng byte, check pass với 6
+  seed, thứ tự claim_id không để lộ nhãn, các ngưỡng biên khớp business rule.
+
+  [High] Số tiền để lộ nhãn fraud - src/generator/fraud.py:112-114
+  - Hệ số amount của claim fraud bị kẹp vào khoảng [0.85, 1.15], nên mọi giá trị
+    rơi ra ngoài đều dồn về đúng 2 mức price*0.85 và price*1.15.
+  - Tôi đếm lại các claim đơn mã: 36 claim có amount đúng 2 mức đó, cả 36 đều là
+    fraud, không claim hợp lệ nào. Reviewer đếm ra 40 fraud và 2 hợp lệ, có lẽ
+    do cách đếm hơi khác. Dù đếm theo cách nào thì chỉ cần lọc amount == 
+    price*1.15 là bắt được fraud mà không cần rule nào.
+  - Sửa: thay việc kẹp bằng cách rút lại gauss cho tới khi hệ số nằm trong
+    khoảng (rejection sampling), rồi chạy lại generate và cập nhật data/ cùng
+    dataset-generation-pitfalls.md.
+
+  [Medium] Bệnh viện weekday-only vẫn là nhóm lớn nhất -
+  src/generator/legit.py:30,61-66
+  - Ở seed 2024, 11 bệnh viện nhiều claim nhất có 60-78 claim, còn các bệnh viện
+    khác chỉ 51 trở xuống. Trong số đó có PRV-006 với 77 claim, vì nó có 31
+    claim của ngày phantom.
+  - Điều này trái với weekday-only-providers.md:21, nơi ghi rõ mục tiêu là nhóm
+    này "does not become the 10 largest hospitals". Xếp bệnh viện theo số claim
+    là đoán ra ngay nhóm chứa 20 claim weekend_anomaly.
+
+  [Medium] check chỉ đếm cấu trúc, không kiểm nhãn -
+  src/generator/checks.py:110-128
+  - Reviewer chuyển nhãn phantom sang một claim khác trên bản copy, check vẫn
+    PASS. Code đúng là không kiểm claim mang nhãn có nằm đúng chỗ không.
+  - Nếu ground_truth.csv lệch như vậy, metrics của #03 sẽ sai mà không ai biết.
+
+  [Low]
+  - checks.py:111,138: tin hoàn toàn vào generation_summary.json. Nếu danh sách
+    weekday-only rỗng thì min() ném ValueError; thiếu file hoặc thiếu key thì ra
+    traceback thay vì báo lỗi và exit 1.
+  - checks.py:30-33: đọc CSV không báo dòng thừa hoặc thiếu cột. Dòng thừa cột
+    có thể lọt qua check, dòng thiếu cột thì ra traceback.
+  - checks.py:73,80: dict days được ghi nhưng không bao giờ đọc.
+  - pyproject.toml: chưa có linter và chưa có tests/. Phần này nên làm cùng #03.
+
+  Lỗi High và Medium thứ nhất buộc phải sinh lại data/, nên ticket #01 cần mở
+  lại.
+
+  Bạn muốn sửa thế nào?
+  1. Sửa cả 3 lỗi High và Medium ngay (gọi coder, rồi chạy reviewer lại).
+  2. Chỉ sửa lỗi High.
+  3. Ghi vào backlog để làm sau.
+
+✻ Baked for 4m 52s · done 21:05
+
+※ recap: Reviewer đã soát lại code của ticket #01 và tôi đã kiểm lại: có 1 lỗi High (amount làm lộ nhãn fraud), 2 lỗi Medium và 4 lỗi Low. Bạn cần chọn: sửa High và Medium ngay, chỉ sửa High, hay ghi vào backlog. (disable recaps in /config)
+
+❯ 1                                                                             
+
+  Searched for 1 pattern (ctrl+o to expand)
+
+⏺ Bash(PYTHONPATH=src uv run python - <<'EOF'
+      from catalog import load_catalog…)
+  ⎿  Counter({'OUTPATIENT': 860, 'INPATIENT': 490, 'DENTAL': 450})
+     97:    def _provider(self, claim_type: str, exclude: Collection[str] =
+      ()) -> Provider:
+     … +11 lines (ctrl+o to expand)
+
+⏺ User answered Claude's questions:
+  ⎿  · Lỗi Medium (weekday-only là 10 bệnh viện lớn nhất) có trade-off. Hiện có 
+     1,350 claim OUTPATIENT/INPATIENT hợp lệ. Muốn 10 bệnh viện weekday-only 
+     không nổi bật thì cả 20 bệnh viện phải cùng >= ~60 claim (~1,220 claim). 
+     Khi đó 20 phòng khám chỉ còn ~130 claim OUTPATIENT (~6-7 claim/phòng 
+     khám/năm). Chọn cách nào? → Tăng phần OUTPATIENT
+
+  Searched for 1 pattern (ctrl+o to expand)
+
+⏺ Bash(grep -n "Phantom\|phantom\|clamp\|15%\|Weekend\|weekend\|Duplicate"
+      docs/business-rule/fraud-injection.md | cut -c1-260; grep -n "^| *[0-9]"
+      docs/decisions/data…)
+  ⎿  11:- Amount của claim fraud thuộc pattern không dựa vào amount (duplic
+     ate, rapid, unbundling, phantom, weekend, mismatch): hệ số dao động kẹ
+     p trong [0.85, 1.15] (khoảng +-1 SD), để không vô tình dính upcoding h
+     … +59 lines (ctrl+o to expand)
+⏺ coder(Fix ticket 01 review findings)
+  ⎿  Backgrounded agent (↓ to manage · ctrl+o to expand)
+
+⏺ coder đang sửa cả 3 lỗi, chạy ngầm:
+
+  - Lỗi High: bỏ việc kẹp hệ số amount, thay bằng rút lại gauss cho tới khi hệ
+    số nằm trong [0.85, 1.15]. Như vậy không còn 2 mốc mà amount dồn về.
+  - Lỗi weekday-only:
+    - Chuyển 150 claim từ DENTAL sang OUTPATIENT, đúng như bạn chọn: các mã nha
+      khoa còn 60 claim mỗi mã, còn P-1001, P-1002, P-1004, P-1005, P-1006 và
+      B-1001 được cộng thêm.
+    - Cả 20 bệnh viện nhận trước cùng một khoảng ~58-62 claim. Phần còn lại chia
+      đều cho mọi provider đủ điều kiện.
+    - Mỗi bệnh viện weekday-only vẫn đảm bảo >= 60 claim.
+  - Lỗi check: thêm 3 nhóm kiểm nhãn:
+    - claim phantom nằm đúng ngày phantom;
+    - nhóm duplicate khớp đúng nhãn duplicate_claim;
+    - claim weekend_anomaly là claim cuối tuần, mã surgical, tại bệnh viện
+      weekday-only, đúng 2 claim mỗi bệnh viện.
+
+  Sau đó nó sẽ sinh lại data/, chạy check với 6 seed, kiểm cùng seed ra file
+  giống từng byte, đo lại các chỗ từng lộ nhãn, và thử chuyển nhãn phantom để
+  xem check có báo lỗi không. Nó không sửa docs và không commit.
+
+  Khi có kết quả, tôi sẽ tự kiểm lại, chạy reviewer lần nữa, rồi cập nhật các
+  doc liên quan: weekday-only-providers.md, fraud-injection.md,
+  dataset-checks.md, dataset-generation-pitfalls.md và ticket 01.
+
+✻ Baked for 1m 59s · done 21:16
+
+› Message from coder
+  Files changed:
+  - src/generator/fraud.py:33 and 112-117: `AMOUNT_FACTOR_CLAMP` renamed
+  `AMOUNT_FACTOR_RANGE`, comment fixed. `_normal_amount` now re-draws
+  `exp(gauss(0, AMOUNT_SIGMA))` until the factor is inside [0.85, 1.15], so
+  there is no pile-up at the edges. legit.py is untouched here, so legit amounts
+  are still not truncated.
+  - src/generator/legit.py:15-30 and 56-75, 98:
+    - `LEGIT_CLAIMS_PER_CODE` updated as you specified (DENTAL 450 -> 300,
+  OUTPATIENT +150, total still 1,800). Comment updated: P-3002 and P-3010 are
+  the two codes below 60.
+    - `WEEKDAY_ONLY_CLAIMS_RANGE` replaced by `HOSPITAL_PREASSIGNED_RANGE = (58,
+  62)`, with a new comment.
+    - All 20 HOSPITALs are pre-assigned OUTPATIENT/INPATIENT claims from that
+  range (`hospitals` built from `providers` by type).
+    - `eligible_by_type` no longer excludes weekday-only hospitals. Their dates
+  stay weekdays-only. The assert message now says "the hospitals".
+  - src/generator/checks.py: new constants `PHANTOM_DAY_OTHER_PATTERNS` (3
+  upcoding + 3 mismatch) and `WEEKEND_PER_PROVIDER`. New checks, all using
+  `expect`:
+    - Weekend (after the weekday-only block): each `weekend_anomaly` claim has
+  is_weekend=1, a weekday-only provider and a surgical code. Each weekday-only
+  hospital has exactly 2.
+    - Duplicate (before the phantom check): the claims in key groups with n>1
+  are exactly the claims labelled `duplicate_claim`.
+    - Phantom (before the stats): every `phantom_billing` claim is on the
+  summary's phantom provider-day. That day holds exactly 25 phantom + 3 upcoding
+  + 3 mismatch.
+
+  Tests:
+  - `uv run python src/cli.py generate --seed 2024 --out data` then `check
+  --data data` -> PASS.
+  - Seeds 1, 7, 42, 123 and 99999 into scratchpad dirs -> all PASS.
+  - Reproducibility: seed 2024 with PYTHONHASHSEED=1 and =999 -> claims.csv,
+  ground_truth.csv and generation_summary.json are byte-identical.
+  - Break test: on a copy I moved the `phantom_billing` label from one claim to
+  a legit claim on another day. `check` FAILED with 2 messages: "phantom_billing
+  claims outside the phantom provider-day" and "phantom provider-day holds
+  {legit:1, phantom_billing:24, ...}".
+  - `uv run pytest` -> "1 warning in 0.01s" and no test summary line. There is
+  no tests/ content yet, so I assume it collected nothing.
+
+  Measurements (seed 2024, new data/):
+  - Claims per hospital:
+    - weekday-only: 72-85.
+    - regular hospitals excluding the phantom hospital: 66-84.
+    - phantom hospital PRV-001: 104, because of its 31 claims on the phantom
+  day.
+    - Top 10 by claim count: 7 are weekday-only, so they no longer form the top
+  10.
+  - CLINIC (20 providers): 4-10 claims.
+  - DENTAL (10 providers): 18-46 claims.
+  - Amounts equal to `round_amount(price*0.85)` or `round_amount(price*1.15)`,
+  single-code claims only: legit 3, fraud 0.
+  - Share of claims inside [0.85, 1.15] of price, single-code claims:
+
+  | Group | Inside band |
+  |---|---|
+  | legit | 1217/1800 (68%) |
+  | duplicate_claim | 30/30 |
+  | rapid_resubmission | 30/30 |
+  | weekend_anomaly | 20/20 |
+  | phantom_billing | 25/25 |
+  | diagnosis_procedure_mismatch | 20/20 |
+  | amount_clustering (amount-based) | 0/20 |
+  | upcoding (amount-based) | 0/30 |
+
+    Unbundling is multi-code, so it is not in this measurement.
+  - `check` stats:
+    - 2000 claims, 200 fraud, 495 members, 50 providers.
+    - Claims per provider type: CLINIC 142, DENTAL 322, HOSPITAL 1536.
+    - Weekday-only hospitals 72-85 claims.
+    - Min single-code claims per code: 47.
+    - 15 duplicate groups.
+    - Phantom day PRV-001 2024-07-15, 31 claims.
+    - Pattern counts all match the spec.
+
+  Not done: nothing from the 3 fixes was skipped. I did not touch the Low
+  findings, docs, config JSON, `rule_names.py` or `catalog.py`.
+
+  Unsure:
+  - The phantom check demands exactly 3 upcoding + 3 mismatch. Your spec said "6
+  claims labelled upcoding or mismatch", and the exact 3+3 split is a stricter
+  reading, because fraud.py always generates 3+3.
+  - I kept (58, 62) as is. Weekday-only hospitals got 72-85 claims in total,
+  well above 60.
+  - DENTAL is now uneven (18-46 per provider) and the CLINICs are small (4-10).
+  You only asked for the 20 hospitals to be symmetric, so I left them alone.
+  - `data/` was regenerated and shows as modified in git, as expected. Nothing
+  was committed or staged.
+
+⏺ Bash(git diff --stat; uv run python src/cli.py check --data data 2>&1 | tail
+      -5; git diff src/generator/fraud.py src/generator/legit.py | head -120)
+  ⎿  warning: in the working copy of 'AI_Engineering_Challenges/AI_Challeng
+     e_10_Fraud_Detection/data/claims.csv', CRLF will be replaced by LF the
+      next time Git touches it
+     … +102 lines (ctrl+o to expand)
+
+⏺ Agent "Fix ticket 01 review findings" finished · 1m 20s
+
+⏺ Bash(git show HEAD:./data/claims.csv | head -1 | od -c | tail -2; head -1
+      data/claims.csv | od -c | tail -2; cat ../../.gitattributes 2>/dev/null)
+  ⎿  Error: Exit code 1
+     0000160    n   t   ,   i   s   _   w   e   e   k   e   n   d  \n        
+     0000176
+     0000160    n   t   ,   i   s   _   w   e   e   k   e   n   d  \r  \n    
+     0000177
+  ⎿  Resuming agent a61838e
+
+⏺ coder đã sửa xong cả 3 lỗi. Tôi đã tự kiểm: check PASS trên data/ vừa sinh
+  lại, và diff đúng spec. Chưa commit.
+
+  Kết quả đo với seed 2024:
+
+  ┌───────────────────────────────────┬────────────────────┬───────────────┐
+  │              Chỉ số               │   Trước khi sửa    │  Sau khi sửa  │
+  ├───────────────────────────────────┼────────────────────┼───────────────┤
+  │ Amount trùng 2 mốc kẹp (fraud /   │ 36 / 0             │ 0 / 3         │
+  │ hợp lệ)                           │                    │               │
+  ├───────────────────────────────────┼────────────────────┼───────────────┤
+  │ Bệnh viện weekday-only            │ 67-78 claim, chiếm │ 72-85 claim   │
+  │                                   │  top               │               │
+  ├───────────────────────────────────┼────────────────────┼───────────────┤
+  │ Bệnh viện thường                  │ 33-49 claim        │ 66-84 claim   │
+  ├───────────────────────────────────┼────────────────────┼───────────────┤
+  │ Weekday-only trong top 10 bệnh    │ gần như cả 10      │ 7             │
+  │ viện                              │                    │               │
+  ├───────────────────────────────────┼────────────────────┼───────────────┤
+  │ Chuyển nhãn phantom sang claim    │ check vẫn PASS     │ check FAIL    │
+  │ khác                              │                    │ đúng          │
+  └───────────────────────────────────┴────────────────────┴───────────────┘
+
+  Hai điểm mới cần bạn biết:
+  - Phòng khám quá nhỏ: 20 phòng khám chỉ còn 4-10 claim mỗi nơi (tổng 142), vì
+    bệnh viện lấy gần hết phần OUTPATIENT. Đây là cái giá của việc cho 20 bệnh
+    viện bằng nhau. Không lộ nhãn trực tiếp, nhưng nhìn kém thực tế.
+  - Dải amount vẫn hơi khác nhau: claim fraud không dựa vào amount nằm 100%
+    trong khoảng +-15% của giá chuẩn, còn claim hợp lệ chỉ 68%. Tín hiệu này yếu
+    hơn lỗi cũ nhiều nhưng vẫn còn.
+
+  Tôi đang cho reviewer xem lại diff và soi riêng 2 điểm này. Khi có kết quả,
+  tôi sẽ xác minh rồi báo bạn, sau đó cập nhật các doc liên quan.
+
+✻ Cogitated for 28s · done 21:17
+
+› Message from reviewer
+  Re-review của diff chưa commit (`src/generator/fraud.py`, `legit.py`,
+  `checks.py`): High (amount dồn về mốc kẹp) và Medium (quy mô weekday-only) đã
+  được sửa, nhưng lần sửa quy mô tạo ra một lỗi lộ nhãn mới ở mức Medium. Ngoài
+  ra có 3 lỗi Low.
+
+  Base gates: chưa có `tests/` và chưa có linter, như lần trước.
+
+  ## Xác minh con số coder báo (seed 2024, đúng với `data/` mới)
+  - **Tái lập:** generate với `PYTHONHASHSEED` 3 và 77 ra 3 file giống nhau từng
+  byte, và giống `data/`. Chạy `check` với các seed 1, 5, 7, 42, 123, 99999:
+  tất cả PASS.
+  - **Quy mô bệnh viện:** weekday-only 72-85, bệnh viện thường 66-84, phantom
+  PRV-001 104. Hai nhóm đã chồng lên nhau, đúng mục tiêu. Seed 42: 69-82 so với
+  67-82. Weekend share lớn nhất của nhóm weekday-only là 2.9%, dưới 5%. Mức tối
+  thiểu 60 claim được bảo đảm: 58 claim hợp lệ chia trước + 2 claim weekend;
+  tổng chia trước tối đa 1,240, ít hơn 1,500 claim OUTPATIENT/INPATIENT.
+  - **Amount:** không còn claim fraud nào trùng mốc kẹp; claim hợp lệ trùng mốc
+  là 3 (seed 42: 1). Trong dải [0.85, 1.15]: hợp lệ 1217/1800 (68%), fraud không
+  dựa vào amount 150/150 (100%).
+  - **Ràng buộc upcoding vẫn đúng:** 18 mã đủ điều kiện (bỏ P-1003, P-3002,
+  P-3010). Các mã được upcode đều có >= 60 claim hợp lệ, tối đa 2 claim mỗi mã
+  (seed 2024 và 42). Comment ở `legit.py` khớp.
+  - **Check mới:** lặp lại thử chuyển nhãn phantom sang một claim hợp lệ, lần
+  này `check` FAIL và báo đúng 2 lỗi.
+
+  ## Findings
+
+  [Medium] src/generator/legit.py:28-33,64-70 kết hợp với fraud.py:97-100 - Nhãn
+  lộ qua loại provider: phòng khám có tỷ lệ fraud khoảng 25%, trong khi bệnh
+  viện và nha khoa khoảng 8-9%.
+  Failure scenario: seed 2024 cho CLINIC 34/142 = 24%, HOSPITAL 144/1536 = 9%,
+  DENTAL 22/322 = 7%. Sáu seed khác cho CLINIC 21-29% ổn định. Nguyên nhân:
+  - 20 bệnh viện nhận trước khoảng 1,200 trong 1,500 claim OUTPATIENT/INPATIENT,
+  nên phòng khám chỉ còn 2-14 claim hợp lệ mỗi năm.
+  - `_Injector._provider` lại chọn đều trên mọi provider đủ điều kiện (40
+  provider làm OUTPATIENT), nên phòng khám nhận khoảng một nửa số fraud
+  OUTPATIENT.
+
+  Hệ quả: claim ở phòng khám có xác suất fraud gấp khoảng 3 lần nền. Phòng khám
+  4-10 claim/năm cũng nhìn rõ là dữ liệu giả.
+  Fix: chọn provider cho fraud theo trọng số bằng volume hợp lệ, ví dụ lấy
+  provider của một claim hợp lệ ngẫu nhiên cùng claim_type (vẫn loại phantom-day
+  như hiện tại). Như vậy tỷ lệ fraud gần bằng nhau giữa các loại provider mà
+  không phải đổi số claim mỗi mã. Có thể làm thêm: hạ
+  `HOSPITAL_PREASSIGNED_RANGE` hoặc chỉ chia trước cho 10 bệnh viện weekday-only
+  rồi bù cho bệnh viện thường bằng trọng số, để phòng khám có volume hợp lý
+  hơn. Sau khi sửa, đo lại tỷ lệ fraud theo provider type.
+  Source: docs/experiences/dataset-generation-pitfalls.md mục 6 "Bài học" ("ràng
+  buộc đặt riêng cho một nhóm provider ... có thể biến nhóm đó thành ngoại lệ
+  thống kê. Sau khi sinh, so phân phối của nhóm đặc biệt với nhóm còn lại") và
+  "Rule derived".
+
+  [Low] src/generator/checks.py:28-29 - `PHANTOM_DAY_OTHER_PATTERNS = {upcoding:
+  3, mismatch: 3}` và `WEEKEND_PER_PROVIDER = 2` được viết lại bằng tay thay vì
+  import `PHANTOM_DAY_EXTRAS` / `WEEKEND_PER_PROVIDER` từ `generator.fraud`
+  (file này đã import `FRAUD_COUNTS` và `CLUSTERING_AMOUNT` từ đó).
+  Failure scenario: đổi `PHANTOM_DAY_EXTRAS` thành 2 và 4 trong fraud.py thì
+  generator vẫn chạy, nhưng `check` FAIL với dataset đúng, hoặc ngược lại hai
+  bên trôi khỏi nhau.
+  Fix: `from generator.fraud import PHANTOM_DAY_EXTRAS, WEEKEND_PER_PROVIDER` và
+  dựng dict từ đó.
+  Về độ chặt: đòi đúng 25 + 3 + 3 và 0 claim hợp lệ trong ngày phantom là đúng
+  với generator (ngày được chọn khi provider chưa có claim nào).
+  fraud-injection.md chỉ ghi "6 claim nhãn upcoding / mismatch", nên check chặt
+  hơn doc nhưng không sai. Nên ghi rõ phép chia 3/3 vào doc.
+  Source: pyfriend mục 2 (hằng số đặt ở một nguồn).
+
+  [Low] docs (chưa sửa trong working tree) - Doc mô tả cách cũ và số đo cũ:
+  - docs/business-rule/weekday-only-providers.md:21 vẫn ghi "a random 62-70
+  legitimate claims, with no extra ones".
+  - docs/experiences/dataset-generation-pitfalls.md mục 6 vẫn ghi 62-70 / 63-69.
+  Các số đo FP ở mục 1, 3, 7, 8, 9 là của dataset cũ (số claim mỗi mã đã đổi,
+  nên mean/SD và chuỗi random đều đổi).
+  - docs/decisions/dataset-checks.md chưa có 3 check nhãn mới (weekend,
+  duplicate, phantom-day).
+
+  Fix: cập nhật trong lượt pre-commit sweep, đo lại các mục FP trên `data/` mới.
+  Nên thêm một ADR hoặc mục experiences cho việc chuyển 150 claim DENTAL sang
+  OUTPATIENT và chia trước cho cả 20 bệnh viện, vì đây là một lựa chọn có cân
+  nhắc phương án.
+
+  [Low] src/generator/checks.py:126-130 - Check weekend dùng `pid in
+  weekday_only` từ summary nên vẫn pass vô điều kiện khi danh sách rỗng (Low cũ
+  từ lần trước, chưa sửa vì ngoài phạm vi).
+
+  ## Không phải finding (đã xem)
+  - **Dải amount 100% so với 68%:** lọc "amount trong +-15%" chỉ nâng tỷ lệ
+  fraud từ 10% lên khoảng 10.9% (150/1367), lift không đáng kể. Đây là thiết kế
+  đã ghi trong fraud-injection.md.
+  - **Tỷ lệ INPATIENT của nhóm weekday-only hơi cao hơn** (seed 42: 0.34-0.45 so
+  với 0.24-0.45), nhưng hai dải chồng lên nhau và không tách được.
+  - **Rejection sampling ở `_normal_amount`:** tỷ lệ chấp nhận khoảng 68% nên
+  vòng lặp kết thúc nhanh và tất định theo seed.
+
+  ## Đã kiểm
+  - `git diff -- src/`.
+  - Generate và check vào scratchpad (không chạm `data/`): 2 lần với 2 giá trị
+  `PYTHONHASHSEED`, cộng 6 seed khác.
+  - Script đo (tỷ lệ fraud theo loại provider, volume bệnh viện / phòng khám /
+  nha khoa, amount trùng mốc và trong dải, upcoding theo mã, weekend share, tỷ
+  lệ inpatient): /private/tmp/claude-501/-Volumes-D-papaya-insurtech-pumpkin/f11
+  6e248-e856-4d47-8a42-763d9dfea1c7/scratchpad/leak2.py
+  - Thử lại việc chuyển nhãn phantom trên bản copy của `data/`.
+
+⏺ Bash(grep -n "^PHANTOM_DAY_EXTRAS\|^WEEKEND_PER_PROVIDER"
+      src/generator/fraud.py; sed -n 20,32p src/generator/checks.py; uv run
+      python -I - <<'EOF'
+      import csv,json,c…)
+  ⎿  41:PHANTOM_DAY_EXTRAS = 3  # upcoding claims and mismatch claims each,
+      on the phantom provider-day
+     42:WEEKEND_PER_PROVIDER = 2
+     … +16 lines (ctrl+o to expand)
+
+⏺ Agent "Review ticket 01 code" finished · 1m 28s
+
+⏺ Reviewer xác nhận lỗi cũ đã sửa nhưng phát hiện lỗi mới: tỷ lệ fraud ở phòng
+  khám cao gấp 3 lần do claim fraud phân bổ đều provider dù phòng khám còn rất
+  ít claim hợp lệ. Tôi sẽ cho coder sửa bằng cách chọn provider theo tỷ lệ claim
+  hợp lệ thực tế, kèm sửa lỗi nhỏ ở checks.py đang hardcode hằng số thay vì
+  import từ fraud.py.
+  ⎿  Resuming agent ac1b160
+
+⏺ coder đang sửa vòng 2 ở chế độ chạy ngầm. Tôi để lại sau 2 việc:
+  - Hai lỗi Low cũ về check: chưa kiểm nội dung generation_summary.json, và
+    check weekend vẫn pass khi danh sách weekday-only rỗng.
+  - Cập nhật các doc đang ghi cách làm và số đo cũ: weekday-only-providers.md,
+    mục 6 và các số đo FP của dataset-generation-pitfalls.md, dataset-checks.md.
+    Tôi sẽ làm việc này trong lượt kiểm tra trước khi commit. Có thể thêm một
+    ADR cho quyết định chuyển 150 claim DENTAL sang OUTPATIENT.
+
+  Một điểm chưa giải quyết được: dù đã sửa, phòng khám vẫn chỉ có 4-10 claim mỗi
+  năm, trông không thực tế. Sau vòng này tôi sẽ báo lại kèm số đo để bạn quyết
+  có chấp nhận và ghi thành giới hạn đã biết hay không.
+
+✻ Crunched for 32s · done 21:19
+
+› Message from coder
+  Files changed:
+  - src/generator/fraud.py:
+    - `_Injector.__init__` now builds `self.legit_providers`, a list per
+  claim_type holding the provider of every legit claim.
+    - `_provider` (around line 97-103) now draws `rng.choice` from that list,
+  filtered by `exclude`. An empty result raises `RuntimeError` with a clear
+  message and there is no fallback.
+    - Draws follow the order of the legit list, so they are deterministic with
+  no set or dict iteration.
+    - Phantom (`exclude=weekday_only_ids`, INPATIENT) and the other callers
+  still go through `_provider` and keep their constraints. Weekend claims pass
+  the provider explicitly, so they are unchanged.
+  - src/generator/checks.py: `PHANTOM_DAY_OTHER_PATTERNS` is now built from
+  `PHANTOM_DAY_EXTRAS`, and `WEEKEND_PER_PROVIDER` is imported from
+  `generator.fraud`. The hand-written copies are removed.
+
+  Tests:
+  - Seed 2024 into `data/`: `check` PASS.
+  - Seeds 1, 7, 42, 123 and 99999: `check` PASS.
+  - Seed 2024 with PYTHONHASHSEED=1 and PYTHONHASHSEED=999: the 3 files are
+  byte-identical, and claims.csv is also identical to `data/`.
+  - `uv run pytest` was not re-run this round. There is no tests/ content yet.
+
+  Measurements:
+
+  | | Seed 2024 | Seed 42 |
+  |---|---|---|
+  | Fraud rate, HOSPITAL | 163/1555 = 10% | 163/1557 = 10% |
+  | Fraud rate, DENTAL | 34/334 = 10% | 34/334 = 10% |
+  | Fraud rate, CLINIC | 3/111 = 3% | 3/109 = 3% |
+  | Weekday-only hospital claims | 70-86 | 70-84 |
+  | Regular hospital claims (phantom hospital excluded) | 68-79 | 69-83 |
+  | CLINIC claims per provider | 3-8 | 2-12 |
+  | DENTAL claims per provider | 20-46 | 25-41 |
+
+  - Before the fix, seed 2024 had CLINIC 24%, HOSPITAL 9% and DENTAL 7%.
+  - Upcoding constraints hold on both seeds: at most 2 per code, every upcoded
+  code has >= 60 legit claims, and P-1003 is never upcoded.
+
+  Not done: nothing from the spec was skipped.
+
+  Unsure:
+  - The CLINIC fraud rate fell from 24% to 3%, so it is now below the other two
+  types. Clinics hold only ~110 claims, and with only 3 or so fraud claims in
+  that sample the 3% rate is within noise.
+  - `ELIGIBLE_PROVIDER_TYPES` is still imported in fraud.py and `self.providers`
+  is still stored, but neither is used any more. I left them as dead code to
+  keep the diff small.
+  - `data/` is regenerated and shows as modified in git. Nothing was committed
+  or staged.
+
+⏺ Bash(uv run python src/cli.py check --data data 2>&1 | tail -3; git diff
+      src/generator/fraud.py | head -80; grep -n
+      "ELIGIBLE_PROVIDER_TYPES\|self.providers" src/gen…)
+  ⎿    members 494, providers 50, claims per provider type {'CLINIC': 111,
+     'DENTAL': 334, 'HOSPITAL': 1555}
+       weekday-only hospitals 70-86 claims, min single-code claims per code
+     … +53 lines (ctrl+o to expand)
+
+⏺ Agent "Fix ticket 01 review findings" finished · 23s
+
+⏺ Bash(sed -n 50,60p src/generator/fraud.py)
+  ⎿      phantom_date: date
+     … +10 lines (ctrl+o to expand)
+
+⏺ Bash(sed -i '' 's/^from generator.models import ELIGIBLE_PROVIDER_TYPES,
+      GeneratedClaim, Provider$/from generator.models import GeneratedClaim,
+      Provider/' src/genera…)
+  ⎿  from generator.models import GeneratedClaim, Provider
+     identical
+  ⎿  Updated src/generator/fraud.py (+1 -1)
+      16  import rule_names as R
+      17  from catalog import Catalog
+      18  from generator.legit import AMOUNT_SIGMA, LEGIT_CLAIMS_PER_CODE
+          , MEMBER_IDS, YEAR_START, DAYS_IN_YEAR, random_date, round_amou
+          nt
+      19 -from generator.models import ELIGIBLE_PROVIDER_TYPES, Generated
+         -Claim, Provider                                                
+      19 +from generator.models import GeneratedClaim, Provider          
+      20  
+      21  FRAUD_COUNTS = {
+      22      R.DUPLICATE_CLAIM: 30,
+  ⎿  Resuming agent a61838e
+
+⏺ coder đã sửa xong vòng 2 và tôi đã tự kiểm lại: check PASS với seed 2024. Tôi
+  cũng bỏ một import không còn dùng trong fraud.py, sinh lại thì file ra giống
+  hệt từng byte.
+
+  Kết quả với seed 2024:
+
+  ┌───────────────┬───────────────────────────────────┐
+  │ Loại provider │ Tỷ lệ fraud (trước vòng 2 -> sau) │
+  ├───────────────┼───────────────────────────────────┤
+  │ Phòng khám    │ 24% -> 3% (3/111)                 │
+  ├───────────────┼───────────────────────────────────┤
+  │ Bệnh viện     │ 9% -> 10%                         │
+  ├───────────────┼───────────────────────────────────┤
+  │ Nha khoa      │ 7% -> 10%                         │
+  └───────────────┴───────────────────────────────────┘
+
+  - Bệnh viện weekday-only có 70-86 claim, bệnh viện thường 68-79, nên không còn
+    tách được nhóm weekday-only theo số claim.
+  - Phòng khám vẫn chỉ có 3-8 claim mỗi nơi.
+
+  Tôi đang cho reviewer xem lại lần cuối. Riêng tỷ lệ 3% ở phòng khám, tôi đoán
+  chỉ là do loại claim: fraud INPATIENT, phantom và weekend đều phải rơi vào
+  bệnh viện, nên bệnh viện có tỷ lệ fraud cao hơn. reviewer sẽ kiểm xem đoán này
+  có đúng không.
+
+✻ Brewed for 29s · done 21:20
+
+› Message from reviewer
+  Round 3 review (`git diff -- src/generator/fraud.py src/generator/checks.py`):
+  No findings ở mức Medium trở lên. Lỗi Medium vòng 2 (phòng khám có tỷ lệ
+  fraud khoảng 25%) đã được sửa. Tỷ lệ CLINIC 3% ở seed 2024 không phải lộ nhãn
+  đáng kể. Còn 2 điểm Low, đều không chặn commit.
+
+  Base gates: vẫn chưa có `tests/` và linter (Low cũ, không nhắc lại).
+
+  ## Xác minh con số coder báo
+  - **Tái lập:** generate seed 2024 với `PYTHONHASHSEED` 3 và 77 ra 3 file giống
+  nhau từng byte, và giống `data/` đang có trong working tree.
+  - **`check`:** PASS với seed 2024, 42, 7, 123.
+  - **Seed 2024 khớp với báo cáo của coder:**
+    - tỷ lệ fraud: HOSPITAL 163/1555 = 10.5%, DENTAL 34/334 = 10.2%, CLINIC
+  3/111 = 2.7%;
+    - weekday-only 70-86, bệnh viện thường 68-79 (không tính bệnh viện phantom
+  111);
+    - phòng khám 3-8 claim mỗi provider.
+  - **Ràng buộc upcoding:** `LEGIT_CLAIMS_PER_CODE` và `_upcoding_codes` không
+  đổi so với vòng trước, nên điều kiện >= 60 claim hợp lệ mỗi mã và tối đa 2
+  claim mỗi mã vẫn đúng như đã đo ở vòng 2.
+  - **checks.py:** đã import `PHANTOM_DAY_EXTRAS` và `WEEKEND_PER_PROVIDER` từ
+  `generator.fraud`. Finding Low về hằng số trùng lặp đã đóng.
+
+  ## CLINIC 3% có phải lộ nhãn không
+  Không đáng kể. Phần lớn là nhiễu do mẫu nhỏ, phần còn lại do cơ cấu
+  claim_type. Bằng chứng:
+  - **Tách theo (claim_type, loại provider)**, bỏ ngày phantom và
+  weekend_anomaly, seed 2024:
+    - OUTPATIENT ở CLINIC: 2.7%
+    - OUTPATIENT ở HOSPITAL: 6.9%
+    - INPATIENT ở HOSPITAL: 8.4%
+    - DENTAL: 10.2%
+  - **Mức kỳ vọng:** sau khi rút provider theo volume hợp lệ, phòng khám nên có
+  khoảng 6-7% x 111, tức khoảng 7 claim fraud; độ lệch chuẩn nhị thức khoảng
+  2.6. Con số 3 nằm khoảng -1.6 SD.
+  - **Đổi seed thì tỷ lệ dao động hai chiều:** 2.8% (seed 42), 11.9% (seed 7),
+  7.6% (seed 123). Không có thiên lệch có hệ thống như vòng 2 (21-29% ở mọi
+  seed).
+  - **Hệ quả cho người đọc dataset:** nếu biết claim nằm ở phòng khám thì xác
+  suất fraud là 3-12% tùy seed, xoay quanh mức nền 10%; nhóm này chỉ có khoảng
+  110 claim (5.5% dataset).
+  - **Phần chênh có hệ thống** (tổng thể bệnh viện khoảng 10.5%) đến từ việc
+  phantom (31 claim), weekend_anomaly (20) và fraud INPATIENT đều phải nằm ở
+  bệnh viện. Điều này đúng với domain, không cần sửa.
+  - **weekday-only so với bệnh viện thường** (bỏ ngày phantom): 9.3% so với
+  7.9%. Khoảng cách đúng bằng 20 claim weekend_anomaly; bỏ chúng ra thì khoảng
+  7.0% so với 7.9%. Cũng khó tránh.
+
+  ## Findings
+
+  [Low] src/generator/legit.py:28-33 - Phòng khám quá nhỏ: 1-15 claim/năm (seed
+  123: 1-11), trong khi bệnh viện 68-86 và nha khoa 20-46.
+  Failure scenario: đây không phải lộ nhãn (xem phần trên), nhưng người chấm
+  nhìn phân phối volume theo provider sẽ thấy 20 phòng khám gần như không hoạt
+  động. Điều này ảnh hưởng tiêu chí "feels right" / polish. Nguyên nhân: chia
+  trước 58-62 claim cho cả 20 bệnh viện thì hết khoảng 1,200 trong 1,500 claim
+  OUTPATIENT/INPATIENT.
+  Fix: nếu muốn giữ hai mục tiêu "weekday-only không tách ra theo volume" và
+  "mỗi bệnh viện weekday-only >= 60 claim", có thể giảm số phòng khám trong
+  `providers.json` (ví dụ 20 xuống 10, bù bằng nha khoa hoặc bệnh viện để vẫn
+  ~50 provider). Cách khác là ghi nhận đây là giới hạn đã biết trong pitfalls
+  mục 6 và trong writeup. Đây là lựa chọn của user, không bắt buộc.
+  Source: docs/experiences/dataset-generation-pitfalls.md mục 6 "Bài học" (so
+  phân phối của nhóm đặc biệt với phần còn lại).
+
+  [Low] src/generator/fraud.py:58 - Field `self.providers` không còn được dùng
+  sau khi `_provider` chuyển sang `self.legit_providers` (code chết). Tham số
+  `providers` của `_Injector.__init__` và `inject_fraud` chỉ còn để gán vào
+  field này.
+  Fix: xóa field. Có thể bỏ luôn tham số nếu không dùng ở chỗ khác; output không
+  đổi vì không có lần rút random nào phụ thuộc vào nó.
+
+  Không có finding mới ở `_provider`:
+  - Danh sách rút có trọng số được dựng theo thứ tự claim hợp lệ, nên tất định.
+  - Danh sách rỗng thì ném `RuntimeError`, không lỗi lặng lẽ.
+  - `phantom_day` vẫn loại weekday-only và chỉ lấy bệnh viện (INPATIENT).
+
+  ## Đã kiểm
+  - Diff của 2 file.
+  - Generate và check vào scratchpad (không ghi `data/`) với 4 seed.
+  - Script đo tỷ lệ fraud theo loại provider và theo (claim_type, loại
+  provider), volume từng provider, weekday-only so với bệnh viện thường:
+  /private/tmp/claude-501/-Volumes-D-papaya-insurtech-pumpkin/f116e248-e856-4d47
+  -8a42-763d9dfea1c7/scratchpad/leak3.py
+  Searched for 1 pattern (ctrl+o to expand)
+
+⏺ Agent "Review ticket 01 code" finished · 51s
+
+⏺ Bash(sed -n 249,250p src/generator/fraud.py && sed -n 54,55p
+      src/generator/fraud.py)
+  ⎿  def inject_fraud(rng: random.Random, catalog: Catalog, providers: list
+     [Provider],
+                      weekday_only: list[Provider], legit: list[GeneratedCl
+     … +5 lines (ctrl+o to expand)
+
+⏺ Bash(python3 - <<'EOF'
+      p='src/generator/fraud.py'; s=open(p).read()…)
+  ⎿  101:        not over-use small providers (which would leak the label t
+     hrough the provider type)."""
+     identical
+     Structural checks passed for data: 2000 claims, 200 fraud
+  ⎿  Updated src/generator/dataset.py (+1 -1)
+      37      catalog, providers = load_catalog(), load_providers()
+      38      weekday_only = pick_weekday_only(rng, providers)
+      39      legit = generate_legit_claims(rng, catalog, providers, week
+          day_only)
+      40 -    fraud = inject_fraud(rng, catalog, providers, weekday_only,
+         - legit)                                                        
+      40 +    fraud = inject_fraud(rng, catalog, weekday_only, legit)    
+      41  
+      42      # Sort by date with a random tie-break, then number: fraud 
+          claims spread over the whole ID
+      43      # range instead of sitting at the end where they were gener
+          ated.
+  ⎿  Updated src/generator/fraud.py (+3 -4)
+      51  
+      52  
+      53  class _Injector:
+      54 -    def __init__(self, rng: random.Random, catalog: Catalog, pr
+         -oviders: list[Provider],                                       
+      54 +    def __init__(self, rng: random.Random, catalog: Catalog,   
+      55                   weekday_only: list[Provider], legit: list[Gene
+          ratedClaim]):
+      56          self.rng = rng
+      57          self.catalog = catalog
+      58 -        self.providers = providers                             
+      58          self.weekday_only_ids = {p.id for p in weekday_only}
+      59          self.claims: list[GeneratedClaim] = []
+      60          self.keys = set()
+     ...
+      245      return slots[: total - on_phantom_day], phantom
+      246  
+      247  
+      249 -def inject_fraud(rng: random.Random, catalog: Catalog, provide
+          -rs: list[Provider],                                           
+      248 +def inject_fraud(rng: random.Random, catalog: Catalog,        
+      249                   weekday_only: list[Provider], legit: list[Gen
+           eratedClaim]) -> FraudResult:
+      251 -    injector = _Injector(rng, catalog, providers, weekday_only
+          -, legit)                                                      
+      250 +    injector = _Injector(rng, catalog, weekday_only, legit)   
+      251      regular_upcoding, phantom_upcoding = _upcoding_codes(
+      252          rng, catalog, FRAUD_COUNTS[R.UPCODING], PHANTOM_DAY_EX
+           TRAS)
+      253  
+
+⏺ Code của ticket #01 đã sạch: reviewer vòng cuối không còn lỗi Medium trở lên.
+  Tôi đã tự kiểm lại: check PASS, và generate lại cùng seed 2024 ra 3 file giống
+  data/ từng byte. Chưa commit gì.
+
+  Đã sửa, trong fraud.py, legit.py, checks.py:
+  - Amount: không còn dồn về 2 mốc kẹp, nên không claim fraud nào có amount đúng
+    mốc nữa.
+  - Weekday-only: nhóm này không còn tách ra được theo số claim (70-86 so với
+    bệnh viện thường 68-79).
+  - Tỷ lệ fraud theo loại provider: bệnh viện 10%, nha khoa 10%, phòng khám 3%.
+    Con số 3% của phòng khám chỉ do mẫu nhỏ: đổi seed thì nó dao động từ 3% đến
+    12% quanh mức 10%. Ở vòng trước, phòng khám ổn định 21-29% với mọi seed.
+  - check: giờ kiểm cả nhãn phantom, duplicate và weekend. Chuyển nhãn phantom
+    sang claim khác thì check FAIL đúng.
+  - Dọn code: tôi bỏ thêm tham số providers không còn dùng trong fraud.py và
+    dataset.py. Output không đổi.
+
+  Còn mở, cần bạn quyết:
+  1. Phòng khám quá nhỏ (khoảng 1-15 claim mỗi nơi mỗi năm). Không lộ nhãn,
+     nhưng người chấm nhìn sẽ thấy lạ. Hai cách:
+     - (a) Giảm số phòng khám trong providers.json từ 20 xuống khoảng 10, bù
+       bằng bệnh viện hoặc nha khoa để vẫn ~50 provider. Như vậy phải sinh lại
+       data và review lại.
+     - (b) Giữ nguyên, ghi thành giới hạn đã biết trong pitfalls và writeup.
+  2. Hai lỗi Low cũ để sau: check chưa kiểm nội dung generation_summary.json, và
+     việc đọc CSV không báo dòng sai số cột.
+
+  Bước tiếp theo, khi bạn nói "commit" tôi sẽ chạy kiểm tra trước khi commit và
+  cập nhật doc theo:
+  - weekday-only-providers.md:21 đang ghi khoảng 62-70 cũ;
+  - dataset-generation-pitfalls.md mục 6 và các số đo FP, phải đo lại trên data/
+    mới;
+  - dataset-checks.md: thêm 3 check mới;
+  - fraud-injection.md: ghi rõ ngày phantom gồm 3 upcoding + 3 mismatch;
+  - có thể thêm một ADR cho quyết định chuyển 150 claim DENTAL sang OUTPATIENT.
+
+  Bạn chọn (a) hay (b) cho phòng khám?
+
+✻ Churned for 11m 42s · done 21:21
+
+❯ a                                                                             
+
+⏺ Trước khi làm (a), tôi tính lại và thấy chỉ giảm số phòng khám thì gần như
+  không giúp được gì. Lỗi này nằm ở phép tính tôi đưa ra trước đó.
+
+  Lý do: 20 bệnh viện đã lấy trước khoảng 1,200 trong 1,500 claim
+  OUTPATIENT/INPATIENT. Khoảng 200 claim OUTPATIENT còn lại đang chia đều cho cả
+  bệnh viện lẫn phòng khám, nên giảm 20 phòng khám xuống 10 thì mỗi nơi chỉ
+  tăng từ ~5 lên ~7 claim. Nha khoa thì giờ chỉ còn 300 claim, nên chuyển 10
+  phòng khám thành nha khoa sẽ làm nha khoa còn ~15 claim mỗi nơi. Chuyển thành
+  bệnh viện thì không đủ claim để chia trước cho 30 bệnh viện.
+
+  Để phòng khám lớn hơn thật, phải đổi chỗ khác:
+
+⏺ User answered Claude's questions:
+  ⎿  · Phòng khám chỉ lớn lên được nếu đổi một trong các chỗ sau (số ước tính, 
+     seed 2024). Chọn cách nào? → Bỏ qua, giữ nguyên hiện tại
+
+  Searched for 1 pattern (ctrl+o to expand)
+
+⏺ Update(docs/requirements/challenge-10-requirements.md)
+  ⎿  Added 1 line, removed 1 line
+       98  - B5 / C4: rapid groups by `(member_id, diagnosis_code)`; runt
+           ime measured with `time.perf_counter()` in the CLI, written to
+            the metrics report.
+       99  - Risks estimated before coding: `docs/experiences/dataset-gen
+           eration-pitfalls.md`.
+      100  - A2 valid pairs fixed: added `J06.9 - P-1003`, `I10 - P-1003`
+           , `E11.9 - P-1002` (35 pairs) so unbundled B-1001 / B-1002 cla
+           ims do not trip mismatch. See `docs/business-rule/diagnosis-pr
+           ocedure-mismatch.md`.
+      101 -- A3: amounts of fraud claims outside the amount patterns are 
+          -clamped to a factor in [0.85, 1.15]; upcoded claims are spread
+          - over codes with >= 60 claims, at most 2 per code. See `fraud-
+          -injection.md`, `upcoding.md`.                                 
+      101 +- A3 (revised 2026-10-24 after review of #01): amounts of frau
+          +d claims outside the amount patterns use a factor re-drawn unt
+          +il inside [0.85, 1.15] (truncated, not clamped: clamping piled
+          + amounts on 2 exact values that leaked the label); upcoded cla
+          +ims are spread over codes with >= 60 claims, at most 2 per cod
+          +e. See `fraud-injection.md`, `upcoding.md`.                   
+      102  - Work tracking: tickets in `docs/backlog/`, plans in `.claude
+           /docs/plans/` (repo root).
+      103  - Agent workflow (2026-10-24): subagents `coder` (sonnet) and 
+           `reviewer` (opus, read-only) in `.claude/agents/`; trigger tab
+           le in the repo-root `AGENTS.md`; the pre-commit doc sweep stay
+           s on the main thread.
+      104  - Docs (2026-10-24): business terms have a single source, `doc
+           s/business-rule/glossary.md`; other docs link to it instead of
+            defining terms.
+
+⏺ Update(docs/requirements/challenge-10-requirements.md)
+  ⎿  Added 1 line
+      110  - B input (2026-10-24): invalid input stops the engine with th
+           e full list of problems; no rows are skipped. See `docs/decisi
+           ons/ADR-002-invalid-input-stops-the-engine.md`.
+      111  - B config (2026-10-24): only the weights are configurable (th
+           e brief only asks for weights); rule thresholds are constants 
+           at the top of each rule file. See `docs/decisions/ADR-003-only
+           -weights-are-configurable.md`.
+      112  - B4 output (2026-10-24): `output/scored_output.json` is a ran
+           ked JSON array; each element has exactly the brief's 3 fields;
+            flags inside a claim sorted by severity descending. See `docs
+           /business-rule/scoring.md`.
+      113 +- A provider volume (2026-10-24, review of #01): 150 legit cla
+          +ims moved from DENTAL to OUTPATIENT codes; all 20 hospitals ge
+          +t the same pre-assigned 58-62 OUTPATIENT / INPATIENT claims, s
+          +o the weekday-only group is not the 10 largest; fraud provider
+          +s are drawn weighted by legit volume, so no provider type has 
+          +an outlier fraud rate. Known limitation, accepted: the 20 clin
+          +ics get only ~1-15 claims each. Making them larger needs a low
+          +er weekday-only floor (< 60) or fewer dental providers; both r
+          +ejected.                                                      
+      114  
+      115  ## Open questions (discussed when each part is detailed)
+      116  
+
+⏺ Code giữ nguyên như hiện tại, phòng khám nhỏ được chấp nhận là giới hạn đã
+  biết.
+
+  Tôi đã ghi 2 quyết định vào mục "Settled decisions" của
+  docs/requirements/challenge-10-requirements.md:
+  - A3: sửa ghi chú cũ. Amount của claim fraud giờ được rút lại cho tới khi nằm
+    trong [0.85, 1.15], không còn kẹp.
+  - A provider volume: ghi cả cách chia claim cho provider vừa đổi và giới hạn
+    phòng khám chỉ có ~1-15 claim. Muốn phòng khám lớn hơn phải hạ mức >= 60 của
+    weekday-only hoặc bớt số nha khoa, và bạn đã chọn không đổi.
+
+  Code đã sửa xong, check PASS, data/ đã sinh lại, nhưng chưa commit. Khi bạn
+  nói "commit", tôi sẽ chạy kiểm tra trước khi commit và cập nhật các doc còn
+  ghi cách làm hoặc số đo cũ:
+  - weekday-only-providers.md;
+  - dataset-generation-pitfalls.md: mục 6, ghi thêm giới hạn phòng khám, và đo
+    lại các số FP trên data/ mới;
+  - dataset-checks.md: thêm 3 check mới;
+  - fraud-injection.md: dòng về việc kẹp amount, và ghi rõ ngày phantom gồm 3
+    upcoding + 3 mismatch.
+
+  Hai lỗi Low về check (chưa kiểm nội dung generation_summary.json, chưa báo
+  dòng CSV sai số cột) vẫn để sau.
+
+✻ Crunched for 53s · done 21:25
+
+❯ commit. rồi check lỗi Low. tách riêng commit cho                              
+  AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/conversations/04-pl 
+  an-phase-2-rule-engine-setup-agent.txt                                        
+
+⏺ Skill(pjdoc-mgmt-claco-bunhy)
+  ⎿  Successfully loaded skill · claude-sonnet-5-5
+
+⏺ Bash(git status --short; grep -n -i "language\|ngôn
+      ngữ\|English\|Vietnamese\|tiếng" AGENTS.md | head; ls docs/decisions; ls
+      docs/changelogs 2>&1)
+  ⎿  Error: Exit code 1
+      M data/claims.csv
+      M data/generation_summary.json
+      M data/ground_truth.csv
+      M docs/requirements/challenge-10-requirements.md
+      M src/generator/checks.py
+      M src/generator/dataset.py
+      M src/generator/fraud.py
+      M src/generator/legit.py
+     ?? conversations/04-plan-phase-2-rule-engine-setup-agent.txt
+     … +8 lines (ctrl+o to expand)
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Bash(mkdir -p /private/tmp/claude-501/-Volumes-D-papaya-insurtech-pumpkin/f116
+      e248-e856-4d47-8a42-763d9dfea1c7/scratchpad && cat >
+      /private/tmp/claude-501/-Volumes-D…)
+  ⎿  Traceback (most recent call last):
+       File "/private/tmp/claude-501/-Volumes-D-papaya-insurtech-pumpkin/f1
+     16e248-e856-4d47-8a42-763d9dfea1c7/scratchpad/measure.py", line 7, in
+     … +14 lines (ctrl+o to expand)
+
+⏺ Bash(head -c 150 src/config/providers.json; echo;
+      S=/private/tmp/claude-501/-Volumes-D-papaya-insurtech-pumpkin/f116e248-e85
+      6-4d47-8a42-763d9dfea1c7/scratchpad/measu…)
+  ⎿  {
+       "providers": [
+         {"id": "PRV-001", "name": "Benh vien Da khoa Hai Au", "type": "HOS
+     … +11 lines (ctrl+o to expand)
+
+⏺ Tôi vừa đo lại các số FP trên data/ mới xong, giờ sẽ cập nhật tài liệu
+  pitfalls (chuyển sang tiếng Anh) trước khi commit.
+
+⏺ Write(docs/experiences/dataset-generation-pitfalls.md)
+  ⎿  Added 56 lines, removed 51 lines
+       1 -# Bẫy khi sinh dataset làm lệch metrics hoặc lộ nhãn           
+       1 +# Dataset generation pitfalls that skew metrics or leak labels 
+       2  
+       3 -**Found:** 2026-10-24 (ước lượng trước khi code, chưa đo)      
+       4 -**Scope:** generator (A) và cách đọc metrics (C): phân phối amo
+         -unt, chọn mã cho fraud, gán `claim_id`, FP tự nhiên.           
+       5 -**Artifact at time of discovery:** chưa có code; liên quan `src
+         -/generator/`, `src/rules/`                                     
+       6 -**Status:** đã đo trên dataset đủ 2,000 claim (seed 2024, 2026-
+         -10-24) bằng script kiểm thô theo định nghĩa rule; đối chiếu lại
+         - bằng engine ở #03                                             
+       3 +**Found:** 2026-10-24 (estimated before coding, then measured) 
+       4 +**Scope:** generator (A) and how metrics are read (C): amount d
+         +istribution, code choice for fraud, `claim_id` assignment, prov
+         +ider volume, natural FPs.                                      
+       5 +**Artifact at time of discovery:** `src/generator/`; cross-chec
+         +ked against the rules in #03                                   
+       6 +**Status:** measured on the full 2,000-claim dataset (seed 2024
+         +) with a rough script following each rule's definition. Last re
+         +-measured 2026-10-24 after the #01 review fixes (amount truncat
+         +ion, provider volume). Re-checked by the engine in #03.        
+       7  
+       8 -Mỗi mục: dự đoán -> cách xử lý khi sinh dữ liệu -> số đo thật (
+         -điền sau).                                                     
+       8 +Each item: prediction -> how generation handles it -> real meas
+         +urement.                                                       
+       9  
+      10 -## 1. FP tự nhiên của upcoding                                 
+      10 +## 1. Natural FPs of upcoding                                  
+      11  
+      12 -- **Dự đoán:** amount hợp lệ = giá chuẩn x log-normal dao động 
+         -15% => khoảng 2.5% claim hợp lệ tự vượt mean + 2 SD, tức khoảng
+         - 40-45 claim trên 1,800 claim hợp lệ.                          
+      13 -- **Ảnh hưởng:** FPR vẫn thấp hơn nhiều so với 20%, nhưng preci
+         -sion giảm.                                                     
+      14 -- **Xử lý:** chấp nhận (đúng quyết định "cho phép FP tự nhiên")
+         -, báo trong metrics report phần 3 và writeup.                  
+      15 -- **Số đo sơ bộ:** 57 claim (3.2%), cao hơn dự đoán. Lý do: log
+         --normal lệch phải, đuôi trên dày hơn phân phối chuẩn nên tỷ lệ 
+         -vượt mean + 2 SD lớn hơn 2.5%.                                 
+      16 -- **Bài học:** ước lượng tỷ lệ vượt ngưỡng theo phân phối chuẩn
+         - sẽ thấp hơn thực tế khi amount sinh bằng log-normal. Số chính 
+         -thức sẽ khác vì claim upcoded làm tăng mean / SD (mục 2).      
+      17 -- **Số đo thật (2,000 claim):** 23 claim hợp lệ vượt mean + 2 S
+         -D (1.3% của 1,800), giảm từ 57 vì 30 claim upcoded kéo SD của m
+         -ã lên. Không claim fraud thuộc pattern khác vượt ngưỡng (amount
+         - kẹp +-15% có tác dụng).                                       
+      18 -- **Bài học thêm:** FP tự nhiên của một rule thống kê phải đo t
+         -rên dataset đã có fraud; đo trên dữ liệu sạch cho số sai hướng.
+      12 +- **Prediction:** legit amount = standard price x log-normal wi
+         +th 15% spread => about 2.5% of legit claims exceed mean + 2 SD 
+         +on their own, i.e. about 40-45 of the 1,800 legit claims.      
+      13 +- **Impact:** FPR stays far below 20%, but precision drops.    
+      14 +- **Handling:** accepted (the "natural FPs are allowed" decisio
+         +n); reported in section 3 of the metrics report and in the writ
+         +eup.                                                           
+      15 +- **Lesson:** the first rough measurement on clean data gave 57
+         + claims (3.2%), above the prediction. The log-normal is right-s
+         +kewed, so its upper tail is heavier than a normal one and more 
+         +than 2.5% exceed mean + 2 SD.                                  
+      16 +- **Real measurement (2,000 claims):** 18 legit claims exceed m
+         +ean + 2 SD (1.0% of 1,800), because the 30 upcoded claims push 
+         +each code's SD up. No fraud claim of another pattern exceeds th
+         +e threshold (their amount factor stays within +-15%).          
+      17 +- **Further lesson:** the natural FPs of a statistical rule mus
+         +t be measured on the dataset with fraud already in it; clean da
+         +ta gives a number that is off in the wrong direction.          
+      18  
+      20 -## 2. Masking làm giảm recall của upcoding                     
+      19 +## 2. Masking lowers upcoding recall                           
+      20  
+      22 -- **Dự đoán:** mean/SD tính cả claim upcoded => nếu nhiều claim
+         - upcoded dồn vào 1 mã, ngưỡng mean + 2 SD bị đẩy lên và một số 
+         -claim upcoded không vượt ngưỡng.                               
+      23 -- **Xử lý:** rải 30 claim upcoded ra nhiều mã (1 mã 1 claim upc
+         -oded là tốt nhất). Không dùng P-1003 cho upcoding vì P-1003 dàn
+         -h cho amount clustering.                                       
+      24 -- **Nếu recall upcoding vẫn thấp:** đổi sang leave-one-out (xem
+         - `../business-rule/upcoding.md`).                              
+      25 -- **Số đo thật:** 30/30 claim upcoded vượt mean + 2 SD (tối đa 
+         -2 claim upcoded mỗi mã, chỉ mã >= 60 claim hợp lệ). Masking có 
+         -xảy ra (làm FP tự nhiên giảm, mục 1) nhưng không làm sót claim 
+         -upcoded nào => chưa cần leave-one-out.                         
+      21 +- **Prediction:** mean / SD include the upcoded claims => if ma
+         +ny upcoded claims sit on one code, the mean + 2 SD threshold ri
+         +ses and some of them stay below it.                            
+      22 +- **Handling:** spread the 30 upcoded claims over many codes (a
+         +t most 2 per code, only codes with >= 60 legit claims). P-1003 
+         +is never upcoded because it is reserved for amount clustering. 
+      23 +- **If upcoding recall is still low:** switch to leave-one-out 
+         +(see `../business-rule/upcoding.md`).                          
+      24 +- **Real measurement:** 30/30 upcoded claims exceed mean + 2 SD
+         +. Masking happens (it lowers the natural FPs, item 1) but misse
+         +s no upcoded claim => leave-one-out not needed yet.            
+      25  
+      27 -## 3. FP tự nhiên của rapid re-submission                      
+      26 +## 3. Natural FPs of rapid re-submission                       
+      27  
+      29 -- **Dự đoán:** 500 member, mỗi người khoảng 3-4 claim => sẽ có 
+         -cặp ngẫu nhiên cùng diagnosis cách nhau <= 7 ngày, ước khoảng 1
+         -0-20 claim hợp lệ bị flag.                                     
+      30 -- **Xử lý:** chấp nhận và báo cáo. Sau khi generate đếm ngay; n
+         -ếu vượt nhiều so với ước lượng thì xem lại cách rải ngày khám c
+         -ủa một member.                                                 
+      31 -- **Số đo sơ bộ:** 32 claim, gấp khoảng 2 lần dự đoán. Vẫn xa n
+         -gưỡng FPR 20%; chưa đổi cách rải ngày, chờ số chính thức.      
+      32 -- **Số đo thật (2,000 claim):** 20 claim hợp lệ nằm trong cặp c
+         -ùng member + diagnosis cách <= 7 ngày (khác unique key duplicat
+         -e), cùng 30 claim rapid chèn. Không claim fraud pattern khác dí
+         -nh (generator chặn khi đặt claim fraud). Số sơ bộ 32 khác vì đo
+         - trên bản Phase 2 trước khi sửa cách chia provider (chuỗi rando
+         -m đổi).                                                        
+      28 +- **Prediction:** 500 members with about 3-4 claims each => som
+         +e random pairs share a diagnosis within <= 7 days, about 10-20 
+         +legit claims flagged.                                          
+      29 +- **Handling:** accepted and reported. If the count is far abov
+         +e the estimate, revisit how one member's visit dates are spread
+         +.                                                              
+      30 +- **Real measurement (2,000 claims):** 24 legit claims sit in a
+         + pair with the same member + diagnosis <= 7 days apart (excludi
+         +ng the duplicate key), next to the 30 injected rapid claims. No
+         + fraud claim of another pattern is caught (the generator blocks
+         + it when placing fraud). Every re-generation changes the random
+         + sequence, so this number moves (20-32 seen so far).           
+      31  
+      34 -## 4. Lộ nhãn qua thứ tự `claim_id`                            
+      32 +## 4. Label leak through `claim_id` order                      
+      33  
+      36 -- **Dự đoán:** nếu sinh claim hợp lệ trước rồi chèn fraud sau v
+         -à gán ID theo thứ tự sinh, claim fraud sẽ nằm cụm ở cuối dãy ID
+         - (vd `CLM-01801` -> `CLM-02000`). Người đọc dataset nhìn là biế
+         -t dữ liệu giả.                                                 
+      37 -- **Xử lý:** sinh xong toàn bộ claim, sắp theo `claim_date` (th
+         -ứ tự phụ ngẫu nhiên theo seed), rồi mới gán `claim_id`.        
+      38 -- **Kiểm:** sau khi generate, xem phân bố vị trí ID của claim f
+         -raud.                                                          
+      34 +- **Prediction:** generating legit claims first, injecting frau
+         +d after and assigning IDs in generation order puts the fraud cl
+         +aims at the end of the ID range (e.g. `CLM-01801` -> `CLM-02000
+         +`). Anyone reading the dataset sees it is fake.                
+      35 +- **Handling:** generate every claim, sort by `claim_date` (sec
+         +ondary order random by seed), then assign `claim_id`.          
+      36 +- **Check:** after generation, look at where the fraud IDs fall
+         +. Reviewed for #01: spread evenly over the deciles, the only cl
+         +uster is the phantom day (31 claims on one date, unavoidable). 
+      37  
+      40 -## 5. Lộ nhãn qua định dạng amount                             
+      38 +## 5. Label leak through amount format and value               
+      39  
+      42 -- **Đã gặp (khi rà plan, trước khi code):** plan cũ làm tròn cl
+         -aim hợp lệ tới 1,000 và claim clustering tới 100 => mọi amount 
+         -không chia hết cho 1,000 (vd 48,300) chắc chắn là fraud cluster
+         -ing.                                                           
+      43 -- **Xử lý:** mọi amount làm tròn tới 100, cả hợp lệ lẫn fraud. 
+      44 -- **Bài học:** mọi quy tắc định dạng (làm tròn, kiểu số, cách v
+         -iết mã) phải giống nhau giữa claim hợp lệ và fraud.            
+      40 +- **Met (plan review, before code):** the old plan rounded legi
+         +t claims to 1,000 and clustering claims to 100 => any amount no
+         +t divisible by 1,000 (e.g. 48,300) was surely clustering fraud.
+      41 +- **Handling:** every amount is rounded to 100, legit and fraud
+         + alike.                                                        
+      42 +- **Met again (review of #01):** fraud claims of non-amount pat
+         +terns clamped their amount factor to [0.85, 1.15], so every fac
+         +tor outside piled onto exactly `price x 0.85` or `price x 1.15`
+         +. 36 single-code claims had one of those two amounts, all of th
+         +em fraud.                                                      
+      43 +- **Handling:** the factor is re-drawn until inside [0.85, 1.15
+         +] (truncated distribution, no pile-up). Measured after the fix:
+         + 0 fraud and 3 legit claims at those two amounts. Remaining, ac
+         +cepted: 100% of non-amount fraud lies within +-15% of the price
+         + versus 68% of legit claims; filtering on it lifts the fraud ra
+         +te only from 10% to ~11%.                                      
+      44 +- **Lesson:** every format rule (rounding, number type, code sp
+         +elling) and every value-shaping rule (clamping, bounds) must ac
+         +t the same on legit and fraud claims, or leave no visible trace
+         + such as a pile-up.                                            
+      45  
+      46 -## 6. Lộ nhãn qua quy mô provider                              
+      46 +## 6. Label leak through provider volume                       
+      47  
+      48 -- **Đã gặp (chạy thử Phase 2):** chia trước 62 claim cho mỗi bệ
+         -nh viện weekday-only rồi vẫn cho bốc thêm => nhóm này có 84-95 
+         -claim, bệnh viện thường 15-27. 10 bệnh viện lớn nhất luôn là nh
+         -óm weekday-only.                                               
+      49 -- **Xử lý:** mỗi bệnh viện weekday-only nhận ngẫu nhiên 62-70 c
+         -laim và không nhận thêm. Đo lại: 63-69 so với bệnh viện thường 
+         -31-45.                                                         
+      50 -- **Bài học:** ràng buộc đặt riêng cho một nhóm provider (số cl
+         -aim tối thiểu, chỉ ngày thường) có thể biến nhóm đó thành ngoại
+         - lệ thống kê. Sau khi sinh, so phân phối của nhóm đặc biệt với 
+         -nhóm còn lại.                                                  
+      48 +- **Met (Phase 2 dry run):** pre-assigning 62 claims to each we
+         +ekday-only hospital and still letting them draw more => this gr
+         +oup had 84-95 claims, regular hospitals 15-27.                 
+      49 +- **Met again (review of #01):** the first fix (62-70 claims fo
+         +r weekday-only hospitals, none extra) still left them at 67-78 
+         +versus 33-49 for regular hospitals: the 10 largest hospitals we
+         +re the weekday-only ones. The fix after that (below) made clini
+         +cs so small that drawing fraud providers uniformly gave clinics
+         + a ~24% fraud rate versus ~9% for hospitals.                   
+      50 +- **Handling:**                                                
+      51 +  - 150 legit claims moved from DENTAL to OUTPATIENT codes, and
+         + all 20 hospitals get the same pre-assigned 58-62 OUTPATIENT / 
+         +INPATIENT claims, weekday-only or not. See `../decisions/ADR-00
+         +4-equal-volume-for-all-hospitals.md`.                          
+      52 +  - Fraud providers are drawn weighted by legit volume (the pro
+         +vider of a random legit claim of the same type).               
+      53 +- **Real measurement (seed 2024):** weekday-only 70-86 claims, 
+         +regular hospitals 68-79 (phantom hospital excluded). Fraud rate
+         +: hospital 163/1,555 (10%), dental 34/334 (10%), clinic 3/111 (
+         +3%; varies 3-12% across seeds around the 10% base, sample of ~1
+         +10).                                                           
+      54 +- **Known limitation, accepted:** clinics get only 3-8 claims e
+         +ach (1-15 across seeds), dental providers 20-46.               
+      55 +- **Lesson:** a constraint placed on one provider group (a mini
+         +mum claim count, weekdays only) can make that group a statistic
+         +al outlier, and fixing it can move the outlier elsewhere. After
+         + generation, compare the distribution of the special group with
+         + the rest, and the fraud rate per provider type.               
+      56  
+      52 -## 7. Số member sát ngưỡng kiểm                                
+      57 +## 7. Member count close to the check threshold                
+      58  
+      54 -- **Đo sơ bộ:** chọn member đều cho 1,800 claim hợp lệ => 483 m
+         -ember khác nhau, chỉ trên ngưỡng 480 một chút (kỳ vọng với 2,00
+         -0 claim là ~491).                                              
+      55 -- **Rủi ro:** đổi seed hoặc đổi số claim có thể làm Phase 5 fai
+         -l ở ngưỡng 480.                                                
+      56 -- **Xử lý nếu fail:** chia trước mỗi member 1 claim hợp lệ (phư
+         -ơng án đã cân nhắc khi chốt ngưỡng), không hạ ngưỡng.          
+      57 -- **Số đo thật (2,000 claim):** 488 member.                    
+      59 +- **Rough measurement:** uniform member choice for the 1,800 le
+         +git claims => 483 distinct members, just above the 480 threshol
+         +d (expected ~491 with 2,000 claims).                           
+      60 +- **Risk:** a new seed or claim count could fail the 480 check.
+      61 +- **Handling if it fails:** pre-assign one legit claim to every
+         + member (the option weighed when the threshold was set); do not
+         + lower the threshold.                                          
+      62 +- **Real measurement (2,000 claims):** 494 members.            
+      63  
+      59 -## 8. FP tự nhiên của amount clustering                        
+      64 +## 8. Natural FPs of amount clustering                         
+      65  
+      61 -- **Dự đoán (`../business-rule/amount-clustering.md`):** khoảng
+         - 6% claim P-1003 hợp lệ tự rơi vào 47,500-49,999.              
+      62 -- **Số đo thật (2,000 claim):** 2/90 claim P-1003 hợp lệ (2.2%)
+         - nằm trong dải, cùng 20 claim clustering chèn. Thấp hơn dự đoán
+         - do mẫu nhỏ (90 claim); ở bản Phase 2 trước đó là 6/90.        
+      66 +- **Prediction (`../business-rule/amount-clustering.md`):** abo
+         +ut 6% of legit P-1003 claims fall into 47,500-49,999 on their o
+         +wn.                                                            
+      67 +- **Real measurement (2,000 claims):** 4/90 legit P-1003 claims
+         + (4.4%) are in the band, next to the 20 injected clustering cla
+         +ims. Small sample (90 claims): earlier generations gave 2/90 an
+         +d 6/90.                                                        
+      68  
+      64 -## 9. Claim fraud vô tình dính rule khác                       
+      69 +## 9. Fraud claims accidentally caught by another rule         
+      70  
+      66 -- **Rủi ro:** claim fraud đặt ngẫu nhiên có thể tạo cặp rapid v
+         -ới claim khác, trùng unique key, rơi vào cuối tuần ở bệnh viện 
+         -weekday-only, hoặc có amount vượt ngưỡng upcoding / rơi vào dải
+         - clustering => kiểm chéo ở #03 thấy 1 claim dính 2 rule.       
+      67 -- **Xử lý:** khi đặt mỗi claim fraud, generator kiểm unique key
+         -, cửa sổ 7 ngày của member + diagnosis, ngày thường ở bệnh viện
+         - weekday-only; amount pattern không dựa vào amount kẹp +-15%; p
+         -hantom sinh cuối để không claim nào rơi thêm vào provider-day 3
+         -1 claim.                                                       
+      68 -- **Số đo thật (2,000 claim):** chỉ 1 provider-day > 30 (31 cla
+         -im); đúng 15 nhóm duplicate; claim cuối tuần ở bệnh viện weekda
+         -y-only chỉ là 20 claim weekend; claim mismatch chỉ gồm 20 claim
+         - mismatch; claim nhiều mã chỉ gồm 25 claim unbundling; không cl
+         -aim fraud nào dính rapid / upcoding / clustering ngoài pattern 
+         -của mình. Ngoại lệ đã biết (6 claim ngày phantom) xem `../busin
+         -ess-rule/fraud-injection.md`.                                  
+      71 +- **Risk:** a randomly placed fraud claim can form a rapid pair
+         + with another claim, repeat a unique key, fall on a weekend at 
+         +a weekday-only hospital, or have an amount above the upcoding t
+         +hreshold / inside the clustering band => the #03 cross-check se
+         +es 1 claim caught by 2 rules.                                  
+      72 +- **Handling:** when placing each fraud claim the generator che
+         +cks the unique key, the member + diagnosis 7-day window, and we
+         +ekdays at weekday-only hospitals; non-amount patterns keep thei
+         +r amount factor within +-15%; phantom is generated last so no o
+         +ther claim lands on the 31-claim provider-day.                 
+      73 +- **Real measurement (2,000 claims):** `check` passes: only 1 p
+         +rovider-day > 30 (31 claims), exactly 15 duplicate groups, the 
+         +only weekend claims at weekday-only hospitals are the 20 weeken
+         +d claims, multi-code claims are only the 25 unbundling claims, 
+         +and no fraud claim is caught by rapid / upcoding / clustering o
+         +utside its own pattern. Known exception (the 6 claims on the ph
+         +antom day): see `../business-rule/fraud-injection.md`.         
+      74  
+      75  ## Rule derived
+      76  
+      72 -- Mọi FP tự nhiên được chấp nhận phải có số đo thật trong metri
+         -cs report, không chỉ ước lượng.                                
+      73 -- Generator không được để thứ tự hay định dạng của dữ liệu tiết
+         - lộ nhãn ground truth.                                         
+      77 +- Every accepted natural FP must have a real measurement in the
+         + metrics report, not only an estimate.                         
+      78 +- The generator must not let the order, format, value shape or 
+         +provider volume of the data reveal the ground-truth label.     
+      79  
+      80  ## Related
+      81  
+      82  - `../business-rule/fraud-injection.md`, `../business-rule/upco
+          ding.md`, `../business-rule/metrics.md`
+      78 -- `../decisions/tech-and-structure.md` (hiệu năng B5, đo thời g
+         -ian C4)                                                        
+      83 +- `../decisions/tech-and-structure.md` (performance B5, timing 
+         +C4)                                                            
+
+⏺ Bash(cat docs/business-rule/fraud-injection.md; sed -n 15,28p
+      docs/business-rule/weekday-only-providers.md; sed -n 28,60p
+      docs/decisions/dataset-checks.md; cat docs/…)
+  ⎿  # Nhúng fraud vào dataset (A3)
+
+     Tổng hợp cách sinh 8 pattern fraud. Chi tiết "chuẩn" của từng rule xem
+     … +137 lines (ctrl+o to expand)
+
+⏺ Write(docs/business-rule/fraud-injection.md)
+  ⎿  Added 24 lines, removed 23 lines
+       1 -# Nhúng fraud vào dataset (A3)                                 
+       1 +# Injecting fraud into the dataset (A3)                        
+       2  
+       3 -Tổng hợp cách sinh 8 pattern fraud. Chi tiết "chuẩn" của từng r
+         -ule xem các file cùng thư mục.                                 
+       3 +How the 8 fraud patterns are generated. Each rule's own definit
+         +ion is in the file of the same folder.                         
+       4  
+       5 -## Nguyên tắc chung                                            
+       5 +## General principles                                          
+       6  
+       7 -- Đếm theo **claim** (phương án C): tổng **200 claim fraud** / 
+         -2,000 claim (10%), đúng "~200 fraudulent claims (~10%)" của đề.
+       8 -- Mỗi claim fraud mang **đúng 1 pattern** trong ground truth (g
+         -iới hạn có chủ đích; thực tế 1 claim có thể nhiều pattern).    
+       9 -- Claim hợp lệ được phép tự nhiên kích hoạt rule (FP tự nhiên),
+         - đếm và báo trong metrics.                                     
+      10 -- Seed cố định để tái lập dataset.                             
+      11 -- Amount của claim fraud thuộc pattern không dựa vào amount (du
+         -plicate, rapid, unbundling, phantom, weekend, mismatch): hệ số 
+         -dao động kẹp trong [0.85, 1.15] (khoảng +-1 SD), để không vô tì
+         -nh dính upcoding hay clustering. Claim hợp lệ không kẹp (giữ FP
+         - tự nhiên có chủ đích).                                        
+      12 -- Mọi amount (hợp lệ và fraud) làm tròn tới 100 VNĐ; claim clus
+         -tering lấy trong 47,500-49,999. Không làm tròn khác nhau giữa c
+         -laim hợp lệ và fraud: khác nhau thì định dạng amount lộ nhãn.  
+      13 -- Sau khi generate, generator (A) chỉ kiểm cấu trúc: đủ số clai
+         -m theo pattern, mỗi mã >= 30 claim 1 mã, mỗi bệnh viện weekday-
+         -only >= 60 claim, không có nhóm duplicate ngoài 15 cặp chèn, kh
+         -ông provider nào khác vượt 30 claim/ngày. Generator không chép 
+         -lại logic rule.                                                
+      14 -- Kiểm chéo bằng engine ở C (test tích hợp chạy engine trên dat
+         -aset thật): mỗi claim fraud chỉ dính đúng rule của pattern mình
+         -. Ngoại lệ đã biết: 6 claim trong ngày phantom (dính thêm phant
+         -om), cặp duplicate tự thỏa điều kiện rapid re-submission, nhưng
+         - rule rapid bỏ qua cặp trùng unique key duplicate (xem `duplica
+         -te-and-rapid-resubmission.md`) nên không bị flag 2 lần.        
+       7 +- Counted per **claim** (option C): **200 fraud claims** out of
+         + 2,000 (10%), matching the brief's "~200 fraudulent claims (~10
+         +%)".                                                           
+       8 +- Each fraud claim carries **exactly 1 pattern** in the ground 
+         +truth (a deliberate limit; in reality one claim can have severa
+         +l).                                                            
+       9 +- Legitimate claims may trigger a rule on their own (natural FP
+         +s); they are counted and reported in the metrics.              
+      10 +- Fixed seed, so the dataset is reproducible.                  
+      11 +- Amount of fraud claims in patterns not based on amount (dupli
+         +cate, rapid, unbundling, phantom, weekend, mismatch): the facto
+         +r is re-drawn until it falls inside [0.85, 1.15] (about +-1 SD,
+         + truncated rather than clamped), so they do not trigger upcodin
+         +g or clustering by accident. Clamping was rejected: it piles am
+         +ounts onto exactly `price x 0.85` / `price x 1.15`, which leaks
+         + the label. Legitimate claims are not truncated (natural FPs ke
+         +pt on purpose).                                                
+      12 +- Every amount (legitimate and fraud) is rounded to 100 VND; cl
+         +ustering claims take 47,500-49,999. Legitimate and fraud claims
+         + are never rounded differently: a different format would leak t
+         +he label.                                                      
+      13 +- Fraud claims pick their provider weighted by legitimate volum
+         +e (the provider of a random legitimate claim of the same claim 
+         +type), so no provider type gets an outlier fraud rate.         
+      14 +- After generation, the generator (A) only checks structure and
+         + label placement: claim counts per pattern, >= 30 single-code c
+         +laims per code, >= 60 claims per weekday-only hospital, no dupl
+         +icate group besides the 15 injected pairs, no other provider ab
+         +ove 30 claims per day, and each label sitting on the structure 
+         +it was injected into (`../decisions/dataset-checks.md`). The ge
+         +nerator does not copy the rule logic.                          
+      15 +- Cross-check with the engine in C (integration test running th
+         +e engine on the real dataset): each fraud claim triggers only t
+         +he rule of its own pattern. Known exceptions: the 6 claims on t
+         +he phantom day (also trigger phantom); a duplicate pair also me
+         +ets the rapid re-submission condition, but the rapid rule skips
+         + pairs sharing the duplicate unique key (see `duplicate-and-rap
+         +id-resubmission.md`), so it is not flagged twice.              
+      16  
+      16 -## Số lượng và cách sinh                                       
+      17 +## Counts and generation                                       
+      18  
+      18 -| Pattern | Số claim | Cách sinh |                             
+      19 +| Pattern | Claims | How |                                     
+      20  |---|---|---|
+      20 -| Duplicate | 30 (15 cặp) | 2 claim cùng member + provider + da
+         -te + diagnosis. Dữ liệu đã qua validate input, không có double-
+         -submit => 2 claim độc lập, **cả 2 mang nhãn fraud**. |         
+      21 -| Rapid re-submission | 30 (15 cặp) | 2 claim cùng member + dia
+         -gnosis, **cách nhau 1-7 ngày** (không cùng ngày để không thành 
+         -duplicate). Cả 2 mang nhãn fraud. |                            
+      22 -| Upcoding | 30 | Amount = giá chuẩn x 1.6-2.5. Xem `upcoding.m
+         -d`. |                                                          
+      23 -| Unbundling | 25 | `procedure_codes` = đủ thành phần của 1 bun
+         -dle. Xem `bundling.md`. |                                      
+      24 -| Phantom billing | 25 | 1 provider-day có **31 claim**: 25 cla
+         -im nhãn phantom + 6 claim nhãn upcoding / mismatch (tính vào số
+         - của 2 pattern đó). Ngày thường, provider không thuộc nhóm week
+         -day-only. |                                                    
+      25 -| Weekend surgical anomaly | 20 | Procedure surgical vào thứ Bả
+         -y / Chủ nhật tại 10 bệnh viện weekday-only, 2 claim mỗi bệnh vi
+         -ện. Xem `weekday-only-providers.md`. |                         
+      26 -| Diagnosis-procedure mismatch | 20 | Procedure ngoài danh sách
+         - hợp lệ của diagnosis. Xem `diagnosis-procedure-mismatch.md`. |
+      27 -| Amount clustering | 20 | P-1003, amount 47,500-49,999. Xem `a
+         -mount-clustering.md`. |                                        
+      28 -| **Tổng** | **200** | |                                       
+      21 +| Duplicate | 30 (15 pairs) | 2 claims with the same member + p
+         +rovider + date + diagnosis. The data has passed input validatio
+         +n, so there is no double-submit => 2 independent claims, **both
+         + labelled fraud**. |                                           
+      22 +| Rapid re-submission | 30 (15 pairs) | 2 claims with the same 
+         +member + diagnosis, **1-7 days apart** (never the same day, so 
+         +they do not become a duplicate). Both labelled fraud. |        
+      23 +| Upcoding | 30 | Amount = standard price x 1.6-2.5. See `upcod
+         +ing.md`. |                                                     
+      24 +| Unbundling | 25 | `procedure_codes` = all components of 1 bun
+         +dle. See `bundling.md`. |                                      
+      25 +| Phantom billing | 25 | 1 provider-day with **31 claims**: 25 
+         +labelled phantom + 3 labelled upcoding + 3 labelled mismatch (c
+         +ounted in those 2 patterns). A weekday, at a hospital outside t
+         +he weekday-only group. |                                       
+      26 +| Weekend surgical anomaly | 20 | Surgical procedure on Saturda
+         +y / Sunday at the 10 weekday-only hospitals, 2 claims per hospi
+         +tal. See `weekday-only-providers.md`. |                        
+      27 +| Diagnosis-procedure mismatch | 20 | Procedure outside the dia
+         +gnosis's valid list. See `diagnosis-procedure-mismatch.md`. |  
+      28 +| Amount clustering | 20 | P-1003, amount 47,500-49,999. See `a
+         +mount-clustering.md`. |                                        
+      29 +| **Total** | **200** | |                                      
+      30  
+      30 -Ràng buộc cho 6 claim trong ngày phantom: chỉ dùng pattern xét 
+         -được trên từng claim (upcoding, mismatch); không dùng duplicate
+         - / rapid (cần cặp claim) hay weekend (ngày phantom là ngày thườ
+         -ng).                                                           
+      31 +Constraint on the 6 extra claims of the phantom day: only patte
+         +rns that can be judged on a single claim (upcoding, mismatch); 
+         +not duplicate / rapid (they need a pair) nor weekend (the phant
+         +om day is a weekday).                                          
+
+⏺ Update(docs/business-rule/weekday-only-providers.md)
+  ⎿  Added 1 line, removed 1 line
+      18  ## Weekend ratio (settled)
+      19  
+      20  - Rule 6 computes the weekend ratio over **all claims** of the 
+          provider, as the brief words it.
+      21 -- The generator gives each weekday-only hospital **>= 60 claims
+         -** (a random 62-70 legitimate claims, with no extra ones, so th
+         -is group does not become the 10 largest hospitals). 2 weekend f
+         -raud claims => 2/60 = 3.3% < 5% => the rule catches them.      
+      21 +- The generator gives each weekday-only hospital **>= 60 claims
+         +** (every one of the 20 hospitals, weekday-only or not, is pre-
+         +assigned a random 58-62 legitimate claims, so this group cannot
+         + be told apart by volume; see `../decisions/ADR-004-equal-volum
+         +e-for-all-hospitals.md`). 2 weekend fraud claims => 2/60 = 3.3%
+         + < 5% => the rule catches them.                                
+      22  - Reason: with ~40 claims per provider, 2/40 = 5% is not < 5% =
+          > missed.
+      23  - The emergency concept is out of scope.
+      24  
+⏺ Update(docs/decisions/dataset-checks.md)
+  ⎿  Added 3 lines
+      46  | 8 | Single-code claims per code | >= 30 for every one of the 
+          21 codes | Upcoding needs history per code (`../business-rule/u
+          pcoding.md`) |
+      47  | 9 | Weekday-only hospitals | >= 60 claims each | 2 weekend fr
+          auds out of >= 60 stays below the 5% weekend-volume threshold (
+          `../business-rule/weekday-only-providers.md`) |
+      48  | 9 | Weekend claims at weekday-only hospitals | Only the 20 `w
+          eekend_anomaly` claims | Same source |
+      49 +| 9 | `weekend_anomaly` claims | Each has `is_weekend = 1`, a w
+         +eekday-only provider and a surgical code; exactly 2 per weekday
+         +-only hospital | Same source, `../business-rule/fraud-injection
+         +.md` |                                                         
+      50  | 10 | Groups of the duplicate key `(member_id, provider_id, cl
+          aim_date, diagnosis_code)` | Exactly 15 groups of 2, every othe
+          r key unique | `../business-rule/duplicate-and-rapid-resubmissi
+          on.md` |
+      51 +| 10 | Claims in duplicate groups | Exactly the claims labelled
+         + `duplicate_claim` | Same source |                             
+      52  | 11 | Provider-days with > 30 claims | Only the phantom day of
+           `generation_summary.json`, with exactly 31 claims | `../busine
+          ss-rule/fraud-injection.md` |
+      53 +| 11 | Labels on the phantom day | Every `phantom_billing` clai
+         +m is on that day; the day holds exactly 25 `phantom_billing` + 
+         +3 `upcoding` + 3 `diagnosis_procedure_mismatch` | Same source |
+      54  
+      55  ## Not checked here
+      56  
+
+⏺ Update(docs/decisions/dataset-checks.md)
+  ⎿  Added 1 line, removed 1 line
+      60  
+      61  ## How the checks were verified
+      62  
+      63 -Each check was run against copies of the dataset broken on purp
+         -ose (2026-10-24): duplicated `claim_id`, wrong `is_weekend`, am
+         -ount off by 50, an extra duplicate group, a legitimate claim wi
+         -th 2 codes, wrong `claim_type`, a pattern count off by one, a r
+         -enamed provider, a date in 2023, a legitimate weekend claim at 
+         -a weekday-only hospital, a second provider-day with 31 claims. 
+         -All 11 were caught; the real dataset (seed 2024) passes.       
+      63 +Each check was run against copies of the dataset broken on purp
+         +ose (2026-10-24): duplicated `claim_id`, wrong `is_weekend`, am
+         +ount off by 50, an extra duplicate group, a legitimate claim wi
+         +th 2 codes, wrong `claim_type`, a pattern count off by one, a r
+         +enamed provider, a date in 2023, a legitimate weekend claim at 
+         +a weekday-only hospital, a second provider-day with 31 claims. 
+         +All 11 were caught; the real dataset (seed 2024) passes. The la
+         +bel-placement rows (added after the #01 review) were verified t
+         +he same way: moving the `phantom_billing` label to a legitimate
+         + claim on another day fails the check.                         
+
+⏺ Write(docs/decisions/ADR-004-equal-volume-for-all-hospitals.md)
+  ⎿  Wrote 41 lines to
+     docs/decisions/ADR-004-equal-volume-for-all-hospitals.md
+      1 # ADR-004: All 20 hospitals get the same claim volume; fraud prov
+      2 
+      3 ## Status
+      5 Accepted (2026-10-24)
+      7 ## Context
+      8 
+        raud claims stay below the 5% weekend-volume threshold (`../busin
+        ess-rule/weekday-only-providers.md`). The first generator gave on
+        #01 measured 67-78 claims for them versus 33-49 for the other 10 
+        lds the 20 `weekend_anomaly` claims.
+     … +67 lines (ctrl+o to expand)
+
+⏺ Update(docs/requirements/challenge-10-requirements.md)
+  ⎿  Added 1 line, removed 1 line
+      110  - B input (2026-10-24): invalid input stops the engine with th
+           e full list of problems; no rows are skipped. See `docs/decisi
+           ons/ADR-002-invalid-input-stops-the-engine.md`.
+      111  - B config (2026-10-24): only the weights are configurable (th
+           e brief only asks for weights); rule thresholds are constants 
+           at the top of each rule file. See `docs/decisions/ADR-003-only
+           -weights-are-configurable.md`.
+      112  - B4 output (2026-10-24): `output/scored_output.json` is a ran
+           ked JSON array; each element has exactly the brief's 3 fields;
+            flags inside a claim sorted by severity descending. See `docs
+           /business-rule/scoring.md`.
+      113 -- A provider volume (2026-10-24, review of #01): 150 legit cla
+          -ims moved from DENTAL to OUTPATIENT codes; all 20 hospitals ge
+          -t the same pre-assigned 58-62 OUTPATIENT / INPATIENT claims, s
+          -o the weekday-only group is not the 10 largest; fraud provider
+          -s are drawn weighted by legit volume, so no provider type has 
+          -an outlier fraud rate. Known limitation, accepted: the 20 clin
+          -ics get only ~1-15 claims each. Making them larger needs a low
+          -er weekday-only floor (< 60) or fewer dental providers; both r
+          -ejected.                                                      
+      113 +- A provider volume (2026-10-24, review of #01): 150 legit cla
+          +ims moved from DENTAL to OUTPATIENT codes; all 20 hospitals ge
+          +t the same pre-assigned 58-62 OUTPATIENT / INPATIENT claims, s
+          +o the weekday-only group is not the 10 largest; fraud provider
+          +s are drawn weighted by legit volume, so no provider type has 
+          +an outlier fraud rate. Known limitation, accepted: the 20 clin
+          +ics get only ~1-15 claims each. Making them larger needs a low
+          +er weekday-only floor (< 60) or fewer dental providers; both r
+          +ejected. See `docs/decisions/ADR-004-equal-volume-for-all-hosp
+          +itals.md`.                                                    
+      114  
+      115  ## Open questions (discussed when each part is detailed)
+      116  
+
+  Searched for 2 patterns (ctrl+o to expand)
+
+⏺ Bash(sed -n 35,60p README.md; uv run python src/cli.py check --data data)
+  ⎿  | `--data` | `data/` | Dataset directory to check. |
+
+     Generating and checking are two separate steps: `generate` only writes
+     … +35 lines (ctrl+o to expand)
+
+⏺ Bash(python3 - <<'EOF'
+      p='README.md'; s=open(p).read()…)
+  ⎿   .../AI_Challenge_10_Fraud_Detection/README.md                     | 8
+      ++++----
+      1 file changed, 4 insertions(+), 4 deletions(-)
+  ⎿  Updated README.md (+4 -4)
+      48    unbundling                       25
+      49    upcoding                         30
+      50    weekend_anomaly                  20
+      51 -  members 488, providers 50, claims per provider type {'CLINIC'
+         -: 330, 'DENTAL': 478, 'HOSPITAL': 1192}                        
+      52 -  weekday-only hospitals 67-78 claims, min single-code claims p
+         -er code 44                                                     
+      53 -  duplicate groups 15, phantom day PRV-006 2024-11-05 (31 claim
+         -s)                                                             
+      51 +  members 494, providers 50, claims per provider type {'CLINIC'
+         +: 111, 'DENTAL': 334, 'HOSPITAL': 1555}                        
+      52 +  weekday-only hospitals 70-86 claims, min single-code claims p
+         +er code 43                                                     
+      53 +  duplicate groups 15, phantom day PRV-049 2024-12-26 (31 claim
+         +s)                                                             
+      54  ```
+      55  
+      56 -`check` reads the files back from disk and verifies counts per 
+         -pattern, columns and formats, members, providers, codes, weekda
+         -y-only hospitals, duplicate groups and the single phantom provi
+         -der-day. If any check fails it prints the problems to stderr an
+         -d exits with code 1; do not use the files in that case. Every c
+         -heck with its threshold and source: [`docs/decisions/dataset-ch
+         -ecks.md`](docs/decisions/dataset-checks.md).                   
+      56 +`check` reads the files back from disk and verifies counts per 
+         +pattern, columns and formats, members, providers, codes, weekda
+         +y-only hospitals, duplicate groups, the single phantom provider
+         +-day, and that the weekend, duplicate and phantom labels sit on
+         + the claims they were injected into. If any check fails it prin
+         +ts the problems to stderr and exits with code 1; do not use the
+         + files in that case. Every check with its threshold and source:
+         + [`docs/decisions/dataset-checks.md`](docs/decisions/dataset-ch
+         +ecks.md).                                                      
+      57  
+      58  ### Output files
+      59  
+
+⏺ Đã cập nhật xong doc. Giờ tạo 2 commit: commit sửa lỗi, và commit riêng cho
+  file conversation.
+
+⏺ Bash(git add src/generator/checks.py src/generator/dataset.py
+      src/generator/fraud.py src/generator/legit.py data/claims.csv
+      data/generation_summary.json data/ground_…)
+  ⎿  060fa59 docs: add conversation plan phase 2 rule engine and agent setu
+     p
+     2d65a9f fix: remove label leaks in dataset generator and check label p
+     … +2 lines (ctrl+o to expand)
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Bash(sed -n 40,56p src/generator/models.py; sed -n 25,40p src/cli.py)
+  ⎿          return self.claim_date.weekday() >= 5
+
+         def duplicate_key(self) -> tuple[str, str, date, str]:
+     … +30 lines (ctrl+o to expand)
+
+⏺ Now the edits to checks.py.
+
+⏺ Update(src/generator/checks.py)
+  ⎿  Added 24 lines, removed 5 lines
+      28  PHANTOM_DAY_OTHER_PATTERNS = {R.UPCODING: PHANTOM_DAY_EXTRAS, R
+          .DIAGNOSIS_PROCEDURE_MISMATCH: PHANTOM_DAY_EXTRAS}
+      29  
+      30  
+      31 -def _read_csv(path: Path) -> tuple[list[str], list[dict]]:     
+      31 +def _read_csv(path: Path) -> tuple[list[str], list[dict], list[
+         +int]]:                                                         
+      32 +    """Return (columns, rows, line numbers of rows with too man
+         +y or too few fields)."""                                       
+      33      with open(path, encoding="utf-8", newline="") as f:
+      34          reader = csv.DictReader(f)
+      34 -        return list(reader.fieldnames or []), list(reader)     
+      35 +        rows, bad_lines = [], []                               
+      36 +        for row in reader:                                     
+      37 +            # DictReader puts extra fields under the key None a
+         +nd fills missing ones with None.                               
+      38 +            if None in row or None in row.values():            
+      39 +                bad_lines.append(reader.line_num)              
+      40 +            rows.append(row)                                   
+      41 +        return list(reader.fieldnames or []), rows, bad_lines  
+      42  
+      43  
+      44  def check_dataset(data_dir: Path, catalog: Catalog) -> tuple[li
+          st[str], dict]:
+     ...
+      49          if not ok:
+      50              problems.append(message)
+      51  
+      45 -    columns, claims = _read_csv(data_dir / "claims.csv")       
+      46 -    gt_columns, truth = _read_csv(data_dir / "ground_truth.csv"
+         -)                                                              
+      47 -    summary = json.loads((data_dir / "generation_summary.json")
+         -.read_text(encoding="utf-8"))                                  
+      52 +    missing = [name for name in ("claims.csv", "ground_truth.cs
+         +v", "generation_summary.json") if not (data_dir / name).is_file
+         +()]                                                            
+      53 +    if missing:                                                
+      54 +        return [f"missing file(s) in {data_dir}: {missing}"], {
+         +}                                                              
+      55  
+      56 +    columns, claims, bad_claims = _read_csv(data_dir / "claims.
+         +csv")                                                          
+      57 +    gt_columns, truth, bad_truth = _read_csv(data_dir / "ground
+         +_truth.csv")                                                   
+      58 +    try:                                                       
+      59 +        summary = json.loads((data_dir / "generation_summary.js
+         +on").read_text(encoding="utf-8"))                              
+      60 +        weekday_only = [p["provider_id"] for p in summary["week
+         +day_only_providers"]]                                          
+      61 +        phantom = summary["phantom_provider_day"]              
+      62 +        phantom_key = (phantom["provider_id"], phantom["claim_d
+         +ate"])                                                         
+      63 +    except (ValueError, KeyError, TypeError) as e:             
+      64 +        return [f"generation_summary.json is unreadable or inco
+         +mplete: {e!r}"], {}                                            
+      65 +                                                               
+      66      # --- shape -----------------------------------------------
+          ------------------------------
+      67 +    expect(not bad_claims, f"claims.csv rows with a wrong numbe
+         +r of fields at lines {bad_claims[:5]}")                        
+      68 +    expect(not bad_truth, f"ground_truth.csv rows with a wrong 
+         +number of fields at lines {bad_truth[:5]}")                    
+      69      expect(columns == CLAIMS_COLUMNS, f"claims.csv columns are 
+          {columns}")
+      70      expect(gt_columns == GROUND_TRUTH_COLUMNS, f"ground_truth.c
+          sv columns are {gt_columns}")
+      71      expect(len(claims) == TOTAL_CLAIMS, f"{len(claims)} claims,
+           expected {TOTAL_CLAIMS}")
+
+⏺ Update(src/generator/checks.py)
+  ⎿  Removed 2 lines
+       90      expect(len(names) == len(providers) and all(providers[pid]
+           .name == name for pid, name in names if pid in providers),
+       91             "provider_id and provider_name are not one-to-one w
+           ith providers.json")
+       92  
+       93 -    days = {}                                                 
+       93      for c in claims:
+       94          try:
+       95              day = date.fromisoformat(c["claim_date"])
+       96          except ValueError:
+       97              problems.append(f"{c['claim_id']}: bad claim_date 
+           {c['claim_date']!r}")
+       98              continue
+      100 -        days[c["claim_id"]] = day                             
+       99          expect(day.year == 2024, f"{c['claim_id']}: claim_date
+            {day} outside 2024")
+      100          expect(c["is_weekend"] == str(int(day.weekday() >= 5))
+           , f"{c['claim_id']}: is_weekend does not match {day}")
+      101  
+
+⏺ Update(src/generator/checks.py)
+  ⎿  Added 6 lines, removed 1 line
+      126                 f"{code}: {single_code_counts[code]} single-cod
+           e claims, expected >= {MIN_SINGLE_CODE_CLAIMS}")
+      127  
+      128      # --- weekday-only hospitals -----------------------------
+           ---------------------------------
+      129 -    weekday_only = [p["provider_id"] for p in summary["weekday
+          -_only_providers"]]                                            
+      129 +    # The list comes from the summary, so validate it first: a
+          +n empty list would pass every check below.                    
+      130 +    expect(len(weekday_only) == WEEKDAY_ONLY_COUNT and len(set
+          +(weekday_only)) == WEEKDAY_ONLY_COUNT                         
+      131 +           and all(pid in providers and providers[pid].type ==
+          + "HOSPITAL" for pid in weekday_only),                         
+      132 +           f"weekday_only_providers in the summary {weekday_on
+          +ly} is not {WEEKDAY_ONLY_COUNT} distinct hospitals of provider
+          +s.json")                                                      
+      133 +    if problems and not weekday_only:                         
+      134 +        return problems, {}  # the stats below need at least o
+          +ne weekday-only hospital                                      
+      135      per_provider = Counter(c["provider_id"] for c in claims)
+      136      for pid in weekday_only:
+      137          expect(per_provider[pid] >= MIN_WEEKDAY_ONLY_CLAIMS, f
+           "weekday-only {pid}: {per_provider[pid]} claims, expected >= {
+           MIN_WEEKDAY_ONLY_CLAIMS}")
+
+⏺ Update(src/generator/checks.py)
+  ⎿  Added 3 lines, removed 4 lines
+      163  
+      164      provider_days = Counter((c["provider_id"], c["claim_date"]
+           ) for c in claims)
+      165      busy = {k: n for k, n in provider_days.items() if n > PHAN
+           TOM_THRESHOLD}
+      166 -    phantom = summary["phantom_provider_day"]                 
+      167 -    expect(busy == {(phantom["provider_id"], phantom["claim_da
+          -te"]): PHANTOM_DAY_CLAIMS},                                   
+      166 +    expect(busy == {phantom_key: PHANTOM_DAY_CLAIMS},         
+      167             f"provider-days with > {PHANTOM_THRESHOLD} claims: 
+           {busy}, expected only the phantom day with {PHANTOM_DAY_CLAIMS
+           }")
+      168  
+      169      phantom_labelled = [c for c in claims if pattern_of[c["cla
+           im_id"]] == R.PHANTOM_BILLING]
+      171 -    expect(all((c["provider_id"], c["claim_date"]) == (phantom
+          -["provider_id"], phantom["claim_date"]) for c in phantom_label
+          -led),                                                         
+      170 +    expect(all((c["provider_id"], c["claim_date"]) == phantom_
+          +key for c in phantom_labelled),                               
+      171             "phantom_billing claims outside the phantom provide
+           r-day of the summary")
+      172      on_phantom_day = Counter(pattern_of[c["claim_id"]] or "leg
+           it" for c in claims
+      174 -                             if (c["provider_id"], c["claim_da
+          -te"]) == (phantom["provider_id"], phantom["claim_date"]))     
+      173 +                             if (c["provider_id"], c["claim_da
+          +te"]) == phantom_key)                                         
+      174      expected_on_day = {R.PHANTOM_BILLING: FRAUD_COUNTS[R.PHANT
+           OM_BILLING], **PHANTOM_DAY_OTHER_PATTERNS}
+      175      expect(dict(on_phantom_day) == expected_on_day, f"phantom 
+           provider-day holds {dict(on_phantom_day)}, expected {expected_
+           on_day}")
+      176  
+
+  Searched for 1 pattern (ctrl+o to expand)
+
+⏺ Bash(python3 - <<'EOF'
+      p='src/generator/checks.py'; s=open(p).read()…)
+  ⎿  Structural checks passed for data: 2000 claims, 200 fraud
+     == missing file
+       - missing file(s) in /private/tmp/claude-501/-Volumes-D-papaya-insur
+     … +22 lines (ctrl+o to expand)
+  ⎿  Updated src/generator/checks.py (+2 -2)
+      16  from generator.dataset import CLAIMS_COLUMNS, GROUND_TRUTH_COLU
+          MNS
+      17  from generator.fraud import CLUSTERING_AMOUNT, FRAUD_COUNTS, PH
+          ANTOM_DAY_EXTRAS, WEEKEND_PER_PROVIDER
+      18  from generator.legit import AMOUNT_ROUNDING
+      19 -from generator.models import load_providers                    
+      19 +from generator.models import WEEKDAY_ONLY_COUNT, load_providers
+      20  
+      21  TOTAL_CLAIMS = 2000
+      22  MEMBER_RANGE = (480, 500)
+     ...
+      130      expect(len(weekday_only) == WEEKDAY_ONLY_COUNT and len(set
+           (weekday_only)) == WEEKDAY_ONLY_COUNT
+      131             and all(pid in providers and providers[pid].type ==
+            "HOSPITAL" for pid in weekday_only),
+      132             f"weekday_only_providers in the summary {weekday_on
+           ly} is not {WEEKDAY_ONLY_COUNT} distinct hospitals of provider
+           s.json")
+      133 -    if problems and not weekday_only:                         
+      133 +    if not weekday_only:                                      
+      134          return problems, {}  # the stats below need at least o
+           ne weekday-only hospital
+      135      per_provider = Counter(c["provider_id"] for c in claims)
+      136      for pid in weekday_only:
+  ⎿  Found 3 new diagnostic issues in 1 file (ctrl+o to expand)
+
+⏺ Bash(S=/private/tmp/claude-501/-Volumes-D-papaya-insurtech-pumpkin/f116e248-e8
+      56-4d47-8a42-763d9dfea1c7/scratchpad/brk; rm -rf $S; cp -r data $S;
+      python3 -c "import…)
+  ⎿  0
+       - claims.csv rows with a wrong number of fields at lines [5]
+     19:from generator.models import WEEKDAY_ONLY_COUNT, load_providers
+     … +3 lines (ctrl+o to expand)
+
+⏺ Bash(S=/private/tmp/claude-501/-Volumes-D-papaya-insurtech-pumpkin/f116e248-e8
+      56-4d47-8a42-763d9dfea1c7/scratchpad/brk; rm -rf $S; cp -r data $S;
+      python3 -c "import…)
+  ⎿    - weekday_only_providers in the summary ['PRV-008', 'PRV-009', 'PRV-
+     012', 'PRV-017', 'PRV-021', 'PRV-024', 'PRV-028', 'PRV-033', 'PRV-036'
+     , 'PRV-041'] is not 10 distinct hospitals of providers.json
+  ⎿  Resuming agent a61838e
+
+⏺ Đã commit xong, theo đúng 2 commit bạn yêu cầu:
+
+  - 2d65a9f fix: remove label leaks in dataset generator and check label 
+    placement
+    - code: src/generator/{fraud,legit,checks,dataset}.py;
+    - data/ sinh lại;
+    - doc:
+      - README.md: cập nhật output mẫu của check.
+      - dataset-generation-pitfalls.md: chuyển sang tiếng Anh, đo lại mọi số FP,
+        thêm phần amount và quy mô provider.
+      - fraud-injection.md: chuyển sang tiếng Anh, sửa dòng về amount và ghi rõ
+        ngày phantom gồm 3 upcoding + 3 mismatch.
+      - weekday-only-providers.md, dataset-checks.md: cập nhật theo cách làm mới
+        và 3 check mới.
+      - challenge-10-requirements.md: ghi các quyết định mới.
+    - ADR mới ADR-004-equal-volume-for-all-hospitals.md cho quyết định chia
+      claim cho bệnh viện, kèm các phương án đã loại.
+  - 060fa59 docs: add conversation plan phase 2 rule engine and agent setup: chỉ
+    chứa file conversation.
+
+  Hai file fraud-injection.md và dataset-generation-pitfalls.md được chuyển cả
+  file sang tiếng Anh vì quy tắc "doc tiếng Việt được chuyển khi sửa tới".
+
+  Commit message không có dòng Co-Authored-By, đúng quy tắc trong AGENTS.md.
+
+  Lỗi Low: tôi đã sửa 3 lỗi trong checks.py, chưa commit:
+  - Thiếu file, JSON hỏng hoặc thiếu key trong generation_summary.json giờ báo
+    lỗi và exit 1, không còn traceback.
+  - check kiểm danh sách weekday-only phải đúng 10 bệnh viện khác nhau. Danh
+    sách rỗng giờ không còn lọt qua.
+  - Dòng CSV thừa hoặc thiếu cột được báo kèm số dòng.
+  - Xóa dict days không dùng.
+
+  Tôi đã thử 7 bản dataset cố ý làm hỏng, cả 7 đều exit 1 với thông báo rõ ràng,
+  còn data/ thật vẫn PASS. reviewer đang xem lại diff này.
+
+  Lỗi Low còn lại (thêm linter và tests/) để làm cùng #03.
+✻ Crunched for 3m 42s · done 21:31
+
+› Message from reviewer
+  Review `git diff -- src/generator/checks.py` (3 Low cũ của checks.py): bản sửa
+  đúng với các case main thread đã thử, nhưng vẫn còn 3 đường lọt ra traceback
+  (1 Medium, 2 Low) và một lần return sớm che mất lỗi CSV (Low). Tôi tái hiện cả
+  4 trên bản copy của `data/` trong scratchpad.
+
+  Phần đúng:
+  - `reader.line_num` cho số dòng vật lý chính xác: dòng thứ 6 của file có field
+  thừa được báo là `lines [6]`.
+  - Summary là list, phần tử không phải dict, hoặc thiếu key đều ra problem,
+  không traceback.
+  - Bỏ dict `days` không ảnh hưởng gì.
+
+  ## Findings
+
+  [Medium] src/generator/checks.py:72,74 - Header sai thì vẫn traceback: dòng
+  69-70 đã ghi problem về cột, nhưng dòng 72 / 74 vẫn chạy `c["claim_id"]` /
+  `t["claim_id"]` trước lần return ở dòng 76.
+  Failure scenario:
+  - (a) Mở `claims.csv` bằng Excel rồi lưu "CSV UTF-8": file có BOM, header
+  thành `claim_id`, ra `KeyError: 'claim_id'` ở dòng 72.
+  - (b) Đổi tên cột `claim_id` trong `ground_truth.csv`: `KeyError` ở dòng 74.
+
+  Cả hai đều là traceback thay vì message và exit 1, đúng loại lỗi mà nhóm shape
+  sinh ra để bắt.
+  Fix: sau 2 dòng `expect(columns == ...)`, nếu `problems` đã khác rỗng thì
+  `return problems, {}` ngay, trước khi tính `ids`. Nên mở file bằng
+  `encoding="utf-8-sig"` nếu muốn chấp nhận BOM, hoặc giữ `utf-8` và để check
+  header báo lỗi; chọn một trong hai và ghi vào dataset-format.md.
+  Source: docs/decisions/dataset-checks.md, "Result" ("Any check fails: prints
+  every problem to stderr, exit code 1").
+
+  [Low] src/generator/checks.py:33 (`_read_csv`) - File không phải UTF-8 thì
+  traceback.
+  Failure scenario: `claims.csv` có byte cp1258 (ví dụ `H\xe0i \xc2u`) ra
+  `UnicodeDecodeError` từ `_read_csv`. Lỗi này không bị bắt vì `try/except` chỉ
+  bọc phần summary.
+  Fix: bọc 2 lần gọi `_read_csv` trong `try/except (UnicodeDecodeError,
+  csv.Error)`, đổi thành problem rồi return sớm.
+
+  [Low] src/generator/checks.py:62,130 - Giá trị không hashable trong summary
+  vẫn traceback.
+  Failure scenario: `weekday_only_providers[0].provider_id = ["x"]` ra
+  `TypeError: unhashable type: 'list'` ở `set(weekday_only)` (dòng 130). Tương
+  tự, `phantom_provider_day.provider_id` là list sẽ nổ ở `{phantom_key: ...}`.
+  Rất hiếm (phải sửa JSON bằng tay) nhưng vẫn là traceback.
+  Fix: trong khối `try` ở dòng 58-64, kiểm thêm `all(isinstance(pid, str) for
+  pid in weekday_only)` và `isinstance` cho 2 phần của `phantom_key`; sai thì
+  raise `TypeError` để rơi vào nhánh `except` sẵn có.
+
+  [Low] src/generator/checks.py:63-64 - Summary hỏng thì return ngay ở dòng 64,
+  trước nhóm shape, nên che mất lỗi của 2 file CSV.
+  Failure scenario: summary là `[]` và `claims.csv` có một dòng thừa field.
+  Output chỉ báo lỗi summary. Người dùng sửa summary, chạy lại, rồi mới thấy lỗi
+  CSV. Kết quả không sai (vẫn exit 1), chỉ báo thiếu.
+  Fix: ghi problem về summary rồi vẫn chạy nhóm shape, sau đó mới return trước
+  các check cần summary (dòng 76 đã return nếu có problem nên không cần thêm
+  nhánh nào). Nếu chấp nhận hành vi hiện tại thì chỉ cần ghi chú như vậy.
+
+  ## Đã kiểm
+  - Đọc diff và dòng 1-90 của file sau sửa.
+  - Chạy `check` trên các bản copy của `data/` trong scratchpad (không chạm
+  `data/`): BOM, đổi tên cột `claim_id` trong ground_truth, byte cp1258,
+  `provider_id` kiểu list, summary `[]` kèm dòng thừa field, dòng thừa field
+  riêng lẻ.
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Agent "Review ticket 01 code" finished · 52s
+
+⏺ Update(src/generator/checks.py)
+  ⎿  Added 11 lines, removed 3 lines
+      53      if missing:
+      54          return [f"missing file(s) in {data_dir}: {missing}"], {
+          }
+      55  
+      56 -    columns, claims, bad_claims = _read_csv(data_dir / "claims.
+         -csv")                                                          
+      57 -    gt_columns, truth, bad_truth = _read_csv(data_dir / "ground
+         -_truth.csv")                                                   
+      56      try:
+      57 +        columns, claims, bad_claims = _read_csv(data_dir / "cla
+         +ims.csv")                                                      
+      58 +        gt_columns, truth, bad_truth = _read_csv(data_dir / "gr
+         +ound_truth.csv")                                               
+      59 +    except (UnicodeDecodeError, csv.Error) as e:               
+      60 +        return [f"CSV file is not readable as UTF-8 CSV: {e!r}"
+         +], {}                                                          
+      61 +    try:                                                       
+      62          summary = json.loads((data_dir / "generation_summary.js
+          on").read_text(encoding="utf-8"))
+      63          weekday_only = [p["provider_id"] for p in summary["week
+          day_only_providers"]]
+      64          phantom = summary["phantom_provider_day"]
+      65          phantom_key = (phantom["provider_id"], phantom["claim_d
+          ate"])
+      66 +        if not all(isinstance(v, str) for v in [*weekday_only, 
+         +*phantom_key]):                                                
+      67 +            raise TypeError("provider_id / claim_date values mu
+         +st be strings")                                                
+      68      except (ValueError, KeyError, TypeError) as e:
+      64 -        return [f"generation_summary.json is unreadable or inco
+         -mplete: {e!r}"], {}                                            
+      69 +        # Still run the shape checks below, so CSV problems are
+         + reported in the same run.                                     
+      70 +        problems.append(f"generation_summary.json is unreadable
+         + or incomplete: {e!r}")                                        
+      71  
+      72      # --- shape -----------------------------------------------
+          ------------------------------
+      73      expect(not bad_claims, f"claims.csv rows with a wrong numbe
+          r of fields at lines {bad_claims[:5]}")
+      74      expect(not bad_truth, f"ground_truth.csv rows with a wrong 
+          number of fields at lines {bad_truth[:5]}")
+      75      expect(columns == CLAIMS_COLUMNS, f"claims.csv columns are 
+          {columns}")
+      76      expect(gt_columns == GROUND_TRUTH_COLUMNS, f"ground_truth.c
+          sv columns are {gt_columns}")
+      77 +    if problems:                                               
+      78 +        return problems, {}  # the checks below read columns by
+         + name and need the summary                                     
+      79      expect(len(claims) == TOTAL_CLAIMS, f"{len(claims)} claims,
+           expected {TOTAL_CLAIMS}")
+      80      ids = [c["claim_id"] for c in claims]
+      81      expect(len(set(ids)) == len(ids), "claim_id is not unique")
+
+⏺ Bash(uv run python src/cli.py check --data data | head -1
+      S=/private/tmp/claude-501/-Volumes-D-papaya-insurtech-pumpkin/f116e248-e85
+      6-4d47-8a42-763d9dfea1c7/scratchp…)
+  ⎿  Structural checks passed for data: 2000 claims, 200 fraud
+     == BOM
+       - claims.csv columns are ['\ufeffclaim_id', 'member_id', 'provider_i
+     … +19 lines (ctrl+o to expand)
+  ⎿  Found 10 new diagnostic issues in 1 file (ctrl+o to expand)
+
+⏺ Bash(sed -n 196p src/generator/checks.py)
+  ⎿          "phantom_day": f"{phantom['provider_id']} {phantom['claim_date
+     ']} ({provider_days[(phantom['provider_id'], phantom['claim_date'])]}
+     claims)",
+
+⏺ Bash(python3 - <<'EOF'
+      p='src/generator/checks.py'; s=open(p).read()…)
+  ⎿    duplicate groups 15, phantom day PRV-049 2024-12-26 (31 claims)
+     0 errors, 0 warnings, 0 informations
+  ⎿  Updated src/generator/checks.py (+2 -1)
+      58          gt_columns, truth, bad_truth = _read_csv(data_dir / "gr
+          ound_truth.csv")
+      59      except (UnicodeDecodeError, csv.Error) as e:
+      60          return [f"CSV file is not readable as UTF-8 CSV: {e!r}"
+          ], {}
+      61 +    weekday_only, phantom_key = [], ("", "")  # replaced below;
+         + only read when the summary is valid                           
+      62      try:
+      63          summary = json.loads((data_dir / "generation_summary.js
+          on").read_text(encoding="utf-8"))
+      64          weekday_only = [p["provider_id"] for p in summary["week
+          day_only_providers"]]
+     ...
+      194          "weekday_only_claims": (min(per_provider[p] for p in w
+           eekday_only), max(per_provider[p] for p in weekday_only)),
+      195          "min_single_code_claims": min(single_code_counts[c] fo
+           r c in catalog.all_billable_codes()),
+      196          "duplicate_groups": len(groups),
+      196 -        "phantom_day": f"{phantom['provider_id']} {phantom['cl
+          -aim_date']} ({provider_days[(phantom['provider_id'], phantom['
+          -claim_date'])]} claims)",                                     
+      197 +        "phantom_day": f"{phantom_key[0]} {phantom_key[1]} ({p
+          +rovider_days[phantom_key]} claims)",                          
+      198      }
+      199      return problems, stats
+  ⎿  Resuming agent a61838e
+
+⏺ Reviewer tìm thêm 4 lỗi trong bản sửa Low của check. Cả 4 đều đúng, tôi đã sửa
+  xong và đang đợi reviewer xem lại lần cuối.
+
+  Lỗi nặng nhất: header CSV sai vẫn ra traceback thay vì báo lỗi. Ví dụ file
+  được lưu lại từ Excel kèm BOM, hoặc cột claim_id bị đổi tên.
+
+  Cách đã sửa:
+  - check dừng ngay sau khi kiểm header nếu header đã sai.
+  - Báo lỗi rõ thay vì traceback khi file CSV không phải UTF-8, hoặc khi
+    generation_summary.json có provider_id không phải chuỗi.
+  - generation_summary.json hỏng không còn che mất lỗi của file CSV: cả hai được
+    báo trong cùng một lần chạy.
+
+  Tôi đã chạy lại 5 trường hợp reviewer dùng để tái hiện lỗi. Cả 5 đều exit 1
+  với thông báo rõ, data/ thật vẫn PASS, pyright 0 lỗi. Phần này chưa commit.
+
+✻ Cogitated for 1m 16s · done 21:33
+
+› Message from reviewer
+  Re-review `git diff -- src/generator/checks.py` vòng 3: 4 finding trước đã
+  đóng. Còn lại 2 Low, không chặn commit.
+
+  Đã xác minh trên bản copy của `data/` trong scratchpad, mỗi case đều exit 1
+  kèm message, không traceback:
+  - BOM: báo sai header.
+  - File cp1258: báo lỗi UTF-8.
+  - `phantom_provider_day` là list, summary `null`, `weekday_only_providers:
+  null`: đều báo lỗi summary.
+  - `claims.csv` rỗng: báo `columns are []`.
+
+  `data/` thật vẫn PASS (exit 0). Thứ tự return sớm hợp lý: lỗi summary cộng với
+  lỗi header / số field được báo chung, rồi dừng trước khi đọc cột theo tên.
+
+  ## Findings
+
+  [Low] src/generator/checks.py:60 - Message lỗi đọc CSV dùng `{e!r}`. Với
+  `UnicodeDecodeError`, repr chứa nguyên chuỗi byte đã đọc, nên in ra stderr
+  khoảng 5 KB nội dung `claims.csv`. Message cũng không nói file nào hỏng.
+  Failure scenario: `claims.csv` có một byte cp1258 ở dòng 22: stderr in một
+  khối dài khoảng 80 dòng claim. Người đọc phải tự tìm `invalid continuation
+  byte` ở cuối và không biết file nào lỗi.
+  Fix: đọc 2 file trong 2 lần `try` riêng (hoặc lặp theo tên file) và báo
+  `f"{name} is not readable as UTF-8 CSV: {e.reason} at byte {e.start}"` cho
+  `UnicodeDecodeError`, `str(e)` cho `csv.Error`.
+
+  [Low] src/generator/checks.py:130-133 (`expect(amount.isdigit() and
+  int(amount) ...)` và dòng clustering ngay sau) - `str.isdigit()` trả True cho
+  ký tự như `²`, nhưng `int("²")` ném lỗi, nên vẫn ra traceback.
+  Failure scenario: `submitted_amount = "²"` ra `ValueError: invalid literal for
+  int() with base 10: '²'` (đã tái hiện). Rất hiếm vì phải sửa file bằng tay,
+  nhưng là đường traceback cuối cùng còn lại mà tôi tìm được.
+  Fix: dùng `re.fullmatch(r"[0-9]+", amount)` (khớp đúng định dạng "số nguyên,
+  không dấu phân cách" trong dataset-format.md) thay cho `isdigit()` ở cả 2 chỗ.
+
+  ## Đã kiểm
+  - Đọc dòng 30-100 của `checks.py` sau sửa và grep các chỗ dùng `phantom_key` /
+  `weekday_only` / `return problems`.
+  - Chạy `check` trên 7 bản copy hỏng (BOM, cp1258, phantom là list, summary
+  `null`, `weekday_only_providers` null, amount `²`, `claims.csv` rỗng) và trên
+  `data/` thật.
+
+⏺ Bash(sed -n 55,62p src/generator/checks.py; grep -n "isdigit"
+      src/generator/checks.py; sed -n 8,13p src/generator/checks.py)
+  ⎿      try:
+             columns, claims, bad_claims = _read_csv(data_dir / "claims.csv
+     ")
+     … +15 lines (ctrl+o to expand)
+
+⏺ Agent "Review ticket 01 code" finished · 32s
+
+⏺ Bash(python3 - <<'EOF'
+      p='src/generator/checks.py'; s=open(p).read()…)
+  ⎿  Structural checks passed for data: 2000 claims, 200 fraud
+       - claims.csv is not UTF-8: invalid continuation byte at byte 5605
+       - CLM-00003: submitted_amount '²' is not a positive multiple of 100
+     … +2 lines (ctrl+o to expand)
+  ⎿  Updated src/generator/checks.py (+12 -7)
+      53      if missing:
+      54          return [f"missing file(s) in {data_dir}: {missing}"], {
+          }
+      55  
+      56 -    try:                                                       
+      57 -        columns, claims, bad_claims = _read_csv(data_dir / "cla
+         -ims.csv")                                                      
+      58 -        gt_columns, truth, bad_truth = _read_csv(data_dir / "gr
+         -ound_truth.csv")                                               
+      59 -    except (UnicodeDecodeError, csv.Error) as e:               
+      60 -        return [f"CSV file is not readable as UTF-8 CSV: {e!r}"
+         -], {}                                                          
+      56 +    read = {}                                                  
+      57 +    for name in ("claims.csv", "ground_truth.csv"):            
+      58 +        try:                                                   
+      59 +            read[name] = _read_csv(data_dir / name)            
+      60 +        except UnicodeDecodeError as e:                        
+      61 +            return [f"{name} is not UTF-8: {e.reason} at byte {
+         +e.start}"], {}                                                 
+      62 +        except csv.Error as e:                                 
+      63 +            return [f"{name} is not valid CSV: {e}"], {}       
+      64 +    columns, claims, bad_claims = read["claims.csv"]           
+      65 +    gt_columns, truth, bad_truth = read["ground_truth.csv"]    
+      66      weekday_only, phantom_key = [], ("", "")  # replaced below;
+           only read when the summary is valid
+      67      try:
+      68          summary = json.loads((data_dir / "generation_summary.js
+          on").read_text(encoding="utf-8"))
+     ...
+      130          expect(c["claim_type"] == catalog.billable(codes[0]).c
+           laim_type, f"{cid}: claim_type {c['claim_type']} does not matc
+           h {codes[0]}")
+      131  
+      132          amount = c["submitted_amount"]
+      128 -        expect(amount.isdigit() and int(amount) > 0 and int(am
+          -ount) % AMOUNT_ROUNDING == 0,                                 
+      133 +        expect(amount.isascii() and amount.isdigit() and int(a
+          +mount) > 0 and int(amount) % AMOUNT_ROUNDING == 0,            
+      134                 f"{cid}: submitted_amount {amount!r} is not a p
+           ositive multiple of {AMOUNT_ROUNDING}")
+      130 -        if pattern == R.AMOUNT_CLUSTERING and amount.isdigit()
+          -:                                                             
+      135 +        if pattern == R.AMOUNT_CLUSTERING and amount.isascii()
+          + and amount.isdigit():                                        
+      136              expect(CLUSTERING_AMOUNT[0] <= int(amount) <= CLUS
+           TERING_AMOUNT[1], f"{cid}: clustering amount {amount} outside 
+           the band")
+      137  
+      138      for code in catalog.all_billable_codes():
+
+⏺ Tôi đã sửa xong mọi lỗi Low của check, trừ phần linter và tests/ để làm cùng
+  #03. Chưa commit.
+
+  Reviewer đã xem 2 vòng. Vòng cuối không còn lỗi nặng, chỉ còn 2 lỗi Low rất
+  nhỏ và tôi đã tự sửa:
+  - Lỗi đọc CSV: thông báo giờ ghi rõ file nào hỏng và ở byte nào, thay vì in ra
+    khoảng 5 KB nội dung file.
+  - Amount kiểu ²: trước đây ra traceback, giờ được báo là amount sai định dạng.
+
+  Tổng cộng các thay đổi chưa commit, đều trong src/generator/checks.py:
+  - Thiếu file, JSON hỏng, thiếu key hoặc sai kiểu trong generation_summary.json
+    đều báo lỗi và exit 1.
+  - Danh sách weekday-only phải đúng 10 bệnh viện khác nhau trong
+    providers.json.
+  - Báo dòng CSV thừa hoặc thiếu cột (kèm số dòng), header sai (kể cả BOM do
+    Excel thêm vào), file không phải UTF-8.
+  - Lỗi của summary và lỗi của file CSV được báo chung trong cùng một lần chạy.
+  - Xóa dict days không dùng.
+
+  Tôi đã thử khoảng 12 bản dataset cố ý làm hỏng: tất cả đều exit 1 kèm thông
+  báo rõ, không còn traceback. data/ thật vẫn PASS, pyright 0 lỗi.
+
+  Thay đổi này không đổi business rule hay format của dataset, nên tôi định
+  commit thành fix: report malformed dataset files in check instead of crashing
+  mà không sửa doc nào. Bạn nói "commit" thì tôi làm.
+
+✻ Cooked for 6m 35s · done 21:34
+
+※ recap: Đang review và sửa code ticket #01: các lỗi lộ nhãn đã sửa và commit, phần sửa lỗi Low của `check` đã xong và test kỹ nhưng chưa commit. Bước tiếp theo: bạn nói "commit" để tôi commit phần này. (disable recaps in /config)
+
+❯ đã thử khoảng 12 bản dataset cố ý làm hỏng. cách thử này nên tạo thành test   
+  cases để tái sử dụng khi cần                                                  
+
+  Searched for 1 pattern (ctrl+o to expand)
+
+⏺ coder(Add dataset check tests)
+  ⎿  Backgrounded agent (↓ to manage · ctrl+o to expand)
+
+⏺ Đồng ý. Tôi đã giao cho coder viết tests/test_dataset_check.py, chạy ngầm.
+
+  Cách test làm việc: mỗi test copy data/ vào thư mục tạm, làm hỏng đúng 1 chỗ,
+  rồi gọi check_dataset. Test chỉ đạt khi có báo lỗi đúng check cần bắt và không
+  ra traceback. Thêm 1 test để chắc data/ thật vẫn PASS.
+
+  Có 27 case, gom từ 3 nguồn:
+  - 11 case trước đây đã kiểm tay, ghi trong dataset-checks.md;
+  - các case chuyển nhãn phantom, duplicate, weekend;
+  - khoảng 12 case về file và summary hỏng vừa thử hôm nay: thiếu file, BOM,
+    file không phải UTF-8, dòng thừa hoặc thiếu cột, JSON hỏng, danh sách
+    weekday-only rỗng hoặc chứa phòng khám, amount ²...
+
+  Nếu một case lộ ra lỗi thật của checks.py, coder sẽ không sửa src/. Nó đánh
+  dấu test đó là lỗi đã biết (xfail) và báo lại.
+
+  Khi xong, tôi sẽ chạy lại uv run pytest để kiểm, cho reviewer xem, rồi cập
+  nhật đoạn "How the checks were verified" trong dataset-checks.md để trỏ tới
+  file test. Tôi sẽ commit cùng phần sửa checks.py khi bạn nói "commit".
+
+✻ Churned for 32s · done 21:44
+
+› Message from coder
+  Files changed: tests/test_dataset_check.py:1-290 (new, the only file touched)
+  - 26 mutation cases through one parametrized test, plus a "committed data
+  passes" test and a "both problems reported" test. Nothing else changed: no
+  src/, docs/ or data/ edits, no commit. No conftest or `__init__.py` was
+  needed; the `data_copy` fixture lives in the test file.
+  Tests: `uv run pytest -q` -> `28 passed in 1.07s`. That is 26 mutation cases,
+  the real-data test and the case-13 test (summary broken plus extra field,
+  asserting both messages). Runtime is about 1 s.
+  Not done: nothing from the spec. Case 13 is a separate test because it asserts
+  two substrings, not one.
+  Unsure:
+  - No xfail and no workaround cases. All 27 mutations are caught by the
+  intended check (the substring assertion passes), none raised, so no bug found
+  in checks.py. Several mutations also trigger side-problems (for example the
+  BOM case also trips other checks); the tests only require the specific
+  substring to be present.
+  - Wording choices:
+    - Case 4 asserts "claims.csv is not UTF-8" (file name plus message), as
+  asked.
+    - Cases 9 and 12 (missing phantom key, provider_id as a list) both land on
+  "generation_summary.json is unreadable". The list case is caught via the
+  TypeError branch.
+    - Case 11 swaps the first weekday-only entry for the first CLINIC id found
+  in providers.json, loaded through `load_providers`, not hard-coded.
+    - Case 20 removes the label of one upcoding claim (so the count is off by
+  one) and expects "claims per pattern".
+    - Case 24 takes the busiest ordinary weekday provider-day and moves legit
+  claims from the same provider's other days onto it until it has 31. The test
+  is deterministic.
+
+⏺ Bash(uv run pytest -q 2>&1 | tail -2; grep -n 'pytest.param\|^    ('
+      tests/test_dataset_check.py | head -40)
+  ⎿  ............................
+        [100%]
+     28 passed in 1.09s
+     … +35 lines (ctrl+o to expand)
+
+⏺ Agent "Add dataset check tests" finished · 1m 4s  ⎿  Resuming agent a61838e
+
+⏺ coder đã viết xong tests/test_dataset_check.py. Tôi đã tự chạy lại: uv run 
+  pytest -q cho 28 passed trong khoảng 1 giây.
+
+  - 26 case làm hỏng dataset, gom trong 1 test chạy theo bảng. Mỗi case có tên
+    dễ đọc, ví dụ claims-bom, phantom-label-moved, second-busy-provider-day.
+  - 1 test kiểm data/ thật PASS.
+  - 1 test kiểm summary hỏng và dòng CSV thừa cột được báo cùng lúc.
+  - Không case nào lộ lỗi thật của checks.py, nên không có test nào phải đánh
+    dấu là lỗi đã biết.
+
+  Tôi thấy một điểm yếu: case claim-type-wrong chỉ kiểm thông báo có chứa "does 
+  not match". Chuỗi này cũng khớp với lỗi is_weekend does not match, nên test có
+  thể pass nhờ nhầm check. Tôi đã cho reviewer soi các điểm sau:
+  - chuỗi con nào chưa đủ đặc trưng;
+  - mỗi lần làm hỏng có đúng chỗ định làm không;
+  - test có vỡ khi data/ được sinh lại không;
+  - còn thiếu case nào so với dataset-checks.md.
+
+  Nó sẽ thử tạm tắt từng check trên một bản copy để xem test tương ứng có fail
+  không. Có kết quả tôi sẽ báo lại.
+
+✻ Crunched for 20s · done 21:46
+
+› Message from reviewer
+  Review `tests/test_dataset_check.py`: 26 case hiện có đều hỏng đúng chỗ định
+  làm và tất định, nhưng 16 trên 34 check của `checks.py` có thể tắt mà test vẫn
+  xanh (1 Medium), cộng 3 Low.
+
+  Base gates: `uv run pytest -q` cho 28 passed. Chưa có linter (Low cũ).
+
+  ## Kết quả mutation testing
+  Tôi chép project vào scratchpad, tắt từng `expect(...)` một (thay bằng lambda
+  no-op) và tắt `problems.append` của nhánh ngày sai định dạng, mỗi lần chạy lại
+  cả bộ test. Repo không bị sửa; file `checks.py` dùng làm gốc giống hệt
+  working tree.
+
+  - **Bị bắt (18):** sai số field ở claims, header claims, header gt, claim_id
+  trùng, số claim theo pattern, đổi tên provider, năm 2023, is_weekend, 2 mã
+  trên claim hợp lệ, claim_type, bội số 100, danh sách weekday-only, claim cuối
+  tuần hợp lệ ở bệnh viện weekday-only, mã surgical, số nhóm duplicate, nhãn
+  duplicate, provider-day đông, nhãn phantom.
+  - **Không bị bắt (16):** xem finding Medium.
+
+  Lượt chạy đầu có vài kết quả "bị bắt" giả, do lần đầu `uv` phải dựng venv
+  trong bản copy. Kết quả trên là của lượt chạy lại, có in tên test đã bắt từng
+  mutant.
+
+  ## Findings
+
+  [Medium] tests/test_dataset_check.py:283-310 - `CASES` chưa phủ 16 check trong
+  bảng của dataset-checks.md: tắt hẳn các check này mà 28 test vẫn pass.
+  Failure scenario: một lần refactor sau làm hỏng một trong các check dưới đây
+  thì không test nào báo. Danh sách (số dòng theo `checks.py` hiện tại):
+
+  | Check trong bảng | Dòng | Case thiếu |
+  |---|---|---|
+  | 1, số claim = 2,000 | 85 | xóa một dòng ở cả 2 file |
+  | 1, claim_id của gt cùng thứ tự | 88 | đổi chỗ 2 dòng trong ground_truth.csv
+  (case `duplicate-claim-id` có kích hoạt dòng 88 nhưng chỉ assert message của
+  dòng 87) |
+  | 1, sai số field ở gt | 80 | thêm field vào một dòng ground_truth.csv |
+  | 2, is_fraud khớp fraud_pattern | 94 | đặt `is_fraud = "0"` cho một claim
+  fraud mà giữ pattern (`set_label` luôn sửa cả hai nên chưa bao giờ chạm tới) |
+  | 3, số member 480-500 | 100 | gán member_id của 30 claim về cùng một member |
+  | 4, phủ đúng 50 provider | 103 | chuyển hết claim của một phòng khám sang
+  phòng khám khác |
+  | 5, ngày sai định dạng | 111 | `claim_date = "2024-13-01"`. Đây là nhánh
+  `except ValueError`: case này kiểm luôn rằng không có traceback |
+  | 6, mã không có trong catalog | 122 | `procedure_codes = "P-9999"` |
+  | 6, unbundling không đúng thành phần bundle | 126 | bỏ bớt một mã của một
+  claim unbundling |
+  | 7, clustering ngoài dải | 136 | amount của một claim clustering = 50000 |
+  | 8, >= 30 claim đơn mã mỗi mã | 139 | đổi mã của hầu hết claim P-3010 sang mã
+  khác cùng claim_type |
+  | 9, weekday-only >= 60 claim | 151 | chuyển claim của một bệnh viện
+  weekday-only sang bệnh viện thường cho tới khi còn 59 |
+  | 9, claim weekend_anomaly nằm ngày thường | 160 | `set_date` một claim
+  weekend_anomaly sang thứ Hai |
+  | 9, weekend_anomaly ở bệnh viện thường | 161, 164 | đổi provider của một
+  claim weekend_anomaly sang bệnh viện thường |
+  | 11, thành phần ngày phantom (25 + 3 + 3) | 189 | đổi nhãn một claim upcoding
+  trong ngày phantom thành mismatch, và một claim mismatch ngoài ngày đó thành
+  upcoding: tổng mỗi pattern giữ nguyên, chỉ dòng 189 báo lỗi |
+
+  Fix: thêm các `break_xxx` trên, mỗi cái assert substring riêng của check đó.
+  Tôi đề xuất chốt đủ trong lần này vì test sinh ra để giữ đúng bảng check này.
+  Source: docs/decisions/dataset-checks.md, bảng "Checks" và mục "How the checks
+  were verified".
+
+  [Low] tests/test_dataset_check.py:301 - Substring `"does not match"` của case
+  `claim-type-wrong` không đặc trưng: nó cũng khớp message `is_weekend does not
+  match` (dòng 114).
+  Failure scenario: hôm nay mutant tắt dòng 130 vẫn bị bắt chỉ vì `claims[0]`
+  không sinh lỗi is_weekend. Nếu một thay đổi sau làm claim đó sinh thêm lỗi
+  is_weekend, mutant sẽ sống mà test vẫn xanh.
+  Fix: dùng `"claim_type DENTAL does not match"`, hoặc ít nhất `": claim_type
+  "`.
+
+  [Low] tests/test_dataset_check.py:207-210,171-180,133-136 - Các case
+  `claim-type-wrong`, `is-weekend-wrong`, `amount-off-by-50`,
+  `amount-superscript`, `duplicate-claim-id` sửa theo vị trí (`claims[0]`,
+  `claims[1]`). Với `data/` hiện tại, `claims[0]` (CLM-00001) là một claim
+  unbundling 3 mã ở bệnh viện weekday-only, nên `is-weekend-wrong` sinh thêm lỗi
+  "weekend claims at weekday-only hospitals". Hiện vẫn đúng vì chỉ assert "có
+  chứa" substring. Khi generate lại với seed khác, claim đầu tiên có thể đổi
+  loại.
+  Fix: chọn claim theo điều kiện, như các case sau đã làm. Ví dụ
+  `legit_claims(...)` có một mã, không ở weekday-only, không ở ngày phantom.
+  Viết một helper `plain_legit_claim(d, claims, truth)` cho mọi case cần "một
+  claim bình thường".
+
+  [Low] tests/test_dataset_check.py:241-253 (`break_second_busy_provider_day`) -
+  Nếu ngày thường đông nhất thuộc một provider có ít hơn `31 - n` claim hợp lệ
+  ở ngày khác (ví dụ phòng khám 3-8 claim), mutation không đủ 31 claim. Test sẽ
+  fail ồn ào chứ không pass sai, nhưng sẽ là test đỏ giả khi data đổi.
+  Fix: chỉ chọn ngày thường đông nhất của provider HOSPITAL, hoặc `assert
+  len(donors) >= 31 - n` ngay trong hàm break để message rõ nguyên nhân.
+
+  ## Đã kiểm (không phải finding)
+  - **Mỗi case hỏng đúng chỗ dự định:** tôi in toàn bộ problem của từng case
+  (script /private/tmp/claude-501/-Volumes-D-papaya-insurtech-pumpkin/f116e248-e
+  856-4d47-8a42-763d9dfea1c7/scratchpad/dump_cases.py). Chỉ 6 case sinh thêm lỗi
+  phụ, và lỗi phụ nào cũng là hệ quả trực tiếp: claim_id trùng kéo theo lệch
+  thứ tự với gt; nhóm duplicate thêm kéo theo lệch nhãn; nhãn phantom bị chuyển
+  kéo theo sai thành phần ngày phantom; danh sách weekday-only có phòng khám kéo
+  theo các lỗi weekend; is_weekend sai ở bệnh viện weekday-only. Không case nào
+  pass nhờ một check khác.
+  - **Tất định:** không dùng random, mỗi test có thư mục `tmp_path` riêng, không
+  ghi vào `data/`.
+  - **Script mutation:** /private/tmp/claude-501/-Volumes-D-papaya-insurtech-pum
+  pkin/f116e248-e856-4d47-8a42-763d9dfea1c7/scratchpad/mutate2.py (chạy trên bản
+  copy ở scratchpad/mut).
+  ⎿  Resuming agent a59f46f
+
+⏺ Agent "Review ticket 01 code" finished · 3m 4s
+
+⏺ reviewer đã thử tạm tắt từng check trong checks.py rồi chạy lại bộ test: tắt
+  16 trên 34 check mà 28 test vẫn pass. Nghĩa là 16 check đó chưa có test giữ.
+  Tôi đã cho coder sửa và đang chờ kết quả.
+
+  Thêm 15 case cho các check chưa có test, mỗi case kiểm đúng thông báo của
+  check đó:
+  - số claim khác 2,000; ground_truth.csv lệch thứ tự hoặc thừa cột; is_fraud
+    không khớp fraud_pattern;
+  - số member dưới 480; không đủ 50 provider; ngày sai định dạng 2024-13-01;
+  - mã không có trong catalog; claim unbundling thiếu mã; claim clustering nằm
+    ngoài khoảng 47,500-49,999;
+  - một mã còn dưới 30 claim; bệnh viện weekday-only còn 59 claim;
+  - claim weekend_anomaly bị dời sang ngày thường hoặc sang bệnh viện thường;
+  - ngày phantom sai cơ cấu 25 + 3 + 3 dù tổng số claim của mỗi pattern vẫn
+    đúng.
+
+  3 lỗi Low:
+  - Case claim-type-wrong đang kiểm chuỗi "does not match", chuỗi này cũng khớp
+    lỗi is_weekend. Sẽ đổi sang chuỗi chỉ riêng lỗi claim_type mới có.
+  - Một số case đang sửa claim theo vị trí (claims[0]). Sẽ đổi sang chọn claim
+    theo điều kiện, để test không vỡ khi sinh lại data/.
+  - Case tạo provider-day thứ 2 có 31 claim sẽ chỉ chọn bệnh viện, vì phòng khám
+    không đủ claim để dồn lên 31.
+
+  Xong thì coder chạy lại cách thử tắt từng check. Mục tiêu là tắt check nào
+  cũng có test fail.
+
+✻ Cogitated for 23s · done 21:49
+
+› Message from coder
+  Files changed: tests/test_dataset_check.py - added 17 mutation cases, switched
+  the position-based cases to a helper, tightened the claim-type substring and
+  the second-busy-day case. Nothing else touched (no src/, docs/ or data/ edits,
+  no commit).
+  - New cases (each asserts the substring of its own check): claim-count-1999,
+  gt-order-swapped, gt-row-extra-field, is-fraud-flag-wrong, too-few-members,
+  provider-not-covered, calendar-date-invalid (the `bad claim_date` branch, no
+  traceback), unknown-code (P-9999), unbundling-missing-component,
+  clustering-amount-outside-band (50000), code-has-few-single-claims,
+  weekday-only-too-small, weekend-anomaly-on-monday,
+  weekend-anomaly-regular-hospital, phantom-day-composition, and
+  weekend-anomaly-uneven-per-hospital. The last one was not in your list: it
+  moves one weekend_anomaly claim from one weekday-only hospital to another, and
+  the mutant for the per-hospital weekend count (checks.py line 164) survived
+  without it.
+  - `ordinary_claims()` is a new helper. It picks a legit, single-code, weekday
+  claim that is not at a weekday-only hospital and not on the phantom day.
+  claim-type-wrong, is-weekend-wrong, amount-off-by-50, amount-superscript,
+  extra-duplicate-group, legit-claim-two-codes, date-in-2023 and
+  calendar-date-invalid now use it instead of claims[0] / claims[1].
+  - claim-type-wrong now asserts ": claim_type ".
+  - second-busy-provider-day only picks the busiest weekday of a HOSPITAL, and
+  asserts there are enough donor claims, with a message naming the provider.
+  Tests: `uv run pytest -q` -> `44 passed in 2.65s`.
+  Mutation: mutate2.py ran on the scratchpad copy `mut` with the new tests/
+  copied in. The result is 34 killed, 0 survived. `mut`'s checks.py is back to
+  the original (diffed against orig_checks.py). The full output is in
+  scratchpad/mut_out.txt. The first mutation run left 1 survivor (line 164); it
+  is dead after the extra case above.
+  Not done: nothing from the coordinator's list.
+  Unsure:
+  - code-has-few-single-claims asserts "P-3010: 3 single-code claims, expected
+  >= 30". The 3 is fixed data: fraud claims still carry P-3010 after the legit
+  ones are moved. It only breaks if the committed dataset (seed 2024) is
+  regenerated.
+  - break_rare_single_code moves legit P-3010 claims to the first other
+  procedure of the same claim_type, without checking diagnosis validity. That is
+  fine here because the check being tested does not look at diagnosis pairs.
+
+⏺ Bash(grep -n "P-3010: 3 single-code" tests/test_dataset_check.py && sed -i ''
+      's/"P-3010: 3 single-code claims, expected >= 30"/"single-code claims,
+      expected >= 30"/…)
+  ⎿  465:    ("code-has-few-single-claims", break_rare_single_code, "P-3010
+     : 3 single-code claims, expected >= 30"),
+     44 passed in 2.78s
+     … +10 lines (ctrl+o to expand)
+  ⎿  Updated tests/test_dataset_check.py (+1 -1)
+      462      ("unknown-code", break_unknown_code, "unknown code(s)"),
+      463      ("unbundling-missing-component", break_unbundling_drops_co
+           de, "are not the components of a bundle"),
+      464      ("clustering-amount-outside-band", break_clustering_amount
+           , "outside the band"),
+      465 -    ("code-has-few-single-claims", break_rare_single_code, "P-
+          -3010: 3 single-code claims, expected >= 30"),                 
+      465 +    ("code-has-few-single-claims", break_rare_single_code, "si
+          +ngle-code claims, expected >= 30"),                           
+      466      ("weekday-only-too-small", break_weekday_only_too_small, "
+           claims, expected >= 60"),
+      467      ("weekend-anomaly-on-monday", break_weekend_anomaly_on_mon
+           day, "weekend_anomaly claim is not on a weekend"),
+      468      ("weekend-anomaly-regular-hospital", break_weekend_anomaly
+           _regular_hospital, "not a weekday-only hospital"),
+
+⏺ Agent "Add dataset check tests" finished · 8m 26s
+  ⎿  Found 6 new diagnostic issues in 1 file (ctrl+o to expand)
+
+⏺ Bash(grep -c KILLED /private/tmp/claude-501/-Volumes-D-papaya-insurtech-pumpki
+      n/f116e248-e856-4d47-8a42-763d9dfea1c7/scratchpad/mut_out.txt; grep -c
+      SURVIV /private/…)
+  ⎿  34
+     0
+     … +4 lines (ctrl+o to expand)
+
+⏺ Bash(sed -i '' 's/        return list(reader.fieldnames), list(reader)/
+      return list(reader.fieldnames or []), list(reader)/'
+      tests/test_dataset_check.py && uv…)
+  ⎿  44 passed in 2.67s
+  ⎿  Updated tests/test_dataset_check.py (+1 -1)
+      25  def read_table(path: Path) -> tuple[list[str], list[dict]]:
+      26      with open(path, encoding="utf-8", newline="") as f:
+      27          reader = csv.DictReader(f)
+      28 -        return list(reader.fieldnames), list(reader)           
+      28 +        return list(reader.fieldnames or []), list(reader)     
+      29  
+      30  
+      31  def write_table(path: Path, header: list[str], rows: list[dict]
+          ) -> None:
+
+⏺ Update(docs/decisions/dataset-checks.md)
+  ⎿  Added 2 lines
+      61  ## How the checks were verified
+      62  
+      63  Each check was run against copies of the dataset broken on purp
+          ose (2026-10-24): duplicated `claim_id`, wrong `is_weekend`, am
+          ount off by 50, an extra duplicate group, a legitimate claim wi
+          th 2 codes, wrong `claim_type`, a pattern count off by one, a r
+          enamed provider, a date in 2023, a legitimate weekend claim at 
+          a weekday-only hospital, a second provider-day with 31 claims. 
+          All 11 were caught; the real dataset (seed 2024) passes. The la
+          bel-placement rows (added after the #01 review) were verified t
+          he same way: moving the `phantom_billing` label to a legitimate
+           claim on another day fails the check.
+      64 +                                                               
+      65 +These manual runs are now automated in `tests/test_dataset_chec
+         +k.py` (`uv run pytest`): each case copies `data/`, breaks exact
+         +ly one thing (including missing or non-UTF-8 files, a broken `g
+         +eneration_summary.json`, rows with a wrong number of fields) an
+         +d asserts the message of the check meant to catch it, with no t
+         +raceback. Mutation run on 2026-10-24: disabling any one of the 
+         +34 checks in `src/generator/checks.py` makes at least one test 
+         +fail.                                                          
+
+⏺ Các lần thử phá dataset giờ đã thành bộ test trong
+  tests/test_dataset_check.py. Tôi đã chạy lại: uv run pytest -q cho 44 passed
+  trong khoảng 3 giây.
+
+  - 42 case làm hỏng dataset, mỗi case hỏng đúng 1 chỗ và kiểm thông báo của
+    đúng check cần bắt, cộng 2 test riêng: data/ thật PASS, và summary hỏng cùng
+    dòng thừa cột được báo cùng lúc.
+  - Mọi check đều có test giữ: tắt lần lượt từng check trong 34 check của
+    checks.py, lần nào cũng có test fail. Trước vòng sửa này có 16 check tắt mà
+    test vẫn pass.
+  - Các case chọn claim theo điều kiện chứ không theo vị trí dòng, nên vẫn chạy
+    được khi data/ được sinh lại.
+
+  Tôi tự sửa thêm 2 chỗ nhỏ:
+  - Case code-has-few-single-claims trước kiểm chuỗi "P-3010: 3 single-code 
+    claims", phụ thuộc vào số liệu của seed hiện tại. Tôi bỏ phần số, chỉ giữ
+    phần chung của thông báo.
+  - Sửa một cảnh báo kiểu của pyright trong file test.
+
+  Ngoài ra tôi cập nhật mục "How the checks were verified" trong
+  docs/decisions/dataset-checks.md, ghi rằng các lần thử tay giờ đã có test tự
+  động.
+
+  Đang chờ commit 3 file: src/generator/checks.py (các lỗi Low),
+  tests/test_dataset_check.py (mới) và dataset-checks.md. Tôi định tách 2
+  commit:
+  1. fix: report malformed dataset files in check instead of crashing: chỉ
+     checks.py.
+  2. test: add mutation tests for dataset check: file test và doc.
+
+  Bạn nói "commit" thì tôi làm.
+
+✻ Sautéed for 14m 14s · done 21:58
+
+❯ tức là các test này xong hết rồi phải ko                                      
+
+⏺ Đúng, phần test cho lệnh check đã xong: 44 test pass, và tắt bất kỳ check nào
+  trong 34 check của checks.py cũng có test fail. Tôi đã tự chạy lại cả hai.
+
+  Còn vài việc chưa làm:
+
+  - Chưa commit. 3 file vẫn đang chờ: checks.py, file test và dataset-checks.md.
+  - reviewer chưa xem vòng sửa cuối của file test. Tôi chỉ tự kiểm qua kết quả
+    pytest và kết quả tắt từng check. Muốn chắc hơn thì cho reviewer xem thêm
+    một lượt trước khi commit.
+  - Chưa có test kiểm tái lập (generate 2 lần cùng seed ra file giống từng
+    byte). Đến giờ việc này mới chỉ kiểm tay. Nếu muốn, có thể thêm 1 test nữa.
+  - Đề bài còn yêu cầu >= 15 unit test cho 8 rule. Phần này thuộc #02/#03, chưa
+    bắt đầu vì engine chưa có. Test lần này chỉ giữ cho lệnh check của dataset.
+
+  Bạn muốn commit luôn, hay thêm test tái lập hoặc cho reviewer xem lại trước?
+
+✻ Baked for 7s · done 21:59
+
+❯ ghi doc cho test này sau đó commit                                            
+  commit                                                                        
+
+⏺ Bash(grep -n "^#" README.md; grep -n -i "test" README.md | head; sed -n 1,22p
+      tests/test_dataset_check.py)
+  ⎿  1:# AI Challenge 10 - Fraud Detection Scoring Engine
+     7:## Requirements
+     14:## Generate the dataset
+     … +30 lines (ctrl+o to expand)
+
+⏺ Bash(sed -n 66,92p README.md)
+  ⎿  `ground_truth.csv` and `generation_summary.json` are answer keys: the
+     engine must detect fraud from `claims.csv` alone.
+     … +24 lines (ctrl+o to expand)
+
+⏺ Update(README.md)
+  ⎿  Added 19 lines
+      74  shasum -a 256 data/claims.csv /tmp/run2/claims.csv   # the two 
+          hashes must match
+      75  ```
+      76  
+      77 +### Test the dataset check                                     
+      78 +                                                               
+      79 +```bash                                                        
+      80 +uv run pytest tests/test_dataset_check.py -q   # 44 tests, ~3 s
+      81 +```                                                            
+      82 +                                                               
+      83 +`tests/test_dataset_check.py` guards `check` itself, not the da
+         +taset content. Each case copies the committed `data/` into a te
+         +mporary directory, breaks exactly one thing, and asserts that `
+         +check` reports the problem of the check meant to catch it, with
+         +out a traceback:                                               
+      84 +                                                               
+      85 +| Group | Examples of what is broken |                         
+      86 +|---|---|                                                      
+      87 +| Files and shape | missing file, BOM header, non-UTF-8 bytes, 
+         +row with too many / too few fields, duplicate or reordered `cla
+         +im_id`, 1,999 claims |                                         
+      88 +| `generation_summary.json` | not JSON, missing key, empty or w
+         +rong weekday-only list, `provider_id` of the wrong type |      
+      89 +| Values | wrong `is_weekend`, date in 2023 or invalid, amount 
+         +not a multiple of 100, unknown code, wrong `claim_type`, cluste
+         +ring amount outside the band |                                 
+      90 +| Structure and labels | extra duplicate group, second provider
+         +-day above 30 claims, too few members / providers / single-code
+         + claims, weekday-only hospital below 60 claims, phantom / dupli
+         +cate / weekend labels moved off the claims they were injected i
+         +nto |                                                          
+      91 +                                                               
+      92 +Two more tests: the committed `data/` passes with no problem, a
+         +nd a broken summary plus a broken CSV row are reported in the s
+         +ame run.                                                       
+      93 +                                                               
+      94 +The cases pick claims by condition (e.g. a legitimate single-co
+         +de weekday claim), not by row position, so they keep working af
+         +ter `data/` is regenerated. Disabling any one of the 34 checks 
+         +in `src/generator/checks.py` makes at least one test fail (muta
+         +tion run, 2026-10-24). When a new check is added to `checks.py`
+         +, add a case that breaks exactly what it checks. The list of ch
+         +ecks: [`docs/decisions/dataset-checks.md`](docs/decisions/datas
+         +et-checks.md).                                                 
+      95 +                                                               
+      96  ### What the dataset contains
+      97  
+      98  - 2,000 claims dated 2024-01-01 to 2024-12-31, about 500 member
+          s, 50 providers (20 hospitals, 20 clinics, 10 dental clinics).
+
+⏺ Bash(sed -i '' 's/^\*\*Status:\*\* work in progress. The dataset generator
+      (part A) is done; the rule engine, tests and metrics report are not built
+      yet./**Status:**…)
+  ⎿  **Status:** work in progress. The dataset generator (part A) and the t
+     ests of its `check` command are done; the rule engine, its tests and t
+     he metrics report are not built yet.
+     … +5 lines (ctrl+o to expand)
+  ⎿  Updated README.md (+1 -1)
+      2  
+      3  Rule-based fraud scoring engine for health insurance claims: it 
+         analyzes each claim and assigns a risk score (0-100) with itemiz
+         ed evidence for every rule that fires.
+      4  
+      5 -**Status:** work in progress. The dataset generator (part A) is 
+        -done; the rule engine, tests and metrics report are not built ye
+        -t.                                                              
+      5 +**Status:** work in progress. The dataset generator (part A) and
+        + the tests of its `check` command are done; the rule engine, its
+        + tests and the metrics report are not built yet.                
+      6  
+      7  ## Requirements
+      8  
+
+⏺ Bash(git commit -q -m "fix: report malformed dataset files in check instead of
+      crashing" -- src/generator/checks.py && git add
+      tests/test_dataset_check.py README.md…)
+  ⎿  283b14a test: add mutation tests for dataset check
+     5a6148c fix: report malformed dataset files in check instead of crashi
+     ng
+     … +4 lines (ctrl+o to expand)
+⏺ Tôi đã viết doc cho bộ test và commit xong. Working tree sạch, uv run pytest
+  cho 44 passed.
+
+  Doc (đã đọc lại trước khi commit):
+  - README.md có thêm mục "Test the dataset check":
+    - lệnh chạy;
+    - test này giữ cho lệnh check chứ không kiểm nội dung dataset;
+    - bảng 4 nhóm case;
+    - các case chọn claim theo điều kiện nên không vỡ khi sinh lại data/;
+    - kết quả thử tắt từng check;
+    - quy tắc: thêm check mới vào checks.py thì thêm một case làm hỏng đúng chỗ
+      đó.
+  - Dòng Status đầu README.md cũng được sửa, ghi rằng test cho check đã xong.
+  - docs/decisions/dataset-checks.md: mục "How the checks were verified" trỏ tới
+    file test tự động.
+
+  Commit:
+  - 5a6148c fix: report malformed dataset files in check instead of crashing:
+    chỉ src/generator/checks.py.
+  - 283b14a test: add mutation tests for dataset check:
+    tests/test_dataset_check.py, README.md, dataset-checks.md.
+
+  Trong lúc làm, có người đã stage sẵn vài file. Tôi commit đúng theo từng đường
+  dẫn nên 2 commit vẫn tách đúng như dự định.
+
+  Commit message không có dòng Co-Authored-By, theo quy tắc trong AGENTS.md.
+  Không cần thêm ADR, vì các thay đổi này không chọn giữa nhiều phương án.
+
+  Nhắc bạn: phiên này dài và có nhiều quyết định (rút lại amount thay vì kẹp,
+  ADR-004, giới hạn phòng khám, bộ test). Bạn nên export log hội thoại vào
+  conversations/, vì bài nộp bắt buộc phải có log.
+
+✻ Churned for 42s · done 22:01
