@@ -10,7 +10,7 @@ Quy ước chung:
 |---|---|---|---|---|
 | 1 | Duplicate | same member + provider + date + diagnosis | Unique key `(member_id, provider_id, claim_date, diagnosis_code)` có >= 2 claim => flag tất cả claim trong nhóm | `duplicate-and-rapid-resubmission.md` |
 | 2 | Rapid re-submission | same member + same diagnosis within 7 days | Cặp claim cùng `(member_id, diagnosis_code)` cách nhau 0-7 ngày, **trừ** cặp trùng unique key duplicate => flag cả 2 claim | `duplicate-and-rapid-resubmission.md` |
-| 3 | Upcoding | amount > 2 standard deviations above mean for that procedure code | `submitted_amount` > mean + 2 x SD của các claim cùng mã procedure; mean/SD tính trên toàn bộ claim cùng mã | `upcoding.md` |
+| 3 | Upcoding | amount > 2 standard deviations above mean for that procedure code | `submitted_amount` > mean + 2 x SD của các claim cùng mã procedure; mean/SD tính trên toàn bộ claim cùng mã; chỉ xét claim có đúng 1 mã | `upcoding.md` |
 | 4 | Unbundling | multiple individual procedures when a bundled code exists | `procedure_codes` chứa **đủ tất cả** thành phần của một bundle | `bundling.md` |
 | 5 | Phantom billing | provider submits > 30 claims in a single day | Provider có > 30 claim trong cùng `claim_date` => flag mọi claim của provider ngày đó | `fraud-injection.md` |
 | 6 | Weekend anomaly | surgical procedures on weekends from providers with < 5% historical weekend volume | Claim có procedure surgical, `is_weekend` = 1, và tỷ lệ claim cuối tuần của provider (tính trên toàn bộ claim của provider) < 5% | `weekday-only-providers.md` |
@@ -20,6 +20,7 @@ Quy ước chung:
 ## Ghi chú
 
 - Rule 4 (unbundling): các mã thành phần đều là cặp hợp lệ với diagnosis của gói, nên claim unbundled không dính rule 7.
-- Rule 3: mã có < 10 claim thì không xét.
+- Rule 3: mã có < 10 claim thì không xét. Claim có nhiều mã (chỉ có ở unbundling) không tham gia tính mean/SD và không bị xét, vì amount là tổng giá lẻ, không so được với một mã.
+- Rule 7: xét từng mã trong `procedure_codes`; 1 mã không hợp lệ là đủ để flag.
 - Rule 6: provider có lịch bình thường có khoảng 28% claim rơi vào cuối tuần (theo lịch 2024), không bị flag. Mỗi bệnh viện weekday-only có >= 60 claim để 2 claim fraud cuối tuần chỉ chiếm 2/60 = 3.3% < 5%.
 - Không đưa khái niệm cấp cứu vào phạm vi (đề không nhắc tới).

@@ -23,6 +23,7 @@ Upcoding: khai số tiền (hoặc mã) đắt hơn dịch vụ thực tế đã
 ## Quy tắc sinh fraud
 
 - Claim upcoded: amount = giá chuẩn x hệ số 1.6-2.5 (vượt ngưỡng 2 SD, vẫn gần thực tế).
+- Rải claim upcoded trên các mã có >= 60 claim 1 mã, tối đa 2 claim upcoded mỗi mã, không dùng P-1003 (dành cho clustering). Lý do: mã chỉ có 30 claim mà chứa 2 claim upcoded thì SD có thể lên khoảng 0.3 x mean, ngưỡng thành khoảng 1.65 x mean => bỏ sót claim upcoded 1.6x (masking).
 
 ## Cách tính mean / SD (đã chốt ở B1)
 
@@ -34,3 +35,9 @@ Upcoding: khai số tiền (hoặc mã) đắt hơn dịch vụ thực tế đã
 
 - Mã có < 10 claim: **không xét upcoding** (không đủ dữ liệu lịch sử để kết luận khai giá cao).
 - Generator sinh mỗi mã >= 30 claim để mọi mã đều được xét.
+
+## Claim có nhiều mã (đã chốt)
+
+- Chỉ claim có **đúng 1 mã** tham gia tính mean/SD và được xét upcoding.
+- Claim nhiều mã chỉ có ở fraud unbundling; amount của nó là tổng giá lẻ nên không so được với "mean for that procedure code".
+- Số claim tối thiểu (10 / 30) đếm trên claim 1 mã.

@@ -12,7 +12,7 @@ Repo nộp bài test tuyển dụng của Papaya Insurtech. Gồm 2 phần, nộ
 ```
 .
 |-- AGENTS.md                         # file này: tổng quan dự án
-|-- .claude/                        # cấu hình agent (tài liệu Challenge 10 nằm trong docs/ của project)
+|-- .claude/                        # cấu hình agent; docs/plans/ = plan thực thi của Challenge 10 (tài liệu khác nằm trong docs/ của project)
 |-- Logical_Questions/                # câu trả lời phần logic, mỗi câu 1 file Q_<n>-<Ten>.md
 |-- AI_Engineering_Challenges/
 |   `-- AI_Challenge_10_Fraud_Detection/  # project Challenge 10
@@ -39,5 +39,6 @@ Repo nộp bài test tuyển dụng của Papaya Insurtech. Gồm 2 phần, nộ
 - Ngôn ngữ trao đổi: tiếng Việt, xưng "tôi" và "bạn". Chỉ dùng ký tự gõ được trên bàn phím (`->`, `-`, `...`, `"`).
 - Trả lời ngắn gọn; code ưu tiên dễ đọc hơn trừu tượng.
 - Commit theo Conventional Commits (`feat:`, `fix:`, `docs:`, `test:` ...).
+- Commit message không thêm dòng `Co-Authored-By` (người dùng chốt 2026-10-24).
 - `.tmp/` là tài liệu tham chiếu, không sửa và không commit.
 - Phần Logical_Questions là câu trả lời cá nhân của người dùng: agent không tự viết hoặc sửa nội dung trả lời trừ khi được yêu cầu rõ.

@@ -13,8 +13,13 @@ AI_Challenge_10_Fraud_Detection/
 |   |-- business-rule/  # business của 8 rule, catalog
 |   |-- requirements/   # original-brief.md (đề gốc), phân rã yêu cầu + quyết định đã chốt
 |   |-- handbook-notes.md
+|   |-- backlog/        # ticket A/B/C/D: việc gì, vì sao, tiêu chí xong
+|   |-- experiences/    # bẫy / rủi ro khi implement
 |   `-- decisions/      # thiết kế kỹ thuật: công nghệ, cấu trúc, định dạng dữ liệu
 |-- src/               # source code, chi tiết: docs/decisions/tech-and-structure.md
+|-- tests/             # pytest
+|-- data/              # claims.csv, ground_truth.csv
+|-- output/            # scored_output.json, metrics_report.md
 `-- conversations/     # log hội thoại AI nguyên văn (bắt buộc nộp)
     `-- README.md      # mục lục log: phiên nào, công cụ nào, nội dung chính
 ```
@@ -56,22 +61,23 @@ AI_Challenge_10_Fraud_Detection/
 - [ ] Ước lượng và báo timeline.
 - [ ] Nộp: dataset, scored output, metrics report, writeup (`README.md`), log hội thoại AI (`conversations/`).
 
-## Quyết định cần chốt (cập nhật khi đã chốt)
+## Quyết định
 
-| Chủ đề | Trạng thái |
-|---|---|
-| Ngôn ngữ / stack | Chưa chốt |
-| Cách đo FPR (trên tập claim hợp lệ hay trên tập bị flag) | Chưa chốt |
-| Một claim có được dính nhiều pattern gian lận không | Chưa chốt |
-| Cách chuẩn hóa score về 0-100 | Chưa chốt |
-| Ngưỡng score để tính "dự đoán là fraud" khi đo metrics | Chưa chốt |
-| Bộ mã ICD-10 / procedure / bundle / cặp diagnosis-procedure | Chưa chốt |
-| Cách lưu và xuất log hội thoại AI | Chat: `/noteconversaion-clacowo-bunhy` (đang cân nhắc); Code: export. Lưu vào `conversations/` |
+Quyết định đã chốt và câu hỏi mở: `docs/requirements/challenge-10-requirements.md` (nguồn duy nhất, không chép lại ở đây).
 
 ## Quy ước cho agent
 
 - Làm theo phase: phân tích đề -> so sánh >= 2 giải pháp -> plan -> code -> test -> review -> writeup. Không nhảy thẳng vào code.
 - Người dùng review 100% plan / assumption trước khi code.
 - Không one-shot: chia việc nhỏ, mỗi bước có kiểm chứng.
-- Ghi lại mọi assumption về chỗ đề mơ hồ vào bảng "Quyết định cần chốt" và vào writeup.
+- Ghi lại mọi assumption về chỗ đề mơ hồ vào `docs/requirements/challenge-10-requirements.md` và vào writeup.
 - Code ưu tiên dễ đọc, tránh trừu tượng thừa; không thêm tính năng ngoài đề.
+
+## Quy ước tài liệu (theo skill `pjdoc-mgmt-claco-bunhy`)
+
+- Việc cần làm: ticket ở `docs/backlog/{idea,todo,done}/NN-<slug>.md`; plan thực thi cùng số ở `.claude/docs/plans/{todo,done}/NN-<slug>.md` (root repo). Trạng thái nằm ở ticket, chi tiết thực thi nằm ở plan.
+- Quyết định kỹ thuật **mới** ghi theo định dạng ADR của skill: `docs/decisions/ADR-NNN-<title>.md`. Các file hiện có trong `docs/decisions/` giữ nguyên định dạng.
+- Bẫy / rủi ro đã gặp hoặc ước lượng: `docs/experiences/`.
+- Không dùng changelog: lịch sử commit và log hội thoại là đủ.
+- Ngôn ngữ: doc dưới `docs/`, `.claude/docs/` và `AGENTS.md` viết tiếng Việt; code, comment, commit message viết tiếng Anh.
+- Trước mỗi commit chạy `/pjdoc-mgmt-claco-bunhy pre-commit`. Khi viết code Python áp dụng `/pyfriend-claco-bunhy`.

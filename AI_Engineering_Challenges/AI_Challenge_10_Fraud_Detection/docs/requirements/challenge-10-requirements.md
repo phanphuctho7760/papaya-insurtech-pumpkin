@@ -88,6 +88,14 @@ Giai đoạn: New Task (theo Task_Lifecycle). Chưa chọn công nghệ.
 - B1 duplicate: unique key `(member_id, provider_id, claim_date, diagnosis_code)`; nhóm >= 2 claim => flag tất cả.
 - B1 rapid re-submission: chỉ bỏ qua cặp trùng unique key duplicate; cặp cùng ngày khác provider vẫn là rapid. Xem `docs/business-rule/duplicate-and-rapid-resubmission.md`.
 - Duplicate: dữ liệu đã qua validate input, không có double-submit; hai claim trùng là hai claim độc lập và là fraud. Rule flag cả 2 claim trong cặp, cả 2 mang nhãn fraud.
+- Công nghệ (chốt 2026-10-24): Python cho cả A, B, C; chỉ thư viện chuẩn + pytest; bỏ `src/api/`. Xem `docs/decisions/tech-and-structure.md`.
+- B1 upcoding: chỉ claim có đúng 1 mã tham gia tính mean/SD và được xét; claim nhiều mã (unbundling) bỏ qua. Mismatch xét từng mã. Xem `docs/business-rule/upcoding.md`.
+- A: generator chỉ kiểm cấu trúc sau khi generate; kiểm chéo rule với nhãn chuyển sang C (test tích hợp). Xem `docs/business-rule/fraud-injection.md`.
+- B5 / C4: rapid group theo `(member_id, diagnosis_code)`; đo thời gian bằng `time.perf_counter()` trong CLI, ghi vào metrics report.
+- Rủi ro đã ước lượng trước khi code: `docs/experiences/dataset-generation-pitfalls.md`.
+- A2 sửa cặp hợp lệ: thêm `J06.9 - P-1003`, `I10 - P-1003`, `E11.9 - P-1002` (35 cặp) để claim unbundled B-1001 / B-1002 không dính mismatch. Xem `docs/business-rule/diagnosis-procedure-mismatch.md`.
+- A3: amount claim fraud không thuộc pattern amount kẹp hệ số [0.85, 1.15]; upcoded rải trên mã >= 60 claim, tối đa 2 claim/mã. Xem `fraud-injection.md`, `upcoding.md`.
+- Quản lý việc: ticket ở `docs/backlog/`, plan ở `.claude/docs/plans/` (root repo).
 
 ## Câu hỏi mở (bàn khi đi vào chi tiết từng mục)
 

@@ -1,0 +1,77 @@
+# Plan 01 - A: Sinh dataset
+
+> **Ticket:** #01 - trạng thái và mục tiêu nằm ở ticket; file này chỉ chứa chi tiết thực thi.
+
+Nguồn business: `docs/business-rule/fraud-injection.md`, `catalog.md`, `icd-10.md`, `diagnosis-procedure-mismatch.md`, `weekday-only-providers.md`, `upcoding.md`, `amount-clustering.md`, `bundling.md`, `duplicate-and-rapid-resubmission.md`. Định dạng: `docs/decisions/dataset-format.md`. Bẫy: `docs/experiences/dataset-generation-pitfalls.md`.
+
+## Đã chốt trước khi code (2026-10-24)
+
+Đường dẫn trong plan tính từ `AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/`. Đã ghi vào business doc: mục 1 -> `diagnosis-procedure-mismatch.md`, mục 2-3 -> `fraud-injection.md`, `upcoding.md`.
+
+1. **Lỗi business doc: claim unbundled của B-1001 và B-1002 sẽ dính thêm mismatch.** `detection-rules.md` ghi "các mã thành phần đều là cặp hợp lệ với diagnosis của gói", nhưng đối chiếu bảng cặp hợp lệ thì sai:
+   - B-1001 = P-1001 + P-1002 + **P-1003**; diagnosis hợp lệ của gói là J06.9, I10, nhưng P-1003 không hợp lệ với J06.9 hay I10.
+   - B-1002 = P-1001 + **P-1002** + P-1006; diagnosis hợp lệ của gói là E11.9, nhưng P-1002 không hợp lệ với E11.9.
+   - B-3101, B-3102, B-4101 không có vấn đề.
+   - Đã chốt: thêm 3 cặp hợp lệ `J06.9 - P-1003`, `I10 - P-1003`, `E11.9 - P-1002` (hợp lý về y khoa: khám tổng quát có xét nghiệm nước tiểu, theo dõi đái tháo đường có công thức máu). Tổng thành 35 cặp. Hệ quả: P-1003 có thêm diagnosis hợp lệ, không ảnh hưởng clustering.
+2. **Amount của claim fraud ngoài pattern amount:** hệ số dao động bị kẹp trong [0.85, 1.15] (khoảng +-1 SD), để claim duplicate / rapid / phantom / weekend / mismatch / unbundling không vô tình dính upcoding hay clustering. Claim hợp lệ vẫn dùng log-normal không kẹp (giữ FP tự nhiên có chủ đích).
+3. **Làm tròn amount:** claim hợp lệ và phần lớn fraud làm tròn tới 1,000 VNĐ (giống hóa đơn thật). Claim clustering lấy ngẫu nhiên trong 47,500-49,999, làm tròn tới 100 VNĐ.
+
+## Phase 1 - Khung project và config
+
+- `pyproject.toml` (uv): Python >= 3.12, dev dependency `pytest`; `[tool.pytest.ini_options] pythonpath = ["src"]`.
+- `src/config/catalog.json`: procedure (mã, tên EN, claim_type, giá chuẩn, surgical), bundle (mã, tên EN, thành phần, giá, surgical), diagnosis (mã, tên EN, claim_type), cặp hợp lệ. Nguồn duy nhất, generator và engine cùng đọc.
+- `src/catalog.py`: load và kiểm `catalog.json` (mã trong cặp hợp lệ phải tồn tại, thành phần bundle phải tồn tại). Dùng chung cho A và B.
+- Tên provider viết không dấu (vd `Benh vien Da khoa An Phuc`), không chứa `,`: tránh lỗi NFC/NFD và lỗi CSV.
+
+## Phase 2 - Provider và claim hợp lệ (1,800 claim)
+
+- **Provider (50):** 20 bệnh viện (OUTPATIENT + INPATIENT), 20 phòng khám (OUTPATIENT), 10 nha khoa (DENTAL). `PRV-001`..`PRV-050` gán sau khi xáo theo seed. 10 bệnh viện weekday-only chọn theo seed.
+- **Member:** `MEM-0001`..`MEM-0500`, chọn đều.
+- **Hạn mức theo mã:** mỗi mã trong 21 mã (16 procedure + 5 bundle) nhận trước 30 claim; 1,170 claim còn lại chia theo trọng số tần suất (ngoại trú nhiều hơn nội trú). Trọng số tần suất là hằng số đặt ở đầu module generator.
+- **Diagnosis:** chọn ngẫu nhiên trong các diagnosis hợp lệ của mã.
+- **Provider cho claim:** đúng loại theo claim_type. Mỗi bệnh viện weekday-only được gán trước 62 claim (OUTPATIENT / INPATIENT) để chắc chắn >= 60; phần còn lại chia ngẫu nhiên.
+- **Ngày:** bệnh viện weekday-only chỉ thứ Hai - thứ Sáu; provider khác chọn đều trong 2024. `is_weekend` suy ra từ ngày.
+- **Amount:** giá chuẩn x `exp(N(0, 0.15))`, làm tròn 1,000.
+- **Không tạo duplicate ngẫu nhiên:** nếu unique key `(member, provider, date, diagnosis)` đã tồn tại thì chọn lại ngày.
+
+## Phase 3 - Chèn 200 claim fraud
+
+| Pattern | Cách sinh | Ghi chú |
+|---|---|---|
+| Duplicate 30 | 15 cặp cùng member + provider + date + diagnosis, procedure hợp lệ | Provider weekday-only thì ngày thường |
+| Rapid 30 | 15 cặp cùng member + diagnosis, cách 1-7 ngày, provider có thể khác | |
+| Upcoding 30 | Giá chuẩn x U(1.6, 2.5), claim 1 mã | 27 claim rải trên các mã có >= 60 claim, tối đa 2 claim/mã, không dùng P-1003; 3 claim nằm trong ngày phantom |
+| Unbundling 25 | 5 bundle x 5 claim; `procedure_codes` = đủ thành phần; amount = tổng giá lẻ x hệ số kẹp | Diagnosis hợp lệ của gói (35 cặp hợp lệ, mục 1) |
+| Phantom 25 | 1 bệnh viện thường, 1 ngày thường mà provider chưa có claim nào; 25 claim ngoại trú hợp lệ | Cùng ngày có thêm 3 upcoding + 3 mismatch => tổng 31 |
+| Weekend 20 | 10 bệnh viện weekday-only x 2 claim; mã surgical (P-3001, P-3002, P-3003, B-3101, B-3102) với diagnosis hợp lệ; thứ Bảy / Chủ nhật | |
+| Mismatch 20 | 17 claim + 3 claim trong ngày phantom; procedure cùng claim_type nhưng ngoài danh sách hợp lệ của diagnosis, không dùng mã bundle | Amount theo giá chuẩn x hệ số kẹp |
+| Clustering 20 | P-1003, diagnosis N39.0, amount 47,500-49,999 | |
+
+- Lý do rải upcoding trên mã >= 60 claim, tối đa 2 claim/mã: với mã chỉ 30 claim, 2 claim upcoded có thể đẩy SD lên khoảng 0.3 x mean, ngưỡng thành khoảng 1.65 x mean, bỏ sót claim upcoded 1.6x (masking).
+
+## Phase 4 - Gán ID, ghi file
+
+- Gộp claim hợp lệ + fraud, sắp theo `claim_date`, thứ tự phụ ngẫu nhiên theo seed, rồi gán `CLM-00001`..`CLM-02000` (tránh lộ nhãn qua ID).
+- Ghi `data/claims.csv`, `data/ground_truth.csv` theo `dataset-format.md`.
+- Ghi `data/generation_summary.json`: seed, danh sách provider weekday-only, provider-day phantom, số claim theo pattern, số claim theo mã.
+- CLI: `uv run python src/cli.py generate [--seed 2024]`.
+
+## Phase 5 - Kiểm cấu trúc (chạy cuối lệnh generate, lỗi thì dừng)
+
+- 2,000 claim, `claim_id` duy nhất, đúng 10 cột; 200 fraud, đúng số theo pattern.
+- Số member khoảng 500, đúng 50 provider, mọi ngày trong 2024, `is_weekend` khớp ngày, claim_type khớp mã.
+- Mỗi mã >= 30 claim 1 mã.
+- Mỗi bệnh viện weekday-only >= 60 claim, không có claim hợp lệ cuối tuần.
+- Nhóm theo unique key duplicate: đúng 15 nhóm có 2 claim, không nhóm nào khác > 1.
+- Chỉ đúng 1 provider-day > 30 claim, và nó có đúng 31 claim.
+- In bảng tóm tắt ra màn hình.
+
+Không chép logic rule vào đây; kiểm chéo rule với nhãn thuộc #03.
+
+## Verify
+
+- Chạy `generate` 2 lần cùng seed => 2 file giống hệt (so sha256).
+- Mở `claims.csv`, đọc mắt 20 dòng: amount hợp lý, tên provider, `procedure_codes` dạng `P-1001|P-1002`.
+- Kiểm vị trí `claim_id` của claim fraud rải đều (không dồn cuối).
+- Đếm nhanh cặp cùng member + diagnosis cách <= 7 ngày trong claim hợp lệ (ước FP tự nhiên của rapid) và ghi vào `dataset-generation-pitfalls.md`.
+- Áp dụng `/pyfriend-claco-bunhy` khi viết code; review diff trước commit; chạy `/pjdoc-mgmt-claco-bunhy pre-commit`.

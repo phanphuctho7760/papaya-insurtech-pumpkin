@@ -23,3 +23,8 @@
 | 17 | Clustering | Amount 47,499 và 50,000 | Không flag |
 | 18 | Scoring | total = 6 (4 + 2) | risk_score = 78 |
 | 19 | Scoring | Không có flag | risk_score = 0, flags rỗng |
+
+## Test tích hợp (ngoài 19 unit test)
+
+- Chạy engine trên `claims.csv` thật, so với `ground_truth.csv`: mỗi claim fraud chỉ dính rule của pattern mình, trừ ngoại lệ đã ghi trong `fraud-injection.md`.
+- Thời gian chạy 2,000 claim < 30 giây.
