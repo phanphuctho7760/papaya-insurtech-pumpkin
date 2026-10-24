@@ -29,6 +29,8 @@ Người dùng duyệt cả 7 mục theo đề xuất. Đã ghi vào: mục 1, 7
 
 ## Phase 2 - 8 rule
 
+**Xong (2026-10-24).** Review 2 vòng; vòng 1 sửa "1 days", làm tròn xuống % gần ngưỡng, evidence unbundling nhiều bundle, siết test S9 / contract (mẫu câu biên: `evidence.md` mục "Edge wording"). 91 test pass; số đếm trên data khớp Verify; 8 rule ~4.5 ms.
+
 - `src/rules/<rule>.py`, mỗi file 1 hàm cùng chữ ký: `detect(claims: list[Claim], catalog: Catalog) -> dict[str, str]` (claim_id -> evidence). Rule không biết weight; engine gắn severity.
 - `src/rules/__init__.py`: `RULES = {rule_name: detect}` theo thứ tự `ALL_RULES`.
 - `src/rules/evidence.py`: helper định dạng chung: `vnd(48500) -> "48,500 VND"`, `code_label("P-3001") -> "P-3001 (Laparoscopic appendectomy)"` (procedure, bundle, diagnosis). Mẫu chuỗi theo `evidence.md`.
@@ -82,7 +84,7 @@ Thời gian < 30 giây trên dataset thật thuộc test tích hợp của #03.
 
 - `uv run pytest` pass toàn bộ test hệ thống S1-S9.
 - `score` chạy trên dataset seed 2024: 2,000 phần tử trong output, in thời gian chạy (kỳ vọng < 1 giây).
-- Đếm nhanh số claim theo rule, so với số đo thật trong `docs/experiences/dataset-generation-pitfalls.md`: duplicate 30, phantom 31, unbundling 25, weekend 20, mismatch 20, clustering 22 (20 + 2 hợp lệ), rapid 50 (30 + 20 hợp lệ), upcoding 53 (30 + 23 hợp lệ). Lệch => dừng lại tìm nguyên nhân trước khi sang #03.
+- Đếm nhanh số claim theo rule, so với số đo thật trong `docs/experiences/dataset-generation-pitfalls.md`: duplicate 30, phantom 31, unbundling 25, weekend 20, mismatch 20, clustering 24 (20 + 4 hợp lệ), rapid 54 (30 + 24 hợp lệ), upcoding 48 (30 + 18 hợp lệ). (Sửa 2026-10-24 theo số đo lại trong pitfalls doc; bản trước ghi 22 / 50 / 53 là số cũ.) Lệch => dừng lại tìm nguyên nhân trước khi sang #03.
 - Đọc evidence bằng mắt (mở `scored_output.json`, xem tay 1 claim mỗi rule; không phải test tự động): câu dễ hiểu với người thẩm định, đủ 3 phần (quan sát / ngưỡng / claim liên quan), mã có tên tiếng Anh, tiền có dấu phân cách và `VND`.
 
 ## Quy trình

@@ -36,3 +36,11 @@ A rapid flag is raised on both claims of a pair, so the wording depends on which
 | Same day, another provider | `Submitted on the same day as CLM-00456 at another provider PRV-015 for the same member MEM-0042 and diagnosis J06.9 (Acute upper respiratory infection) - window: 7 days` |
 
 A claim related to several claims gets one flag whose evidence lists each related claim (`scoring.md`).
+
+## Edge wording
+
+| Case | Evidence |
+|---|---|
+| Rapid, several related claims | One clause per related claim (wording above), joined by `; `; the `for the same member ... - window: 7 days` suffix appears once. A 1-day gap reads `1 day`, not `1 days`. |
+| Unbundling, several bundles matched | `Billed 4 separate procedures for 520,000 VND: P-1001 (...) + P-1002 (...) + P-1003 (...) instead of bundle B-1001 (...) at X VND; P-1001 (...) + P-1002 (...) + P-1006 (...) instead of bundle B-1002 (...) at Y VND`. One bundle keeps template 4. |
+| Percentages near a threshold | Rounded **down** (clustering to a whole percent, weekend ratio to 1 decimal), so a flagged value never displays as the threshold itself: 49,999 VND => `99%`, not `100%`; 10 of 201 => `4.9%`, not `5.0%`. |
