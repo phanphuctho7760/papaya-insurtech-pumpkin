@@ -61,3 +61,5 @@ If a shape check (group 1) fails, the remaining checks are skipped: they assume 
 ## How the checks were verified
 
 Each check was run against copies of the dataset broken on purpose (2026-10-24): duplicated `claim_id`, wrong `is_weekend`, amount off by 50, an extra duplicate group, a legitimate claim with 2 codes, wrong `claim_type`, a pattern count off by one, a renamed provider, a date in 2023, a legitimate weekend claim at a weekday-only hospital, a second provider-day with 31 claims. All 11 were caught; the real dataset (seed 2024) passes. The label-placement rows (added after the #01 review) were verified the same way: moving the `phantom_billing` label to a legitimate claim on another day fails the check.
+
+These manual runs are now automated in `tests/test_dataset_check.py` (`uv run pytest`): each case copies `data/`, breaks exactly one thing (including missing or non-UTF-8 files, a broken `generation_summary.json`, rows with a wrong number of fields) and asserts the message of the check meant to catch it, with no traceback. Mutation run on 2026-10-24: disabling any one of the 34 checks in `src/generator/checks.py` makes at least one test fail.

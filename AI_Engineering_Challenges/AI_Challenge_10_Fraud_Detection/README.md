@@ -2,7 +2,7 @@
 
 Rule-based fraud scoring engine for health insurance claims: it analyzes each claim and assigns a risk score (0-100) with itemized evidence for every rule that fires.
 
-**Status:** work in progress. The dataset generator (part A) is done; the rule engine, tests and metrics report are not built yet.
+**Status:** work in progress. The dataset generator (part A) and the tests of its `check` command are done; the rule engine, its tests and the metrics report are not built yet.
 
 ## Requirements
 
@@ -73,6 +73,25 @@ Format details (CSV dialect, `procedure_codes` joined with `|`, integer VND amou
 uv run python src/cli.py generate --out /tmp/run2
 shasum -a 256 data/claims.csv /tmp/run2/claims.csv   # the two hashes must match
 ```
+
+### Test the dataset check
+
+```bash
+uv run pytest tests/test_dataset_check.py -q   # 44 tests, ~3 s
+```
+
+`tests/test_dataset_check.py` guards `check` itself, not the dataset content. Each case copies the committed `data/` into a temporary directory, breaks exactly one thing, and asserts that `check` reports the problem of the check meant to catch it, without a traceback:
+
+| Group | Examples of what is broken |
+|---|---|
+| Files and shape | missing file, BOM header, non-UTF-8 bytes, row with too many / too few fields, duplicate or reordered `claim_id`, 1,999 claims |
+| `generation_summary.json` | not JSON, missing key, empty or wrong weekday-only list, `provider_id` of the wrong type |
+| Values | wrong `is_weekend`, date in 2023 or invalid, amount not a multiple of 100, unknown code, wrong `claim_type`, clustering amount outside the band |
+| Structure and labels | extra duplicate group, second provider-day above 30 claims, too few members / providers / single-code claims, weekday-only hospital below 60 claims, phantom / duplicate / weekend labels moved off the claims they were injected into |
+
+Two more tests: the committed `data/` passes with no problem, and a broken summary plus a broken CSV row are reported in the same run.
+
+The cases pick claims by condition (e.g. a legitimate single-code weekday claim), not by row position, so they keep working after `data/` is regenerated. Disabling any one of the 34 checks in `src/generator/checks.py` makes at least one test fail (mutation run, 2026-10-24). When a new check is added to `checks.py`, add a case that breaks exactly what it checks. The list of checks: [`docs/decisions/dataset-checks.md`](docs/decisions/dataset-checks.md).
 
 ### What the dataset contains
 
