@@ -59,6 +59,12 @@ Nguồn business: `docs/business-rule/fraud-injection.md`, `catalog.md`, `icd-10
 
 - Lý do rải upcoding trên mã >= 60 claim, tối đa 2 claim/mã: với mã chỉ 30 claim, 2 claim upcoded có thể đẩy SD lên khoảng 0.3 x mean, ngưỡng thành khoảng 1.65 x mean, bỏ sót claim upcoded 1.6x (masking).
 
+**Tiến độ (2026-10-24): xong** (`src/generator/fraud.py`, `src/rule_names.py`).
+- Tên pattern = tên rule, snake_case theo tiêu đề rule của đề, đặt ở `src/rule_names.py` để #02 dùng chung: `duplicate_claim`, `rapid_resubmission`, `upcoding`, `unbundling`, `phantom_billing`, `weekend_anomaly`, `diagnosis_procedure_mismatch`, `amount_clustering`.
+- Mỗi claim fraud được đặt sao cho không vô tình dính rule khác: không tạo unique key duplicate mới, không có claim cùng member + diagnosis trong 7 ngày, bệnh viện weekday-only chỉ nhận ngày thường (trừ weekend), amount kẹp +-15%. Phantom sinh cuối cùng để không claim nào rơi thêm vào provider-day đó.
+- Clustering lấy amount `47,500..49,900` bước 100 (cùng cách làm tròn với mọi claim).
+- Kiểm thô (seed 2024, chưa phải engine): đúng số theo pattern; 1 provider-day 31 claim (PRV-006, 2024-11-05, thứ Ba); 15 nhóm duplicate; weekday-only 67-78 claim, claim cuối tuần của nhóm này chỉ là 20 claim weekend; 30/30 upcoded vượt mean + 2 SD, không claim fraud khác vượt, 23 claim hợp lệ vượt (giảm từ 57 khi chưa có fraud vì claim upcoded kéo SD lên); dải clustering: 20 fraud + 2 hợp lệ; mismatch chỉ gồm 20 claim mismatch; claim nhiều mã chỉ là 25 unbundling; cặp rapid: 30 fraud + 20 hợp lệ, không pattern khác; 488 member; mã ít nhất 44 claim 1 mã.
+
 ## Phase 4 - Gán ID, ghi file
 
 - Gộp claim hợp lệ + fraud, sắp theo `claim_date`, thứ tự phụ ngẫu nhiên theo seed, rồi gán `CLM-00001`..`CLM-02000` (tránh lộ nhãn qua ID).

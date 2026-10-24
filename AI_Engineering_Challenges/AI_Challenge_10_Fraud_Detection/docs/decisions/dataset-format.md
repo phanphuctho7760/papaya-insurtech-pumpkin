@@ -29,3 +29,5 @@
 | claim_id | khớp claims.csv | `CLM-00123` |
 | is_fraud | `1` / `0` | `1` |
 | fraud_pattern | tên pattern hoặc rỗng nếu hợp lệ | `upcoding` |
+
+Giá trị `fraud_pattern` trùng tên rule trong output của engine (`src/rule_names.py`): `duplicate_claim`, `rapid_resubmission`, `upcoding`, `unbundling`, `phantom_billing`, `weekend_anomaly`, `diagnosis_procedure_mismatch`, `amount_clustering`.
