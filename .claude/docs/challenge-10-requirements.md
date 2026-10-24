@@ -53,18 +53,30 @@ Giai đoạn: New Task (theo Task_Lifecycle). Chưa chọn công nghệ.
 
 - Giai đoạn hiện tại: New Task. Chọn công nghệ để sau (có thể làm ở Claude Code).
 - Timeline mục tiêu 4-6 giờ, chưa cam kết đến khi phân tích xong đề.
+- Timeline 5-7h (kế hoạch 6h): dataset 1.5h, logic 1.75h, unit test 1.25h (gồm C2, C3, C4), buffer 1.5h. Ghi tại `AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/README.md`.
+- A: viết code generator, ràng buộc sinh đủ các pattern fraud theo đề.
+- A: dữ liệu hợp lệ được phép tự nhiên kích hoạt rule (FP tự nhiên), đếm và báo trong metrics.
+- A2: diagnosis dùng mã ICD-10 thật; procedure dùng mã tự đặt `P-xxxx`. Xem `docs/business-rule/icd-10.md`.
+- A4: tách input (`claims.csv`, chỉ 10 cột của đề) và ground truth (`ground_truth.csv`: claim_id, is_fraud, fraud_pattern). Engine không đọc ground truth.
+- A: seed cố định để tái lập dataset.
+- A3: một claim fraud chỉ mang 1 pattern (giới hạn có chủ đích; thực tế có thể nhiều).
+- A3: có nhóm provider weekday-only. Xem `docs/business-rule/weekday-only-providers.md`.
+- Cách đếm fraud: phương án C, đếm theo claim, tổng 200 claim fraud. Duplicate 15 cặp (30 claim). Phantom: 1 provider-day có 31 claim = 25 claim nhãn phantom + 6 claim nhãn upcoding/mismatch.
+- Provider: 50 provider, 3 loại (bệnh viện, phòng khám, nha khoa); 10 bệnh viện weekday-only, mỗi provider nhận 2 claim weekend fraud.
+- Đơn vị VNĐ, giữ nguyên số của đề; mặt bằng giá bệnh viện tư.
+- A2 đã ghi: `AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/business-rule/` (catalog, icd-10, upcoding, bundling, diagnosis-procedure-mismatch, amount-clustering, weekday-only-providers).
+- Claim hợp lệ có đúng 1 mã procedure; amount = giá chuẩn x log-normal dao động 15%; upcoded = giá chuẩn x 1.6-2.5.
+- Unbundling flag khi claim chứa đủ tất cả thành phần của bundle.
+- Amount clustering dùng P-1003 (giá chuẩn 40,000, dao động 15%).
 - Duplicate: dữ liệu đã qua validate input, không có double-submit; hai claim trùng là hai claim độc lập và là fraud. Rule flag cả 2 claim trong cặp, cả 2 mang nhãn fraud.
 
 ## Câu hỏi mở (bàn khi đi vào chi tiết từng mục)
 
 | Mục | Câu hỏi |
 |---|---|
-| A3 | "30 duplicate claims" là 30 claim (15 cặp) hay 30 cặp (60 claim)? Đề xuất 15 cặp để giữ tổng ~200. |
-| A3 / B1 | Phantom billing: đề yêu cầu 25 claim nhưng rule là > 30 claim/provider/ngày. Gán nhãn cả ngày bất thường (31 claim) hay giữ 25 và chấp nhận 6 FP? |
-| A3 / B1 | Weekend anomaly: "never operate on weekends" (Dataset) và "< 5% historical weekend volume" (Rule) không khớp; cách tính "historical"; danh sách surgical. |
-| A2 / B1 | Upcoding: `submitted_amount` là cấp claim, "mean per procedure" là cấp procedure; quy đổi thế nào. |
-| A2 | Diagnosis-procedure: tập mã phải khép kín để claim hợp lệ không bị flag hàng loạt. |
-| A3 | Amount clustering: claim hợp lệ có được rơi vào 47,500-49,999 không. |
+| B1 | Weekend anomaly: cách tính "historical weekend volume" (loại claim đang xét). |
+| B1 | Upcoding: mean/SD có loại claim upcoded ra không (masking); số claim tối thiểu mỗi mã. |
+| A3 | Rapid re-submission: 30 claim = 15 cặp? Có loại trừ cặp duplicate không. |
+| B1 | Duplicate claim cũng thỏa rapid re-submission: rule rapid có loại trừ không. |
 | B4 | Ví dụ output của đề (severity 4 + 2, score 78) không khớp chuẩn hóa tuyến tính; chọn cách chuẩn hóa. |
 | C2 | Định nghĩa "dự đoán fraud" (có >= 1 flag hay score > ngưỡng); FPR = FP/(FP+TN) hay 1 - precision. |
-| A4 | Một claim có được mang nhiều pattern fraud không. |
