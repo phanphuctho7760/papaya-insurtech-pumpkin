@@ -18,19 +18,28 @@ From this folder (`AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/`):
 ```bash
 uv sync                                   # create .venv and install dev dependencies
 uv run python src/cli.py generate         # default seed 2024, writes to data/
+uv run python src/cli.py check            # structural checks on data/
 ```
 
-Options:
+`generate` options:
 
 | Option | Default | Meaning |
 |---|---|---|
 | `--seed` | `2024` | Random seed. The same seed always produces byte-identical files. |
 | `--out` | `data/` | Output directory (created if missing). |
 
-Expected console output:
+`check` options:
+
+| Option | Default | Meaning |
+|---|---|---|
+| `--data` | `data/` | Dataset directory to check. |
+
+Generating and checking are two separate steps: `generate` only writes the files, `check` only reads them. `check` can therefore verify any existing dataset directory without regenerating it.
+
+Expected output of `check`:
 
 ```text
-Wrote 2000 claims (200 fraud) to .../data with seed 2024
+Structural checks passed for .../data: 2000 claims, 200 fraud
   amount_clustering                20
   diagnosis_procedure_mismatch     20
   duplicate_claim                  30
@@ -39,7 +48,12 @@ Wrote 2000 claims (200 fraud) to .../data with seed 2024
   unbundling                       25
   upcoding                         30
   weekend_anomaly                  20
+  members 488, providers 50, claims per provider type {'CLINIC': 330, 'DENTAL': 478, 'HOSPITAL': 1192}
+  weekday-only hospitals 67-78 claims, min single-code claims per code 44
+  duplicate groups 15, phantom day PRV-006 2024-11-05 (31 claims)
 ```
+
+`check` reads the files back from disk and verifies counts per pattern, columns and formats, members, providers, codes, weekday-only hospitals, duplicate groups and the single phantom provider-day. If any check fails it prints the problems to stderr and exits with code 1; do not use the files in that case. Every check with its threshold and source: [`docs/decisions/dataset-checks.md`](docs/decisions/dataset-checks.md).
 
 ### Output files
 

@@ -93,6 +93,14 @@ Nguồn business: `docs/business-rule/fraud-injection.md`, `catalog.md`, `icd-10
 
 Không chép logic rule vào đây; kiểm chéo rule với nhãn thuộc #03.
 
+**Tiến độ (2026-10-24): xong** (`src/generator/checks.py`, lệnh riêng `cli.py check [--data data]`; lỗi => in danh sách lỗi ra stderr, exit 1).
+- Đổi so với plan (người dùng chốt 2026-10-24): kiểm cấu trúc là lệnh `check` riêng, không chạy cuối `generate`. Lý do: generate và check là 2 quá trình tách bạch, mỗi hàm 1 chức năng; `check` kiểm được thư mục dataset có sẵn mà không phải sinh lại.
+- Kiểm trên file đọc lại từ đĩa (bắt được cả lỗi khi ghi CSV); danh sách weekday-only và ngày phantom lấy từ `generation_summary.json`.
+- Kiểm thêm ngoài danh sách trên: header 2 file, `claim_id` của ground truth khớp thứ tự claims, `is_fraud` khớp `fraud_pattern`.
+- Seed 2024 pass hết. Đã thử 11 kiểu làm hỏng trên bản copy (trùng `claim_id`, sai `is_weekend`, amount lẻ 50, thêm 1 nhóm duplicate, claim hợp lệ 2 mã, sai claim_type, lệch số pattern, đổi tên provider, ngày 2023, claim hợp lệ cuối tuần ở weekday-only, thêm 1 provider-day 31 claim): bắt được cả 11.
+
+**Plan hoàn thành 2026-10-24.**
+
 ## Verify
 
 - Chạy `generate` 2 lần cùng seed => 2 file giống hệt (so sha256).

@@ -1,65 +1,66 @@
-# Công nghệ và cấu trúc dự án
+# Technology and project structure
 
-> Thiết kế dự định, có thể thay đổi trong quá trình làm. Khi thay đổi: cập nhật file này và ghi lý do.
+> Intended design; it may change while the work goes on. When it changes: update this file and record the reason.
 
-## Công nghệ (đã chốt 2026-10-24)
+## Technology (settled 2026-10-24)
 
-| Phần | Công nghệ | Ghi chú |
+| Part | Technology | Notes |
 |---|---|---|
-| A. Sinh dataset | Python | Sinh `claims.csv` + `ground_truth.csv`, seed cố định |
-| B. Engine (8 rule, scoring) | Python | Cùng ngôn ngữ với A |
-| C. Test, metrics | pytest | |
+| A. Dataset generation | Python | Writes `claims.csv` + `ground_truth.csv`, fixed seed |
+| B. Engine (8 rules, scoring) | Python | Same language as A |
+| C. Tests, metrics | pytest | |
 
-- Thư viện: chỉ thư viện chuẩn (`csv`, `json`, `statistics`, `random`, `datetime`, `math`, `time`) + pytest để test.
+- Libraries: standard library only (`csv`, `json`, `statistics`, `random`, `datetime`, `math`, `time`) + pytest for tests.
 
-### Phương án đã cân nhắc
+### Options considered
 
-| Phương án | Lý do không chọn / chọn |
+| Option | Why rejected / chosen |
 |---|---|
-| TypeScript cho B, Python cho A | Không chọn: config phải đọc ở 2 ngôn ngữ, dễ lệch giữa generator và engine. Lợi duy nhất là khớp stack backend của Papaya. |
-| **Python cho cả A, B, C** | Chọn: đề không yêu cầu API; 1 nơi đọc config, 1 test runner; Python là stack AI/ML của team (Handbook `Tech_Stack.md`). |
-| pandas | Không chọn: 2,000 dòng rất nhỏ; code thuần dễ giải thích từng dòng khi phỏng vấn. |
+| TypeScript for B, Python for A | Rejected: the config would be read in 2 languages, easy for the generator and the engine to drift apart. The only gain is matching Papaya's backend stack. |
+| **Python for A, B and C** | Chosen: the brief asks for no API; 1 place reads the config, 1 test runner; Python is the team's AI/ML stack (Handbook `Tech_Stack.md`). |
+| pandas | Rejected: 2,000 rows is tiny; plain code is easier to explain line by line in the interview. |
 
-## Ghi chú kỹ thuật
+## Technical notes
 
-- `config/` là file JSON dùng chung (bundle map, cặp hợp lệ, giá chuẩn, trọng số) để generator và engine không lệch nhau. Trọng số 1-5 được kiểm khi load.
-- Không làm API (đề không yêu cầu). Chạy hàng loạt bằng CLI, xuất file.
-- Mọi rule cùng một chữ ký: nhận toàn bộ danh sách claim, trả flag theo `claim_id`. Lý do: 5/8 rule cần nhìn nhiều claim (duplicate, rapid, upcoding, phantom, weekend).
-- Hiệu năng (B5): rule rapid chỉ so cặp trong nhóm `(member_id, diagnosis_code)`, mỗi nhóm vài claim => không có O(n^2) trên toàn bộ dataset.
-- Đo thời gian (C4): `time.perf_counter()` bao toàn bộ luồng load -> rules -> score -> ghi file trong CLI; ghi kết quả vào metrics report.
-- Generator gán `claim_id` sau khi sắp toàn bộ claim theo ngày, để claim fraud không nằm cụm ở cuối dãy ID.
+- `config/` holds shared JSON files (bundle map, valid pairs, standard prices, weights) so the generator and the engine cannot drift apart. Weights 1-5 are validated on load.
+- No API (the brief does not ask for one). Batch runs through the CLI, writing files.
+- Every rule has the same signature: it takes the full list of claims and returns flags by `claim_id`. Reason: 5 of the 8 rules need to look at several claims (duplicate, rapid, upcoding, phantom, weekend).
+- Performance (B5): the rapid rule only compares pairs inside a `(member_id, diagnosis_code)` group of a few claims => no O(n^2) over the whole dataset.
+- Timing (C4): `time.perf_counter()` around the whole load -> rules -> score -> write flow in the CLI; the result goes into the metrics report.
+- The generator assigns `claim_id` after sorting all claims by date, so fraudulent claims do not cluster at the end of the ID range.
+- Generating and checking the dataset are separate CLI commands (`ADR-001-separate-dataset-check-command.md`); the checks are listed in `dataset-checks.md`.
 
-## Cấu trúc `src/`
+## Structure of `src/`
 
 ```
 src/
-|-- config/      # weights.json, catalog.json (procedure, bundle, giá, cặp hợp lệ), providers.json (50 provider, chỉ generator đọc)
-|-- generator/   # sinh dataset + nhãn ground truth
-|-- rules/       # 8 rule, mỗi rule 1 file, hàm thuần
-|-- scoring/     # tổng trọng số, chuẩn hóa 0-100, xếp hạng
-|-- metrics/     # precision, recall, FPR, report 4 phần
-`-- cli.py       # generate | score | metrics
+|-- config/      # weights.json, catalog.json (procedures, bundles, prices, valid pairs), providers.json (50 providers, read by the generator only)
+|-- generator/   # dataset generation + ground-truth labels + structural checks
+|-- rules/       # 8 rules, one file each, pure functions
+|-- scoring/     # weighted sum, 0-100 normalization, ranking
+|-- metrics/     # precision, recall, FPR, 4-part report
+`-- cli.py       # generate | check | score | metrics
 tests/           # pytest
 data/            # claims.csv, ground_truth.csv
 output/          # scored_output.json, metrics_report.md
 ```
 
-## Cấu trúc `conversations/`
+## Structure of `conversations/`
 
 ```
 conversations/
-|-- README.md                      # mục lục
+|-- README.md                      # index
 |-- 01-chat-research-domain.md     # Claude Chat
-|-- 02-code-setup-project.txt      # Claude Code: chốt kỹ thuật, backlog, plan 01
-|-- 03-code-phase1-generator.txt   # Claude Code (dự kiến)
-`-- 04-code-phase2-rules.txt       # Claude Code (dự kiến)
+|-- 02-code-setup-project.txt      # Claude Code: tech decisions, backlog, plan 01
+|-- 03-code-phase1-generator.txt   # Claude Code (planned)
+`-- 04-code-phase2-rules.txt       # Claude Code (planned)
 ```
 
-- Claude Chat: lưu bằng skill `/noteconversaion-clacowo-bunhy` (đang cân nhắc).
-- Claude Code: lưu bằng lệnh `/export`, giữ nguyên file `.txt` (không đổi sang `.md` để giữ nguyên văn).
-- Đặt tên `NN-<công cụ>-<chủ đề>`, `NN` theo thứ tự thời gian; `README.md` liệt kê từng file.
-- Log giữ nguyên văn, không chỉnh sửa.
+- Claude Chat: saved with the `/noteconversaion-clacowo-bunhy` skill (under consideration).
+- Claude Code: saved with `/export`, kept as the original `.txt` (not converted to `.md`, to stay verbatim).
+- Naming `NN-<tool>-<topic>`, `NN` in chronological order; `README.md` lists every file.
+- Logs are kept verbatim, never edited.
 
-## Định dạng dữ liệu
+## Data formats
 
-Xem `dataset-format.md`.
+See `dataset-format.md`.

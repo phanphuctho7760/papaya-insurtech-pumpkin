@@ -8,8 +8,8 @@
 
 ## DONE
 
-(trống)
+- [01 - A: Sinh dataset](done/01-dataset-generator.md) - ticket #01, xong 2026-10-24. Generator 2,000 claim + 200 fraud theo 8 pattern, CLI `generate`, kiểm cấu trúc tự động.
 
 ## TODO
 
-- [01 - A: Sinh dataset](todo/01-dataset-generator.md) - ticket #01.
+(trống)
