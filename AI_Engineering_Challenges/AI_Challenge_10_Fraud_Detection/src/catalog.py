@@ -59,6 +59,10 @@ class Catalog:
     def is_valid_pair(self, diagnosis_code: str, code: str) -> bool:
         return code in self.valid_pairs.get(diagnosis_code, frozenset())
 
+    def diagnoses_for(self, code: str) -> list[str]:
+        """Diagnoses for which a procedure / bundle code is clinically valid, in catalog order."""
+        return [dx for dx, codes in self.valid_pairs.items() if code in codes]
+
     def components_price(self, bundle_code: str) -> int:
         """Sum of the standard prices of a bundle's components (the unbundled price)."""
         return sum(self.procedures[c].standard_price for c in self.bundles[bundle_code].components)

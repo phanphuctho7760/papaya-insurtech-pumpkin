@@ -9,7 +9,7 @@ Tổng hợp cách sinh 8 pattern fraud. Chi tiết "chuẩn" của từng rule 
 - Claim hợp lệ được phép tự nhiên kích hoạt rule (FP tự nhiên), đếm và báo trong metrics.
 - Seed cố định để tái lập dataset.
 - Amount của claim fraud thuộc pattern không dựa vào amount (duplicate, rapid, unbundling, phantom, weekend, mismatch): hệ số dao động kẹp trong [0.85, 1.15] (khoảng +-1 SD), để không vô tình dính upcoding hay clustering. Claim hợp lệ không kẹp (giữ FP tự nhiên có chủ đích).
-- Amount làm tròn tới 1,000 VNĐ; riêng claim clustering lấy trong 47,500-49,999, làm tròn tới 100 VNĐ.
+- Mọi amount (hợp lệ và fraud) làm tròn tới 100 VNĐ; claim clustering lấy trong 47,500-49,999. Không làm tròn khác nhau giữa claim hợp lệ và fraud: khác nhau thì định dạng amount lộ nhãn.
 - Sau khi generate, generator (A) chỉ kiểm cấu trúc: đủ số claim theo pattern, mỗi mã >= 30 claim 1 mã, mỗi bệnh viện weekday-only >= 60 claim, không có nhóm duplicate ngoài 15 cặp chèn, không provider nào khác vượt 30 claim/ngày. Generator không chép lại logic rule.
 - Kiểm chéo bằng engine ở C (test tích hợp chạy engine trên dataset thật): mỗi claim fraud chỉ dính đúng rule của pattern mình. Ngoại lệ đã biết: 6 claim trong ngày phantom (dính thêm phantom), cặp duplicate tự thỏa điều kiện rapid re-submission, nhưng rule rapid bỏ qua cặp trùng unique key duplicate (xem `duplicate-and-rapid-resubmission.md`) nên không bị flag 2 lần.
 

@@ -14,7 +14,7 @@ Nguồn business: `docs/business-rule/fraud-injection.md`, `catalog.md`, `icd-10
    - B-3101, B-3102, B-4101 không có vấn đề.
    - Đã chốt: thêm 3 cặp hợp lệ `J06.9 - P-1003`, `I10 - P-1003`, `E11.9 - P-1002` (hợp lý về y khoa: khám tổng quát có xét nghiệm nước tiểu, theo dõi đái tháo đường có công thức máu). Tổng thành 35 cặp. Hệ quả: P-1003 có thêm diagnosis hợp lệ, không ảnh hưởng clustering.
 2. **Amount của claim fraud ngoài pattern amount:** hệ số dao động bị kẹp trong [0.85, 1.15] (khoảng +-1 SD), để claim duplicate / rapid / phantom / weekend / mismatch / unbundling không vô tình dính upcoding hay clustering. Claim hợp lệ vẫn dùng log-normal không kẹp (giữ FP tự nhiên có chủ đích).
-3. **Làm tròn amount:** claim hợp lệ và phần lớn fraud làm tròn tới 1,000 VNĐ (giống hóa đơn thật). Claim clustering lấy ngẫu nhiên trong 47,500-49,999, làm tròn tới 100 VNĐ.
+3. **Làm tròn amount:** mọi claim (hợp lệ và fraud) làm tròn tới 100 VNĐ, giống bảng giá thật (27,400 / 46,200 trong `catalog.md`). Claim clustering lấy ngẫu nhiên trong 47,500-49,999. Sửa 2026-10-24: bản trước làm tròn claim hợp lệ tới 1,000 và clustering tới 100, khiến mọi amount không chia hết cho 1,000 là fraud clustering (lộ nhãn qua định dạng).
 
 ## Phase 1 - Khung project và config
 
@@ -33,12 +33,16 @@ Nguồn business: `docs/business-rule/fraud-injection.md`, `catalog.md`, `icd-10
 
 - **Provider (50):** đọc từ `src/config/providers.json`: 20 bệnh viện (OUTPATIENT + INPATIENT), 20 phòng khám (OUTPATIENT), 10 nha khoa (DENTAL). 10 bệnh viện weekday-only chọn theo seed.
 - **Member:** `MEM-0001`..`MEM-0500`, chọn đều (không chia trước; kỳ vọng ~491 member xuất hiện, Phase 5 kiểm >= 480).
-- **Hạn mức theo mã:** mỗi mã trong 21 mã (16 procedure + 5 bundle) nhận trước 30 claim; 1,170 claim còn lại chia theo trọng số tần suất (ngoại trú nhiều hơn nội trú). Trọng số tần suất là hằng số đặt ở đầu module generator.
+- **Hạn mức theo mã:** bảng số claim hợp lệ cố định cho từng mã trong 21 mã (`LEGIT_CLAIMS_PER_CODE` trong `src/generator/legit.py`, tổng 1,800): mỗi mã >= 30, ngoại trú nhiều nhất, 18 mã ngoài P-1003 có >= 60 (đủ chỗ rải 27 claim upcoded, tối đa 2/mã). Dùng số cố định thay vì chia theo trọng số ngẫu nhiên để mã sát 60 không bị rơi xuống dưới 60 tùy seed.
 - **Diagnosis:** chọn ngẫu nhiên trong các diagnosis hợp lệ của mã.
-- **Provider cho claim:** đúng loại theo claim_type. Mỗi bệnh viện weekday-only được gán trước 62 claim (OUTPATIENT / INPATIENT) để chắc chắn >= 60; phần còn lại chia ngẫu nhiên.
+- **Provider cho claim:** đúng loại theo claim_type. Mỗi bệnh viện weekday-only nhận ngẫu nhiên 62-70 claim (OUTPATIENT / INPATIENT) và không nhận thêm; phần còn lại chia ngẫu nhiên cho provider khác. Lý do không cho bốc thêm: bản đầu cho bốc thêm thì 10 bệnh viện này có 84-95 claim so với 15-27 của bệnh viện thường, tức 10 bệnh viện lớn nhất luôn là nhóm weekday-only (dấu vết dễ thấy, ngược thực tế).
 - **Ngày:** bệnh viện weekday-only chỉ thứ Hai - thứ Sáu; provider khác chọn đều trong 2024. `is_weekend` suy ra từ ngày.
-- **Amount:** giá chuẩn x `exp(N(0, 0.15))`, làm tròn 1,000.
+- **Amount:** giá chuẩn x `exp(N(0, 0.15))`, làm tròn 100.
 - **Không tạo duplicate ngẫu nhiên:** nếu unique key `(member, provider, date, diagnosis)` đã tồn tại thì chọn lại ngày.
+
+**Tiến độ (2026-10-24): xong** (`src/generator/models.py`, `src/generator/legit.py`, thêm `Catalog.diagnoses_for`). Số đo sơ bộ trên 1,800 claim hợp lệ, seed 2024 (chưa có fraud, số chính thức đo lại sau Phase 5):
+- 483 member, 50 provider; weekday-only 63-69 claim, bệnh viện thường 31-45, phòng khám 10-24, nha khoa 34-59; provider-day lớn nhất 3; 0 duplicate.
+- FP tự nhiên: upcoding 57 claim (ước lượng cũ 40-45; log-normal lệch phải nên ~3.2% vượt mean + 2 SD), rapid 32 claim (ước lượng cũ 10-20), P-1003 trong dải clustering 6/90.
 
 ## Phase 3 - Chèn 200 claim fraud
 
@@ -68,7 +72,7 @@ Nguồn business: `docs/business-rule/fraud-injection.md`, `catalog.md`, `icd-10
 - Số member khác nhau trong 480-500, đúng 50 provider, mọi ngày trong 2024, `is_weekend` khớp ngày, claim_type khớp mã.
 - Mỗi `provider_id` luôn đi với đúng 1 `provider_name` và ngược lại.
 - `procedure_codes`: mọi mã có trong catalog; claim không phải unbundling có đúng 1 mã; claim unbundling có đúng đủ thành phần của 1 bundle.
-- `submitted_amount`: số nguyên dương; chia hết cho 1,000, riêng claim clustering chia hết cho 100 và nằm trong 47,500-49,999.
+- `submitted_amount`: số nguyên dương, chia hết cho 100; claim clustering nằm trong 47,500-49,999.
 - Mỗi mã >= 30 claim 1 mã.
 - Mỗi bệnh viện weekday-only >= 60 claim, không có claim hợp lệ cuối tuần.
 - Nhóm theo unique key duplicate: đúng 15 nhóm có 2 claim, không nhóm nào khác > 1.

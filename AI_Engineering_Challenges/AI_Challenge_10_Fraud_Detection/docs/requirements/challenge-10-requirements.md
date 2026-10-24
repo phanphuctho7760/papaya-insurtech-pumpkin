@@ -94,6 +94,7 @@ Giai đoạn: New Task (theo Task_Lifecycle). Chưa chọn công nghệ.
 - A1 provider (2026-10-24): 50 provider đặt cố định trong `src/config/providers.json` (id, tên không dấu, loại), ID xen kẽ loại; danh sách weekday-only không ghi trong config mà generator chọn theo seed.
 - A1 member (2026-10-24): chọn đều trong `MEM-0001..0500`, không chia trước; "~500" được kiểm tự động là >= 480 member khác nhau (kỳ vọng ~491).
 - A2 claim_type (2026-10-24): claim_type của diagnosis chỉ để tham khảo, claim_type của claim lấy theo mã. Giữ 2 cặp khác claim_type `K80.2 - P-1005`, `J18.9 - P-1004`. Xem `docs/business-rule/diagnosis-procedure-mismatch.md`.
+- A amount (2026-10-24): mọi amount làm tròn tới 100 VNĐ, cả hợp lệ lẫn fraud (bản trước làm tròn khác nhau => lộ nhãn clustering). Xem `docs/business-rule/fraud-injection.md`.
 - B5 / C4: rapid group theo `(member_id, diagnosis_code)`; đo thời gian bằng `time.perf_counter()` trong CLI, ghi vào metrics report.
 - Rủi ro đã ước lượng trước khi code: `docs/experiences/dataset-generation-pitfalls.md`.
 - A2 sửa cặp hợp lệ: thêm `J06.9 - P-1003`, `I10 - P-1003`, `E11.9 - P-1002` (35 cặp) để claim unbundled B-1001 / B-1002 không dính mismatch. Xem `docs/business-rule/diagnosis-procedure-mismatch.md`.
