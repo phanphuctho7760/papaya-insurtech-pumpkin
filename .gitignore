@@ -3,5 +3,6 @@
 
 /.agent/tmp
 /.claude/worktrees
-/.vscode
+/.local-symlinks
 /.tmp
+/.vscode

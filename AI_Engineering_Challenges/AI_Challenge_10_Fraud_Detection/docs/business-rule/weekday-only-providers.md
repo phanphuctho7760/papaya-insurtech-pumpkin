@@ -15,6 +15,9 @@ Phục vụ pattern "weekend surgical anomaly" (rule 6).
 - Procedure surgical: P-3001, P-3002, P-3003, B-3101, B-3102 (xem `catalog.md`).
 - Danh sách provider weekday-only được ghi lại sau khi generate.
 
-## Điểm còn mở
+## Cách tính tỷ lệ cuối tuần (đã chốt)
 
-- Cách tính "historical weekend volume" (bàn ở B1). Với ~40 claim/provider và 2 claim fraud cuối tuần, tỷ lệ là 2/40 = 5%, đúng biên ngưỡng => bắt buộc loại các claim đang xét ra khỏi phép tính.
+- Rule 6 tính tỷ lệ cuối tuần trên **toàn bộ claim** của provider, đúng nguyên văn đề.
+- Generator cho mỗi bệnh viện weekday-only **>= 60 claim**. 2 claim fraud cuối tuần => 2/60 = 3.3% < 5% => rule bắt được.
+- Lý do: với ~40 claim/provider, 2/40 = 5% không < 5% => bỏ sót.
+- Không đưa khái niệm cấp cứu vào phạm vi.

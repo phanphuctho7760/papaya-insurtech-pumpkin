@@ -24,7 +24,13 @@ Upcoding: khai số tiền (hoặc mã) đắt hơn dịch vụ thực tế đã
 
 - Claim upcoded: amount = giá chuẩn x hệ số 1.6-2.5 (vượt ngưỡng 2 SD, vẫn gần thực tế).
 
-## Điểm còn mở (bàn ở B1)
+## Cách tính mean / SD (đã chốt ở B1)
 
-- Mean/SD tính trên toàn bộ claim (gồm cả claim upcoded, có hiệu ứng masking) hay loại trừ.
-- Số claim tối thiểu của một mã để tính SD có nghĩa.
+- Tính mean và SD trên **toàn bộ claim có cùng mã**, gồm cả claim upcoded. Giữ đúng chữ của đề ("mean for that procedure code").
+- Hệ quả đã biết (masking): claim upcoded làm tăng mean và SD => ngưỡng mean + 2 SD bị đẩy lên, một số claim upcoded có thể không vượt ngưỡng => giảm recall.
+- Cách xử lý: đo recall của rule upcoding trên dataset trước. Chỉ khi không đạt mục tiêu mới đổi sang loại trừ claim đang xét (leave-one-out). Ghi kết quả đo và quyết định vào writeup.
+
+## Số claim tối thiểu
+
+- Mã có < 10 claim: **không xét upcoding** (không đủ dữ liệu lịch sử để kết luận khai giá cao).
+- Generator sinh mỗi mã >= 30 claim để mọi mã đều được xét.

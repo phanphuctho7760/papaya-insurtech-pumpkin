@@ -1,7 +1,8 @@
 # Challenge 10 - Phân rã yêu cầu
 
 Phân rã yêu cầu của AI Challenge 10 - Fraud Detection Scoring Engine thành các mục chính và chi tiết.
-Nguồn: `.tmp/pumpkin-main/Hiring/AI_Engineering_Challenges/AI_Challenge_10.md` (R1-R7) và `.tmp/pumpkin-main/Hiring/AI_Engineering_Challenges/README.md` (R8).
+Nguồn: `docs/business-rule/AI_Challenge_10.md` (R1-R7) và `docs/requirements/AI_Engineering_Challenges_Original.md` (R8).
+Đường dẫn trong file này tính từ thư mục project `AI_Challenge_10_Fraud_Detection/`.
 Giai đoạn: New Task (theo Task_Lifecycle). Chưa chọn công nghệ.
 
 ## Danh sách yêu cầu gốc (R)
@@ -53,7 +54,7 @@ Giai đoạn: New Task (theo Task_Lifecycle). Chưa chọn công nghệ.
 
 - Giai đoạn hiện tại: New Task. Chọn công nghệ để sau (có thể làm ở Claude Code).
 - Timeline mục tiêu 4-6 giờ, chưa cam kết đến khi phân tích xong đề.
-- Timeline 5-7h (kế hoạch 6h): dataset 1.5h, logic 1.75h, unit test 1.25h (gồm C2, C3, C4), buffer 1.5h. Ghi tại `AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/README.md`.
+- Timeline 5-7h (kế hoạch 6h): dataset 1.5h, logic 1.75h, unit test 1.25h (gồm C2, C3, C4), buffer 1.5h. Ghi tại `README.md` của project.
 - A: viết code generator, ràng buộc sinh đủ các pattern fraud theo đề.
 - A: dữ liệu hợp lệ được phép tự nhiên kích hoạt rule (FP tự nhiên), đếm và báo trong metrics.
 - A2: diagnosis dùng mã ICD-10 thật; procedure dùng mã tự đặt `P-xxxx`. Xem `docs/business-rule/icd-10.md`.
@@ -64,21 +65,31 @@ Giai đoạn: New Task (theo Task_Lifecycle). Chưa chọn công nghệ.
 - Cách đếm fraud: phương án C, đếm theo claim, tổng 200 claim fraud. Duplicate 15 cặp (30 claim). Phantom: 1 provider-day có 31 claim = 25 claim nhãn phantom + 6 claim nhãn upcoding/mismatch.
 - Provider: 50 provider, 3 loại (bệnh viện, phòng khám, nha khoa); 10 bệnh viện weekday-only, mỗi provider nhận 2 claim weekend fraud.
 - Đơn vị VNĐ, giữ nguyên số của đề; mặt bằng giá bệnh viện tư.
-- A2 đã ghi: `AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/business-rule/` (catalog, icd-10, upcoding, bundling, diagnosis-procedure-mismatch, amount-clustering, weekday-only-providers).
+- A2 đã ghi: `docs/business-rule/` (catalog, icd-10, upcoding, bundling, diagnosis-procedure-mismatch, amount-clustering, weekday-only-providers).
 - Claim hợp lệ có đúng 1 mã procedure; amount = giá chuẩn x log-normal dao động 15%; upcoded = giá chuẩn x 1.6-2.5.
 - Unbundling flag khi claim chứa đủ tất cả thành phần của bundle.
 - Amount clustering dùng P-1003 (giá chuẩn 40,000, dao động 15%).
-- A3: rapid re-submission 15 cặp (30 claim), cả 2 claim mang nhãn fraud, cách nhau 1-7 ngày. Tổng hợp: `AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/business-rule/fraud-injection.md`.
-- A5: CSV RFC 4180 (phân cách `,`), `procedure_codes` phân cách `|`, ngày `YYYY-MM-DD`, amount số nguyên VNĐ, `is_weekend` 1/0, ground truth file riêng. Xem `AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/dataset-format.md`.
+- A3: rapid re-submission 15 cặp (30 claim), cả 2 claim mang nhãn fraud, cách nhau 1-7 ngày. Tổng hợp: `docs/business-rule/fraud-injection.md`.
+- A5: CSV RFC 4180 (phân cách `,`), `procedure_codes` phân cách `|`, ngày `YYYY-MM-DD`, amount số nguyên VNĐ, `is_weekend` 1/0, ground truth file riêng. Xem `docs/decisions/dataset-format.md`.
 - Mục A: đã chốt xong.
+- Công nghệ: A dùng Python; B dự định TypeScript, đang cân nhắc Python cho cả A và B (đề không yêu cầu API). Cấu trúc `src/` và `conversations/`: `docs/decisions/tech-and-structure.md`.
+- Bỏ hẳn khái niệm cấp cứu ra khỏi phạm vi.
+- B1 upcoding: mã < 10 claim không xét; generator sinh >= 30 claim mỗi mã.
+- B2 evidence: tiếng Anh, kèm tên tiếng Anh của mã, đủ 3 phần (quan sát / ngưỡng / claim liên quan). Xem `docs/business-rule/evidence.md`.
+- B3 trọng số: Duplicate 5, Phantom 4, Upcoding 4, Mismatch 4, Unbundling 3, Rapid 3, Weekend 2, Clustering 2. Xem `docs/business-rule/scoring-weights.md`.
+- B4 scoring: weighted sum + scale bão hòa `100 x (1 - e^(-0.25 x total))` (khớp ví dụ đề 78); xếp hạng giảm dần; output toàn bộ claim. Xem `docs/business-rule/scoring.md`.
+- C2 metrics: dự đoán fraud khi score > 0; FPR = FP/(FP+TN); thêm bảng theo ngưỡng 0/40/70. Xem `docs/business-rule/metrics.md`.
+- C1 test: 19 test (mỗi rule 1 ca flag + 1 ca không flag + ca biên, cộng scoring). Xem `docs/business-rule/test-cases.md`.
+- C3 metrics report: 4 phần (tổng thể, theo pattern, FP tự nhiên theo rule, bảng theo ngưỡng). Xem `docs/business-rule/metrics.md`.
+- Project tự đứng độc lập: đề, quy định chung, phân rã yêu cầu, handbook notes đã copy vào `docs/`.
+- B1 weekend: rule tính trên toàn bộ claim của provider; mỗi bệnh viện weekday-only >= 60 claim.
+- Business 8 rule: `docs/business-rule/detection-rules.md`.
+- B1 upcoding: mean/SD tính trên toàn bộ claim cùng mã (gồm cả claim upcoded), chấp nhận masking; đo recall trước, chỉ đổi sang leave-one-out nếu không đạt. Xem `docs/business-rule/upcoding.md`.
+- B1 duplicate: unique key `(member_id, provider_id, claim_date, diagnosis_code)`; nhóm >= 2 claim => flag tất cả.
+- B1 rapid re-submission: chỉ bỏ qua cặp trùng unique key duplicate; cặp cùng ngày khác provider vẫn là rapid. Xem `docs/business-rule/duplicate-and-rapid-resubmission.md`.
 - Duplicate: dữ liệu đã qua validate input, không có double-submit; hai claim trùng là hai claim độc lập và là fraud. Rule flag cả 2 claim trong cặp, cả 2 mang nhãn fraud.
 
 ## Câu hỏi mở (bàn khi đi vào chi tiết từng mục)
 
 | Mục | Câu hỏi |
 |---|---|
-| B1 | Weekend anomaly: cách tính "historical weekend volume" (loại claim đang xét). |
-| B1 | Upcoding: mean/SD có loại claim upcoded ra không (masking); số claim tối thiểu mỗi mã. |
-| B1 | Duplicate claim cũng thỏa rapid re-submission: rule rapid có loại trừ không. |
-| B4 | Ví dụ output của đề (severity 4 + 2, score 78) không khớp chuẩn hóa tuyến tính; chọn cách chuẩn hóa. |
-| C2 | Định nghĩa "dự đoán fraud" (có >= 1 flag hay score > ngưỡng); FPR = FP/(FP+TN) hay 1 - precision. |

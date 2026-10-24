@@ -1,6 +1,6 @@
 # Handbook notes cho Challenge 10 (Chat / Cowork)
 
-Tóm tắt các phần trong `.tmp/pumpkin-main/Software_Artisan_Handbook` dùng được khi làm AI Challenge 10 - Fraud Detection Scoring Engine.
+Tóm tắt các phần trong Software_Artisan_Handbook (repo papaya-insurtech/pumpkin, không kèm trong project) dùng được khi làm AI Challenge 10 - Fraud Detection Scoring Engine.
 Phạm vi: chỉ phần áp dụng cho Claude Chat và Claude Cowork. Phần Claude Code xem mục "Để dành cho Claude Code" ở cuối.
 
 > Cho agent: khi người dùng chạm tới chủ đề trong bảng "Khi nào nhắc" dưới đây, hãy nhắc ngắn gọn ý liên quan và dẫn đường file gốc.
@@ -21,7 +21,7 @@ Phạm vi: chỉ phần áp dụng cho Claude Chat và Claude Cowork. Phần Cla
 
 ## 1. AI Agent Philosophy
 
-File: `resources/AI_Agent_Workflow/AI_Agent_Philosophy.md`
+Nguồn Handbook: `Software_Artisan_Handbook/resources/AI_Agent_Workflow/AI_Agent_Philosophy.md`
 
 - Three-tool model: Chat = research, brainstorm, rubber-duck, nhờ tìm lỗi giải pháp. Cowork = phân tích yêu cầu, test plan, tài liệu. Code = viết code, git, test.
 - Ask What and Why before How: đưa context What/Why, để agent đề xuất How; nếu đã có hướng thì đưa như gợi ý, yêu cầu agent đánh giá rủi ro và so sánh phương án.
@@ -33,7 +33,7 @@ Liên hệ đề: Papaya chấm "decompose the problem, direct the AI tool effec
 
 ## 2. Task Lifecycle
 
-File: `resources/Development_Process/resources/Task_Lifecycle.md`
+Nguồn Handbook: `Software_Artisan_Handbook/resources/Development_Process/resources/Task_Lifecycle.md`
 
 - New Task: description phải rõ What + Why. Dán đề vào Chat để tìm ambiguity, thông tin thiếu.
 - Research: không nhảy vào code ngay; giải pháp phải end-to-end, bao hết use case.
@@ -43,7 +43,7 @@ File: `resources/Development_Process/resources/Task_Lifecycle.md`
 
 ## 3. Reviewee Convention
 
-File: `resources/Development_Process/resources/Code_Review/resources/Reviewee_Convention.md`
+Nguồn Handbook: `Software_Artisan_Handbook/resources/Development_Process/resources/Code_Review/resources/Reviewee_Convention.md`
 
 - Mục "Agent Workflow" trong mô tả: agent nào đã dùng, các prompt/chỉ đạo chính, đã tự kiểm tra gì, giới hạn còn lại. Nên đưa vào README nộp bài.
 - Commit theo Conventional Commits: `feat:`, `fix:`, `docs:`, `test:`, `refactor:`, `chore:` ...
@@ -52,7 +52,7 @@ File: `resources/Development_Process/resources/Code_Review/resources/Reviewee_Co
 
 ## 4. Reviewing AI Generated Code + Code Review Checklist
 
-Files: `resources/Development_Process/resources/Code_Review/resources/Reviewing_AI_Generated_Code.md`, `.../Code_Review_Checklist.md`
+Nguồn Handbook: `Software_Artisan_Handbook/resources/Development_Process/resources/Code_Review/resources/Reviewing_AI_Generated_Code.md`, `.../Code_Review_Checklist.md`
 
 Checklist tự review output AI:
 - Hallucinated API: import, signature có thật không.
@@ -65,7 +65,7 @@ Checklist tự review output AI:
 
 ## 5. Medical Insurance 101 (domain)
 
-File: `resources/Medical_Insurance_101.md`
+Nguồn Handbook: `Software_Artisan_Handbook/resources/Medical_Insurance_101.md`
 
 - Thực thể: Policy Owner, Insured Person, Medical Provider (CSYT), Insurer, TPA.
 - Claim method: Reimbursement (theo chi phí thực tế, có trần Limit) và Lump Sum.
@@ -76,13 +76,13 @@ File: `resources/Medical_Insurance_101.md`
 
 ## 6. Tech Stack
 
-File: `resources/Tech_Stack.md`
+Nguồn Handbook: `Software_Artisan_Handbook/resources/Tech_Stack.md`
 
 - AI/ML của team: Python (Pytorch, Keras, OpenAI, Vertex AI, Gemini). Backend: Node.js / TypeScript.
 
 ## 7. Communication Convention (chỉ cho email nộp bài)
 
-File: `resources/Communication_Convention.md`
+Nguồn Handbook: `Software_Artisan_Handbook/resources/Communication_Convention.md`
 
 - Email trang trọng; subject dạng `[Project Name] Subject`; luôn có greeting, sign-off, signature; nhắc tới đính kèm / link trong thân email.
 
@@ -92,7 +92,7 @@ Git_Workflow (Gitflow nhiều nhánh môi trường), Release_Process, System_En
 
 ## Để dành cho Claude Code (đọc khi chuyển sang Claude Code)
 
-- `resources/AI_Agent_Workflow/Claude_Code_Best_Practices.md`: prompting, Plan Mode, session management.
-- `resources/AI_Agent_Workflow/Claude_Code_Workflow_Setup.md`: Superpowers flow, branch/worktree/PR, harness, reviewer agents.
-- `resources/AI_Agent_Workflow/Agent_Troubleshooting.md`: loop, hallucination, context limit, scope creep, khi nào restart.
+- `Software_Artisan_Handbook/resources/AI_Agent_Workflow/Claude_Code_Best_Practices.md`: prompting, Plan Mode, session management.
+- `Software_Artisan_Handbook/resources/AI_Agent_Workflow/Claude_Code_Workflow_Setup.md`: Superpowers flow, branch/worktree/PR, harness, reviewer agents.
+- `Software_Artisan_Handbook/resources/AI_Agent_Workflow/Agent_Troubleshooting.md`: loop, hallucination, context limit, scope creep, khi nào restart.
 - Các mục "With Claude Code" trong Git_Workflow và phase Coding / Testing / Code Review của Task_Lifecycle.

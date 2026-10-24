@@ -8,7 +8,7 @@ Tổng hợp cách sinh 8 pattern fraud. Chi tiết "chuẩn" của từng rule 
 - Mỗi claim fraud mang **đúng 1 pattern** trong ground truth (giới hạn có chủ đích; thực tế 1 claim có thể nhiều pattern).
 - Claim hợp lệ được phép tự nhiên kích hoạt rule (FP tự nhiên), đếm và báo trong metrics.
 - Seed cố định để tái lập dataset.
-- Sau khi generate: kiểm mỗi claim fraud chỉ dính đúng rule của pattern mình. Ngoại lệ đã biết: 6 claim trong ngày phantom (dính thêm phantom), cặp duplicate (tự thỏa rapid re-submission; xử lý ở B1).
+- Sau khi generate: kiểm mỗi claim fraud chỉ dính đúng rule của pattern mình. Ngoại lệ đã biết: 6 claim trong ngày phantom (dính thêm phantom), cặp duplicate tự thỏa điều kiện rapid re-submission, nhưng rule rapid bỏ qua cặp trùng unique key duplicate (xem `duplicate-and-rapid-resubmission.md`) nên không bị flag 2 lần.
 
 ## Số lượng và cách sinh
 

@@ -74,6 +74,32 @@ Giá gói khoảng 90% tổng giá lẻ. Chi tiết rule: `bundling.md`.
 | B-3102 | Gói cắt túi mật | P-3002 + P-3010 | 28,000,000 | 25,500,000 | x |
 | B-4101 | Gói điều trị tủy | P-4002 + P-4004 | 2,080,000 | 1,900,000 | |
 
+## Tên tiếng Anh (dùng trong evidence)
+
+| Mã | English name |
+|---|---|
+| P-1001 | General consultation |
+| P-1002 | Complete blood count |
+| P-1003 | Urinalysis |
+| P-1004 | Chest X-ray |
+| P-1005 | Abdominal ultrasound |
+| P-1006 | HbA1c test |
+| P-2001 | Inpatient pneumonia treatment |
+| P-2002 | Normal vaginal delivery |
+| P-3001 | Laparoscopic appendectomy |
+| P-3002 | Laparoscopic cholecystectomy |
+| P-3003 | Open reduction internal fixation |
+| P-3010 | General anesthesia |
+| P-4001 | Dental examination |
+| P-4002 | Dental X-ray |
+| P-4003 | Dental filling |
+| P-4004 | Root canal treatment |
+| B-1001 | General check-up package |
+| B-1002 | Diabetes check-up package |
+| B-3101 | Appendectomy package |
+| B-3102 | Cholecystectomy package |
+| B-4101 | Root canal package |
+
 ## Provider
 
 - 50 provider, 3 loại: bệnh viện (nội trú, phẫu thuật), phòng khám (ngoại trú), nha khoa (răng).

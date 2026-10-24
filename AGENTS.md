@@ -12,9 +12,7 @@ Repo nộp bài test tuyển dụng của Papaya Insurtech. Gồm 2 phần, nộ
 ```
 .
 |-- AGENTS.md                         # file này: tổng quan dự án
-|-- .claude/docs/                     # ghi chú hỗ trợ cho agent
-|   |-- handbook-notes-challenge-10.md
-|   `-- challenge-10-requirements.md   # phân rã yêu cầu A/B/C/D, quyết định đã chốt, câu hỏi mở
+|-- .claude/                        # cấu hình agent (tài liệu Challenge 10 nằm trong docs/ của project)
 |-- Logical_Questions/                # câu trả lời phần logic, mỗi câu 1 file Q_<n>-<Ten>.md
 |-- AI_Engineering_Challenges/
 |   `-- AI_Challenge_10_Fraud_Detection/  # project Challenge 10
@@ -33,8 +31,8 @@ Repo nộp bài test tuyển dụng của Papaya Insurtech. Gồm 2 phần, nộ
 - Quy định chung phần AI: `.tmp/pumpkin-main/Hiring/AI_Engineering_Challenges/README.md`
 - Quy định phần logic: `.tmp/pumpkin-main/Hiring/Logical_Questions/README.md`
 - Handbook của team: `.tmp/pumpkin-main/Software_Artisan_Handbook/`
-- **Ghi chú Handbook đã lọc cho Challenge 10: `.claude/docs/handbook-notes-challenge-10.md`.** Khi người dùng đụng tới chủ đề có trong bảng "Khi nào nhắc" của file này (phân tích đề, so sánh giải pháp, timeline, README, review output AI, domain bảo hiểm, chọn stack, email nộp bài), hãy nhắc ý liên quan.
-- **Phân rã yêu cầu Challenge 10: `.claude/docs/challenge-10-requirements.md`.** Dùng làm khung A/B/C/D khi bàn chi tiết; cập nhật mục "Quyết định đã chốt" và "Câu hỏi mở" khi có quyết định mới.
+- **Ghi chú Handbook đã lọc cho Challenge 10: `AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/handbook-notes.md`.** Khi người dùng đụng tới chủ đề có trong bảng "Khi nào nhắc" của file này (phân tích đề, so sánh giải pháp, timeline, README, review output AI, domain bảo hiểm, chọn stack, email nộp bài), hãy nhắc ý liên quan.
+- **Phân rã yêu cầu Challenge 10: `AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/requirements/challenge-10-requirements.md`.** Dùng làm khung A/B/C/D khi bàn chi tiết; cập nhật mục "Quyết định đã chốt" và "Câu hỏi mở" khi có quyết định mới.
 
 ## Quy ước làm việc
 

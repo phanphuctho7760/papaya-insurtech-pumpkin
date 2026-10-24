@@ -40,3 +40,20 @@
 | O80 | Sinh thường | INPATIENT |
 | K02.1 | Sâu răng (ngà) | DENTAL |
 | K04.0 | Viêm tủy răng | DENTAL |
+
+## Tên tiếng Anh (dùng trong evidence)
+
+| Mã | English name |
+|---|---|
+| J06.9 | Acute upper respiratory infection |
+| I10 | Essential hypertension |
+| E11.9 | Type 2 diabetes without complications |
+| A09 | Infectious gastroenteritis |
+| N39.0 | Urinary tract infection |
+| J18.9 | Pneumonia |
+| K35.8 | Acute appendicitis |
+| K80.2 | Gallstones |
+| S52.5 | Fracture of lower end of radius |
+| O80 | Normal delivery |
+| K02.1 | Dental caries |
+| K04.0 | Pulpitis |
