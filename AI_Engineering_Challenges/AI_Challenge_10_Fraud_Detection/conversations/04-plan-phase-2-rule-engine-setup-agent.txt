@@ -1,0 +1,2588 @@
+ ▐▛███▛█   Claude Code v2.1.310
+▝▜██████▀  Opus 5.5 · Claude Pro
+ ▝▝   ▝▝   /Volumes/D/papaya-insurtech-pumpkin
+
+
+❯  viết .claude/docs/plans/todo/02-rule-engine.md cho ticket 2                  
+
+  Listed 1 directory (ctrl+o to expand)
+
+⏺ Bash(cat .claude/docs/plans/README.md
+      .claude/docs/plans/done/01-dataset-generator.md;
+      P=AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection; find $P/docs
+      $P/s…)
+  ⎿  # Plans
+
+     **Đọc khi:** bắt đầu thực thi một ticket trong `AI_Engineering_Challen
+     … +330 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin/AI_Engineering_Challenges/AI_Chall
+      enge_10_Fraud_Detection && for f in docs/backlog/README.md
+      docs/backlog/todo/02-rule-en…)
+  ⎿  === docs/backlog/README.md
+     # Backlog
+     … +243 lines (ctrl+o to expand)
+
+⏺ Bash(for f in docs/business-rule/upcoding.md
+      docs/business-rule/duplicate-and-rapid-resubmission.md
+      docs/business-rule/weekday-only-providers.md docs/business-rule/b…)
+  ⎿  Error: Exit code 1
+     === docs/business-rule/upcoding.md
+     # Upcoding (khai nâng mức)
+
+     ## Thuật ngữ
+
+     Upcoding: khai số tiền (hoặc mã) đắt hơn dịch vụ thực tế đã làm. Ví dụ trám
+     răng giá chuẩn 400,000, khai 900,000.
+
+     ## Nguồn trong đề
+
+     … +162 lines (ctrl+o to expand)
+
+⏺ Bash(cat docs/business-rule/test-cases.md docs/decisions/dataset-format.md;
+      sed -n 1,400p docs/business-rule/bundling.md
+      docs/business-rule/diagnosis-procedure-misma…)
+  ⎿  # Test cases (C1)
+
+     Đề yêu cầu: "At least 15 unit tests covering individual rules and edge
+     … +125 lines (ctrl+o to expand)
+
+⏺ Bash(cat src/cli.py src/rule_names.py src/catalog.py; head -3 data/claims.csv;
+      python3 -c "import
+      json;d=json.load(open('src/config/catalog.json'));print(d.keys());[…)
+  ⎿  """Command-line entry point.
+
+         uv run python src/cli.py generate [--seed 2024] [--out data]
+     … +244 lines (ctrl+o to expand)
+
+⏺ Tôi đã đọc xong ticket #02, business doc và code hiện có; giờ xem nốt câu hỏi
+  mở và ví dụ output của đề rồi viết plan.
+
+⏺ Bash(sed -n 60,140p docs/requirements/challenge-10-requirements.md; grep -n
+      -A25 -i "example output\|\"claim_id\"" docs/requirements/original-brief.md
+      | head -50; gr…)
+  ⎿  - A2: diagnosis dùng mã ICD-10 thật; procedure dùng mã tự đặt `P-xxxx`
+     . Xem `docs/business-rule/icd-10.md`.
+     - A4: tách input (`claims.csv`, chỉ 10 cột của đề) và ground truth (`g
+     … +124 lines (ctrl+o to expand)
+
+⏺ Bash(grep -rn "stdev\|pstdev" src/ | grep -v pyc; sed -n 104,130p
+      docs/requirements/challenge-10-requirements.md; python3 -c "
+      import math…)
+  ⎿  ## Câu hỏi mở (bàn khi đi vào chi tiết từng mục)
+
+     | Mục | Câu hỏi |
+     … +12 lines (ctrl+o to expand)
+
+  Searched for 1 pattern (ctrl+o to expand)
+
+⏺ Write(.claude/docs/plans/todo/02-rule-engine.md)
+  ⎿  Wrote 65 lines to .claude/docs/plans/todo/02-rule-engine.md
+      1 # Plan 02 - B: Engine 8 rule + scoring
+      3 > **Ticket:** #02 - trạng thái và mục tiêu nằm ở ticket; file này
+         chỉ chứa chi tiết thực thi.
+      5 Nguồn business: `docs/business-rule/detection-rules.md`, `evidenc
+        ng.md`, `diagnosis-procedure-mismatch.md`, `duplicate-and-rapid-r
+        esubmission.md`, `weekday-only-providers.md`, `amount-clustering.
+        ormat.md`. Tên rule: `src/rule_names.py`.
+      6 
+        ợp thuộc #03; ở đây chỉ chạy kiểm nhanh (phần Verify).
+      9 ## Cần chốt trước khi code
+     … +143 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin && python3 - <<'EOF'
+      from pathlib import Path…)
+  ⎿   M .claude/docs/plans/README.md
+      M AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/back
+     log/todo/02-rule-engine.md
+     ?? .claude/docs/plans/todo/02-rule-engine.md
+  ⎿  Updated .claude/docs/plans/README.md (+1 -1)
+      12  
+      13  ## TODO
+      14  
+      15 -(trống)                                                        
+      15 +- [02 - B: Engine 8 rule + scoring](todo/02-rule-engine.md) - t
+         +icket #02. Load input + weights, 8 rule, scoring 0-100, CLI `sc
+         +ore`; 7 mục cần chốt trước khi code.                           
+  ⎿  Updated AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs
+     /backlog/todo/02-rule-engine.md (+1 -1)
+       4  **Type:** feature
+       5  **Priority:** 2
+       6  **Effort:** M (kế hoạch 1.75h)
+       7 -**Plan:** none yet                                             
+       7 +**Plan:** `.claude/docs/plans/todo/02-rule-engine.md`          
+       8  **Related:** #01, #03
+       9  
+      10  ## What
+
+  Searched for 1 pattern (ctrl+o to expand)
+
+⏺ Bash(sed -i '' 's|^\*\*Plan:\*\*
+      `.claude/docs/plans/todo/02-rule-engine.md`$|**Plan:**
+      `.claude/docs/plans/todo/02-rule-engine.md` (repo root)|'
+      AI_Engineering_Chal…)
+  ⎿  7:**Plan:** `.claude/docs/plans/todo/02-rule-engine.md` (repo root)
+  ⎿  Updated AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs
+     /backlog/todo/02-rule-engine.md (+1 -1)
+       4  **Type:** feature
+       5  **Priority:** 2
+       6  **Effort:** M (kế hoạch 1.75h)
+       7 -**Plan:** `.claude/docs/plans/todo/02-rule-engine.md`          
+       7 +**Plan:** `.claude/docs/plans/todo/02-rule-engine.md` (repo roo
+         +t)                                                             
+       8  **Related:** #01, #03
+       9  
+      10  ## What
+
+⏺ Tôi đã viết xong .claude/docs/plans/todo/02-rule-engine.md, chưa commit. Plan
+  theo khung của plan 01 và viết bằng tiếng Việt, đúng quy ước cho thư mục
+  .claude/docs/.
+
+  Trước khi code, bạn cần duyệt 7 mục (mỗi mục tôi đã kèm đề xuất):
+  1. Mỗi rule tối đa 1 flag cho 1 claim, evidence liệt kê mọi claim liên quan.
+     Nếu không, weight bị cộng 2 lần.
+  2. Upcoding dùng statistics.pstdev, giữ dấu >. Với dataset này, chênh với
+     stdev dưới 1.2%.
+  3. Thêm mẫu evidence rapid cho 2 trường hợp: claim đứng trước trong cặp, và
+     cặp cùng ngày khác provider.
+  4. "Surgical" nghĩa là claim có ít nhất 1 mã surgical = true. Ngày cuối tuần
+     lấy theo cột is_weekend.
+  5. Input lỗi thì engine dừng hẳn, không bỏ qua dòng. Lý do: gặp mã lạ, rule
+     mismatch và upcoding sẽ ra kết quả sai mà không báo gì.
+  6. Ngưỡng của từng rule để là hằng số trong code. Chỉ weight đưa vào config.
+  7. scored_output.json là mảng đã xếp hạng, mỗi phần tử chỉ có 3 trường của đề.
+
+  3 phase:
+  - Phase 1: load claims (src/claims.py) và weights.json (kiểm int 1-5).
+  - Phase 2: 8 rule cùng chữ ký và helper định dạng evidence.
+  - Phase 3: scoring, xếp hạng và CLI score (có đo thời gian).
+
+  Engine không import gì từ generator/, để không có đường nào chạm tới nhãn.
+  Hằng số CLAIMS_COLUMNS sẽ chuyển sang claims.py.
+
+  Verify: đếm số claim theo từng rule và so với số đo thật đã ghi ở #01, ví dụ
+  upcoding 53 (30 fraud + 23 hợp lệ), rapid 50, clustering 22. Lệch thì dừng tìm
+  nguyên nhân trước khi sang #03. Ngoài ra kiểm cả trường hợp weights.json lỗi.
+
+  Tôi cũng đã điền dòng Plan trong ticket #02 và thêm plan vào mục TODO của
+  .claude/docs/plans/README.md.
+
+  Bạn duyệt 7 mục trên, tôi sẽ ghi các quyết định vào business doc rồi bắt đầu
+  Phase 1.
+
+✻ Cogitated for 2m 2s · done 20:15
+
+※ recap: Bạn đang làm ticket #02 (engine 8 rule và scoring) của Challenge 10, và tôi đã viết xong plan `02-rule-engine.md`, chưa commit. Việc tiếp theo là bạn duyệt 7 mục cần chốt trong plan để tôi bắt đầu Phase 1. (disable recaps in /config)
+
+❯ giải thích thuật ngữ "stdev"                                                  
+                                                                                
+  tôi nghĩ nên tạo 1 .md để list các thuật ngữ trong business logic docs.       
+                                                                                
+  mắt evidence là gì                                                            
+                                                                                
+  các bước này nó có thuộc phần rule ko hay nó qua phần kiểm thử rồi            
+  Sửa weights.json thành 0 / 6 / "4" / thiếu 1 rule => load báo lỗi. Đổi 1      
+  weight hợp lệ => score đổi mà không sửa code.                                 
+  grep -rn ground_truth src/rules src/scoring src/claims.py không ra kết quả.   
+  Áp dụng /pyfriend-claco-bunhy khi viết code; review diff trước commit; chạy   
+  /pjdoc-mgmt-claco-bunhy pre-commit                                            
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin/AI_Engineering_Challenges/AI_Chall
+      enge_10_Fraud_Detection/docs && grep -rn -i "thuật ngữ\|glossary\|term"
+      --include=*.md…)
+  ⎿  (eval):1: no matches found: --include=*.md
+     28:## Thuật ngữ đánh giá (metrics)
+     29-
+     … +29 lines (ctrl+o to expand)
+
+⏺ 1. "stdev" là gì
+
+  Standard deviation (độ lệch chuẩn, SD) đo mức các giá trị phân tán quanh mean.
+  Rule upcoding dùng nó để đặt ngưỡng: flag khi amount > mean + 2 x SD.
+
+  Python có 2 hàm tính SD, chỉ khác ở mẫu số:
+
+  ┌────────────────────────┬─────────────────────┬──────────────────────────┐
+  │          Hàm           │      Công thức      │         Dùng khi         │
+  ├────────────────────────┼─────────────────────┼──────────────────────────┤
+  │ statistics.pstdev      │ căn của tổng (x -   │ Có đủ toàn bộ dữ liệu    │
+  │ (population)           │ mean)^2 / n         │ cần xét                  │
+  ├────────────────────────┼─────────────────────┼──────────────────────────┤
+  │ statistics.stdev       │ căn của tổng (x -   │ Chỉ có một mẫu, cần ước  │
+  │ (sample)               │ mean)^2 / (n - 1)   │ lượng cho tổng thể lớn   │
+  │                        │                     │ hơn                      │
+  └────────────────────────┴─────────────────────┴──────────────────────────┘
+
+  Rule tính trên toàn bộ claim cùng mã trong dataset, nên tôi đề xuất pstdev.
+  Với n >= 44, hai hàm chênh nhau dưới 1.2%. pstdev cho SD nhỏ hơn một chút nên
+  ngưỡng thấp hơn và flag nhiều hơn một chút.
+
+  2. "mắt evidence"
+
+  Tôi viết tắt, câu đúng là "đọc evidence bằng mắt". Nghĩa là mở
+  scored_output.json, xem tay mỗi rule 1 claim, xem chuỗi evidence có dễ đọc và
+  đủ 3 phần không. Bước này không phải test tự động.
+
+  3. Các bước Verify thuộc phần nào
+
+  Các bước này không thuộc rule, cũng không thuộc #03. Chúng là 3 loại khác
+  nhau:
+
+  Bước: Sửa weights.json thành 0 / 6 / "4" / thiếu rule => báo lỗi
+  Thuộc: #02, kiểm phần load weights (Phase 1)
+  Lý do: Kiểm tiêu chí "kiểm 1-5 khi load" và "trọng số cấu hình được" của
+  ticket
+  #02. 19 test ở #03 không có ca này.
+  ────────────────────────────────────────
+  Bước: grep ground_truth
+  Thuộc: #02, kiểm tiêu chí "Engine không đọc ground_truth.csv"
+  Lý do: Kiểm cấu trúc code, không kiểm logic rule.
+  ────────────────────────────────────────
+  Bước: /pyfriend, review diff, /pjdoc-mgmt pre-commit
+  Thuộc: Quy trình làm việc
+  Lý do: Không phải bước kiểm kết quả. Tôi để nhầm vào Verify.
+
+  Phần kiểm tay weights có thể làm thành unit test tự động ở #03 (ngoài 19
+  test).
+
+  Tôi đề xuất sửa plan: tách Verify thành "Kiểm acceptance criteria" và mục
+  riêng "Quy trình".
+
+  4. File thuật ngữ
+
+  Tôi đồng ý nên có. Có 2 điểm cần bạn chọn:
+  - Ngôn ngữ: theo AGENTS.md, file mới trong docs/ phải viết tiếng Anh. Tôi đề
+    xuất docs/business-rule/glossary.md bằng tiếng Anh, mỗi thuật ngữ kèm nghĩa
+    ngắn. Ví dụ: SD, pstdev/stdev, upcoding, unbundling, bundle, phantom
+    billing, FP tự nhiên, masking, unique key, TP/FP/FN/TN,
+    precision/recall/FPR.
+  - Các mục thuật ngữ đã có: catalog.md, upcoding.md, bundling.md,
+    diagnosis-procedure-mismatch.md đều đang có mục "Thuật ngữ". Có 2 cách:
+    - (a) Giữ nguyên các mục đó, glossary chỉ thêm link tới chúng.
+    - (b) Chuyển hết về glossary cho chỉ còn 1 nguồn. Cách này buộc dịch toàn bộ
+      4 file đó sang tiếng Anh, vì quy ước là sửa file nào thì chuyển cả file
+      sang tiếng Anh.
+
+  Tôi nghiêng về (a) cho bây giờ. Mỗi lần sau sửa 1 file nào thì dịch file đó và
+  chuyển phần thuật ngữ của nó về glossary.
+
+  Bạn chọn (a) hay (b), và có muốn tôi sửa mục Verify của plan luôn không?
+
+✻ Crunched for 31s · done 20:32
+
+❯ ghi rõ "đọc evidence bằng mắt"                                                
+  chọn b. và chuyển các doc sang tiếng Anh                                      
+                                                                                
+  phần verify này nên là 1 unit test của hệ thống. nó là kiểm thử logic code đã 
+  implement đúng với cách ta thảo luận chưa. còn test của 8 rule là unit test   
+  cho business có hoạt động đúng chưa                                           
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin/AI_Engineering_Challenges/AI_Chall
+      enge_10_Fraud_Detection && grep -rn -i "thuật ngữ" docs README.md
+      AGENTS.md; echo ---;…)
+  ⎿  docs/handbook-notes.md:60:- Wrong business logic: thuật ngữ, luồng cla
+     im đúng chưa; hỏi "có hợp lý với nghiệp vụ không", không chỉ "có chạy
+     không".
+     … +40 lines (ctrl+o to expand)
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin/AI_Engineering_Challenges/AI_Chall
+      enge_10_Fraud_Detection/docs/business-rule && for f in catalog.md
+      amount-clustering.md…)
+  ⎿  === catalog.md
+          1  # Catalog: procedure, bundle, giá chuẩn
+          2
+     … +240 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin/AI_Engineering_Challenges/AI_Chall
+      enge_10_Fraud_Detection && grep -rn "mục \"\?[A-ZĐT]" docs | grep -i
+      "catalog.md\|upcod…)
+  ⎿  docs/business-rule/amount-clustering.md:19:- Bằng chứng thực tế: giá k
+     hông BHYT của tổng phân tích nước tiểu ở một bệnh viện công là 48,000
+     VNĐ (xem `catalog.md`, mục Nguồn), nằm đúng trong dải.
+     … +9 lines (ctrl+o to expand)
+
+⏺ Tôi sẽ tạo glossary.md (tiếng Anh), dịch 6 file liên quan đến mục thuật ngữ
+  (catalog, upcoding, bundling, diagnosis-procedure-mismatch, amount-clustering,
+  metrics), sau đó cập nhật plan.
+
+⏺ Write(AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/business-
+       rule/glossary.md)
+  ⎿  Wrote 84 lines to AI_Engineering_Challenges/AI_Challenge_10_Fraud_Dete
+     ction/docs/business-rule/glossary.md
+       1 # Glossary
+       2 
+         rm you are not sure about.
+       4 **Does not contain:** rule conditions (see `detection-rules.md`)
+         , reference data (see `catalog.md`).
+       6 Single source for the terms used in `docs/business-rule/`. Other
+          docs link here instead of defining terms again.
+       7 
+       9 
+      10 | Term | Meaning |
+     … +146 lines (ctrl+o to expand)
+
+⏺ Write(AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/business-
+       rule/catalog.md)
+  ⎿  Added 57 lines, removed 83 lines
+       1 -# Catalog: procedure, bundle, giá chuẩn                        
+       1 +# Catalog: procedures, bundles, standard prices                
+       2  
+       3 -Dữ liệu tham chiếu dùng chung cho generator (mục A) và engine (
+         -mục B).                                                        
+       3 +Reference data shared by the generator (part A) and the engine 
+         +(part B). Terms (procedure, surgical, bundle, standard price, v
+         +ariation): see `glossary.md`.                                  
+       4  
+       5 -## Vai trò của bảng giá                                        
+       5 +## Role of the price list                                      
+       6  
+       7 -- Đây là bài test: bảng giá là **ví dụ giả lập**. Trong thực tế
+         -, insurer / TPA đã có bảng giá chính thức.                     
+       8 -- Mục tiêu của bảng giá ở đây: mức giá **hợp lý** và **không là
+         -m dữ liệu phá rule** (vd claim hợp lệ không tự vượt ngưỡng upco
+         -ding, claim clustering không dính upcoding). Độ chính xác so vớ
+         -i thị trường là thứ yếu.                                       
+       7 +- This is a hiring test: the price list is a **simulated exampl
+         +e**. In practice the insurer / TPA already has an official pric
+         +e list.                                                        
+       8 +- What the price list must achieve here: **plausible** prices t
+         +hat **do not break the rules** (e.g. legitimate claims do not e
+         +xceed the upcoding threshold by themselves, clustering claims d
+         +o not trip upcoding). Accuracy against the market is secondary.
+       9  
+      10 -## Quy ước chung                                               
+      10 +## Conventions                                                 
+      11  
+      12 -- Đơn vị tiền: **VNĐ**, giữ nguyên các con số của đề (ngưỡng au
+         -to-approval 50,000 VNĐ).                                       
+      13 -- Mặt bằng giá: **bệnh viện / phòng khám tư** tại Việt Nam (bảo
+         - hiểm sức khỏe tư nhân thường dùng ở cơ sở tư).                
+      14 -- Mã chẩn đoán: ICD-10 thật, xem `icd-10.md`. Mã procedure và m
+         -ã bundle: tự đặt.                                              
+      15 -- Claim hợp lệ có **đúng 1 mã** trong `procedure_codes` (có thể
+         - là mã procedure lẻ hoặc mã bundle). Claim nhiều mã chỉ xuất hi
+         -ện ở fraud unbundling.                                         
+      16 -- Amount claim hợp lệ = giá chuẩn x hệ số ngẫu nhiên log-normal
+         -, dao động khoảng 15%.                                         
+      12 +- Currency: **VND**, keeping the brief's numbers as they are (a
+         +uto-approval threshold 50,000 VND).                            
+      13 +- Price level: **private hospitals / clinics** in Vietnam (priv
+         +ate health insurance is mostly used at private facilities).    
+      14 +- Diagnosis codes: real ICD-10, see `icd-10.md`. Procedure and 
+         +bundle codes: made up.                                         
+      15 +- A legitimate claim has **exactly 1 code** in `procedure_codes
+         +` (an individual procedure code or a bundle code). Claims with 
+         +several codes only appear as unbundling fraud.                 
+      16 +- Legitimate claim amount = standard price x a random log-norma
+         +l factor, variation about 15%.                                 
+      17  
+      18 -## Thuật ngữ                                                   
+      18 +## Procedures                                                  
+      19  
+      20 -| Thuật ngữ | Nghĩa |                                          
+      21 -|---|---|                                                      
+      22 -| Procedure | Dịch vụ / thủ thuật y tế đã thực hiện (khám, xét 
+         -nghiệm, phẫu thuật...) |                                       
+      23 -| Surgical | Procedure thuộc loại phẫu thuật |                 
+      24 -| Bundle (gói) | Nhóm procedure luôn đi cùng nhau, tính bằng 1 
+         -mã gói, rẻ hơn tổng giá lẻ |                                   
+      25 -| Giá chuẩn | Giá tham chiếu của procedure, tâm của phân phối a
+         -mount claim hợp lệ |                                           
+      26 -| Dao động | Mức amount claim hợp lệ lệch quanh giá chuẩn (15% 
+         -=> phần lớn trong khoảng giá chuẩn +-15%) |                    
+      27 -                                                               
+      28 -## Thuật ngữ đánh giá (metrics)                                
+      29 -                                                               
+      30 -So kết quả engine với ground truth (đáp án đúng: claim nào thực
+         - sự là fraud):                                                 
+      31 -                                                               
+      32 -| Thuật ngữ | Nghĩa | Ví dụ |                                  
+      33 -|---|---|---|                                                  
+      34 -| TP (True Positive) | Engine flag, claim **là** fraud | Bắt đú
+         -ng claim upcoded |                                             
+      35 -| **FP (False Positive)** - báo nhầm | Engine flag, nhưng claim
+         - **không phải** fraud | Claim xét nghiệm nước tiểu hợp lệ giá 4
+         -8,000 bị flag amount clustering |                              
+      36 -| FN (False Negative) - bỏ sót | Engine không flag, nhưng claim
+         - **là** fraud | Claim weekend fraud không bị bắt vì tỷ lệ cuối 
+         -tuần của provider vượt 5% |                                    
+      37 -| TN (True Negative) | Engine không flag, claim không phải frau
+         -d | Claim hợp lệ bình thường |                                 
+      38 -| Precision | TP / (TP + FP): trong các claim bị flag, bao nhiê
+         -u % đúng là fraud | |                                          
+      39 -| Recall | TP / (TP + FN): trong các claim fraud, bắt được bao 
+         -nhiêu % | Đề yêu cầu >= 70% |                                  
+      40 -| FPR (False Positive Rate) | FP / (FP + TN): trong các claim h
+         -ợp lệ, bao nhiêu % bị báo nhầm | Đề yêu cầu <= 20% |           
+      41 -                                                               
+      42 -FP tự nhiên: claim hợp lệ tự rơi vào điều kiện của rule (không 
+         -do chèn fraud). Dataset cho phép FP tự nhiên có chủ đích để met
+         -rics trung thực; số lượng được đếm và báo trong metrics report.
+      43 -                                                               
+      44 -## Procedure                                                   
+      45 -                                                               
+      46 -| Mã | Procedure | claim_type | Giá chuẩn (VNĐ) | Surgical |   
+      20 +| Code | Procedure | claim_type | Standard price (VND) | Surgic
+         +al |                                                           
+      21  |---|---|---|---|---|
+      48 -| P-1001 | Khám bệnh | OUTPATIENT | 200,000 | |                
+      49 -| P-1002 | Xét nghiệm máu (công thức máu) | OUTPATIENT | 100,00
+         -0 | |                                                          
+      50 -| P-1003 | Xét nghiệm nước tiểu | OUTPATIENT | 40,000 | |      
+      51 -| P-1004 | X-quang ngực | OUTPATIENT | 150,000 | |             
+      52 -| P-1005 | Siêu âm bụng | OUTPATIENT | 250,000 | |             
+      53 -| P-1006 | Xét nghiệm HbA1c | OUTPATIENT | 150,000 | |         
+      54 -| P-2001 | Điều trị nội trú viêm phổi | INPATIENT | 10,000,000 
+         -| |                                                            
+      55 -| P-2002 | Sinh thường | INPATIENT | 30,000,000 | |            
+      56 -| P-3001 | Mổ ruột thừa nội soi | INPATIENT | 18,000,000 | x | 
+      57 -| P-3002 | Cắt túi mật nội soi | INPATIENT | 25,000,000 | x |  
+      58 -| P-3003 | Phẫu thuật kết hợp xương | INPATIENT | 22,000,000 | 
+         -x |                                                            
+      59 -| P-3010 | Gây mê | INPATIENT | 3,000,000 | |                  
+      60 -| P-4001 | Khám răng | DENTAL | 100,000 | |                    
+      61 -| P-4002 | X-quang răng | DENTAL | 80,000 | |                  
+      62 -| P-4003 | Trám răng | DENTAL | 400,000 | |                    
+      63 -| P-4004 | Điều trị tủy | DENTAL | 2,000,000 | |               
+      22 +| P-1001 | General consultation | OUTPATIENT | 200,000 | |     
+      23 +| P-1002 | Complete blood count | OUTPATIENT | 100,000 | |     
+      24 +| P-1003 | Urinalysis | OUTPATIENT | 40,000 | |                
+      25 +| P-1004 | Chest X-ray | OUTPATIENT | 150,000 | |              
+      26 +| P-1005 | Abdominal ultrasound | OUTPATIENT | 250,000 | |     
+      27 +| P-1006 | HbA1c test | OUTPATIENT | 150,000 | |               
+      28 +| P-2001 | Inpatient pneumonia treatment | INPATIENT | 10,000,0
+         +00 | |                                                         
+      29 +| P-2002 | Normal vaginal delivery | INPATIENT | 30,000,000 | |
+      30 +| P-3001 | Laparoscopic appendectomy | INPATIENT | 18,000,000 |
+         + x |                                                           
+      31 +| P-3002 | Laparoscopic cholecystectomy | INPATIENT | 25,000,00
+         +0 | x |                                                        
+      32 +| P-3003 | Open reduction internal fixation (bone surgery) | IN
+         +PATIENT | 22,000,000 | x |                                     
+      33 +| P-3010 | General anesthesia | INPATIENT | 3,000,000 | |      
+      34 +| P-4001 | Dental examination | DENTAL | 100,000 | |           
+      35 +| P-4002 | Dental X-ray | DENTAL | 80,000 | |                  
+      36 +| P-4003 | Dental filling | DENTAL | 400,000 | |               
+      37 +| P-4004 | Root canal treatment | DENTAL | 2,000,000 | |       
+      38  
+      65 -## Bundle (5 gói)                                              
+      39 +## Bundles (5)                                                 
+      40  
+      67 -Giá gói khoảng 90% tổng giá lẻ. Chi tiết rule: `bundling.md`.  
+      41 +A bundle costs about 90% of the sum of its components. Rule det
+         +ails: `bundling.md`.                                           
+      42  
+      69 -| Mã gói | Tên | Thành phần | Tổng giá lẻ | Giá gói | Surgical 
+         -|                                                              
+      43 +| Bundle code | Name | Components | Sum of components | Bundle 
+         +price | Surgical |                                             
+      44  |---|---|---|---|---|---|
+      71 -| B-1001 | Khám tổng quát | P-1001 + P-1002 + P-1003 | 340,000 
+         -| 305,000 | |                                                  
+      72 -| B-1002 | Khám đái tháo đường | P-1001 + P-1002 + P-1006 | 450
+         -,000 | 405,000 | |                                             
+      73 -| B-3101 | Gói mổ ruột thừa | P-3001 + P-3010 | 21,000,000 | 19
+         -,000,000 | x |                                                 
+      74 -| B-3102 | Gói cắt túi mật | P-3002 + P-3010 | 28,000,000 | 25,
+         -500,000 | x |                                                  
+      75 -| B-4101 | Gói điều trị tủy | P-4002 + P-4004 | 2,080,000 | 1,9
+         -00,000 | |                                                     
+      45 +| B-1001 | General check-up package | P-1001 + P-1002 + P-1003 
+         +| 340,000 | 305,000 | |                                        
+      46 +| B-1002 | Diabetes check-up package | P-1001 + P-1002 + P-1006
+         + | 450,000 | 405,000 | |                                       
+      47 +| B-3101 | Appendectomy package | P-3001 + P-3010 | 21,000,000 
+         +| 19,000,000 | x |                                             
+      48 +| B-3102 | Cholecystectomy package | P-3002 + P-3010 | 28,000,0
+         +00 | 25,500,000 | x |                                          
+      49 +| B-4101 | Root canal package | P-4002 + P-4004 | 2,080,000 | 1
+         +,900,000 | |                                                   
+      50  
+      77 -## Tên tiếng Anh (dùng trong evidence)                         
+      51 +## English names (used in evidence)                            
+      52  
+      79 -| Mã | English name |                                          
+      53 +| Code | English name |                                        
+      54  |---|---|
+      55  | P-1001 | General consultation |
+      56  | P-1002 | Complete blood count |
+     ...
+       74  | B-3102 | Cholecystectomy package |
+       75  | B-4101 | Root canal package |
+       76  
+      103 -## Provider                                                   
+       77 +## Providers                                                  
+       78  
+      105 -- 50 provider, 3 loại: bệnh viện (nội trú, phẫu thuật), phòng 
+          -khám (ngoại trú), nha khoa (răng).                            
+      106 -- 10 bệnh viện weekday-only: xem `weekday-only-providers.md`. 
+       79 +- 50 providers of 3 types: hospitals (inpatient, surgery), cli
+          +nics (outpatient), dental clinics (dental).                   
+       80 +- 10 weekday-only hospitals: see `weekday-only-providers.md`. 
+       81  
+      108 -## Nguồn tham khảo giá                                        
+       82 +## Price sources                                              
+       83  
+      110 -Bảng giá là giả lập. Phần lớn giá chuẩn là ước lượng từ kiến t
+          -hức chung; các mục sau có đối chiếu nguồn (research ngày 2026-
+          -10-24, nhiều nguồn là bảng giá cũ hoặc blog tổng hợp):        
+       84 +The price list is simulated. Most standard prices are estimate
+          +s from general knowledge; the items below were checked against
+          + sources (researched 2026-10-24; many sources are old price li
+          +sts or aggregator blogs):                                     
+       85  
+      112 -| Mã | Nguồn tìm được | Ghi chú |                             
+       86 +| Code | Sources found | Notes |                              
+       87  |---|---|---|
+      114 -| P-1002 | Công 46,200-70,000; tư 98,000 (DIAG) | Hạ về 100,00
+          -0 cho sát giá tư |                                            
+      115 -| P-1003 | Công 27,400-28,600 (BHYT), 48,000 (không BHYT) | Tư
+          - chưa có nguồn; 48,000 rơi đúng dải clustering |              
+      116 -| P-1006 | Công 101,000-143,000; tư 120,000-150,000 | Khớp |  
+      117 -| P-2002 | Tư 27-45 triệu (Vinmec, Tâm Anh) | Đặt 30 triệu the
+          -o mặt bằng tư |                                               
+      118 -| P-3001 | Tư 8-30 triệu (Long Châu) | Khớp |                 
+      119 -| P-4003 | 150,000-500,000 | Khớp |                           
+       88 +| P-1002 | Public 46,200-70,000; private 98,000 (DIAG) | Set t
+          +o 100,000 to match private prices |                           
+       89 +| P-1003 | Public 27,400-28,600 (with public health insurance)
+          +, 48,000 (without) | No private source yet; 48,000 falls right
+          + in the clustering band |                                     
+       90 +| P-1006 | Public 101,000-143,000; private 120,000-150,000 | M
+          +atches |                                                      
+       91 +| P-2002 | Private 27-45 million (Vinmec, Tam Anh) | Set to 30
+          + million, private price level |                               
+       92 +| P-3001 | Private 8-30 million (Long Chau) | Matches |       
+       93 +| P-4003 | 150,000-500,000 | Matches |                        
+       94  
+      121 -Link nguồn:                                                   
+       95 +Source links:                                                 
+       96  - BV Phụ sản Hải Phòng: https://benhvienphusanhaiphong.vn/Imag
+           es/news/Bảng%20giá%20viện%20phí%20khám%20chữa%20bệnh.pdf
+       97  - NQ 45/2024 Hà Nội: https://storage-vnportal.vnpt.vn/gov-hni/
+           6249/VanBanCongBao/2025/3/28/NQPQ-45-2025-23_signed.pdf
+      124 -- Medpro (xét nghiệm máu): https://medpro.vn/tin-tuc/xet-nghie
+          -m-mau-bao-nhieu-tien                                          
+       98 +- Medpro (blood test): https://medpro.vn/tin-tuc/xet-nghiem-ma
+          +u-bao-nhieu-tien                                              
+       99  - Pharmacity (HbA1c): https://www.pharmacity.vn/xet-nghiem-hba
+           1c-gia-bao-nhieu.htm
+      126 -- Vinmec sinh thường (qua Medpro): https://medpro.vn/tin-tuc/c
+          -hi-phi-sinh-o-vinmec-bao-nhieu                                
+      127 -- Tâm Anh sinh trọn gói: https://tamanhhospital.vn/sinh-con-tr
+          -on-goi/                                                       
+      128 -- Long Châu (mổ ruột thừa): https://nhathuoclongchau.com.vn/ba
+          -i-viet/thac-mac-chi-phi-mo-ruot-thua-bao-nhieu-tien-69480.html
+      129 -- Medpro (trám răng): https://medpro.vn/tin-tuc/gia-tram-rang-
+          -bao-nhieu-tien                                                
+      100 +- Vinmec normal delivery (via Medpro): https://medpro.vn/tin-t
+          +uc/chi-phi-sinh-o-vinmec-bao-nhieu                            
+      101 +- Tâm Anh delivery package: https://tamanhhospital.vn/sinh-con
+          +-tron-goi/                                                    
+      102 +- Long Châu (appendectomy): https://nhathuoclongchau.com.vn/ba
+          +i-viet/thac-mac-chi-phi-mo-ruot-thua-bao-nhieu-tien-69480.html
+      103 +- Medpro (dental filling): https://medpro.vn/tin-tuc/gia-tram-
+          +rang-bao-nhieu-tien                                           
+
+⏺ Write(AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/business-
+       rule/upcoding.md)
+  ⎿  Added 24 lines, removed 26 lines
+       1 -# Upcoding (khai nâng mức)                                     
+       1 +# Upcoding                                                     
+       2  
+       3 -## Thuật ngữ                                                   
+       3 +Terms (upcoding, mean, SD, masking, leave-one-out): see `glossa
+         +ry.md`.                                                        
+       4  
+       5 -Upcoding: khai số tiền (hoặc mã) đắt hơn dịch vụ thực tế đã làm
+         -. Ví dụ trám răng giá chuẩn 400,000, khai 900,000.             
+       5 +## Source in the brief                                         
+       6  
+       7 -## Nguồn trong đề                                              
+       8 -                                                               
+       7  - Dataset: "30 upcoded claims (amount > 2 standard deviations a
+          bove mean for that procedure)".
+       8  - Rule 3: "amount > 2 standard deviations above mean for that p
+          rocedure code".
+       9  
+      12 -## Thế nào là "chuẩn"                                          
+      10 +## What "normal" means                                         
+      11  
+      14 -- Mỗi procedure / bundle có giá chuẩn (xem `catalog.md`).      
+      15 -- Claim hợp lệ: amount = giá chuẩn x hệ số log-normal, dao động
+         - khoảng 15%.                                                   
+      16 -- Vì claim hợp lệ chỉ có 1 mã, "mean for that procedure" = mean
+         - amount của các claim có cùng mã đó.                           
+      12 +- Every procedure / bundle has a standard price (see `catalog.m
+         +d`).                                                           
+      13 +- Legitimate claim: amount = standard price x a log-normal fact
+         +or, variation about 15%.                                       
+      14 +- Legitimate claims have exactly 1 code, so "mean for that proc
+         +edure" = the mean amount of the claims with that code.         
+      15  
+      18 -## Lưu ý: "2 SD" không phải "gấp 2 lần"                        
+      16 +## Note: "2 SD" is not "2 times"                               
+      17  
+      20 -- Ngưỡng rule = mean + 2 x SD. Với dao động 15%, SD khoảng 15% 
+         -mean => ngưỡng khoảng 1.3 lần mean.                            
+      21 -- Ví dụ trám răng: mean 400,000, SD khoảng 60,000 => ngưỡng kho
+         -ảng 520,000.                                                   
+      18 +- Rule threshold = mean + 2 x SD. With 15% variation, SD is abo
+         +ut 15% of the mean => threshold about 1.3 x the mean.          
+      19 +- Dental filling example: mean 400,000, SD about 60,000 => thre
+         +shold about 520,000.                                           
+      20  
+      23 -## Quy tắc sinh fraud                                          
+      21 +## Fraud generation                                            
+      22  
+      25 -- Claim upcoded: amount = giá chuẩn x hệ số 1.6-2.5 (vượt ngưỡn
+         -g 2 SD, vẫn gần thực tế).                                      
+      26 -- Rải claim upcoded trên các mã có >= 60 claim 1 mã, tối đa 2 c
+         -laim upcoded mỗi mã, không dùng P-1003 (dành cho clustering). L
+         -ý do: mã chỉ có 30 claim mà chứa 2 claim upcoded thì SD có thể 
+         -lên khoảng 0.3 x mean, ngưỡng thành khoảng 1.65 x mean => bỏ só
+         -t claim upcoded 1.6x (masking).                                
+      23 +- Upcoded claim: amount = standard price x a factor of 1.6-2.5 
+         +(above the 2 SD threshold, still realistic).                   
+      24 +- Upcoded claims are spread over codes with >= 60 single-code c
+         +laims, at most 2 upcoded claims per code, never P-1003 (reserve
+         +d for clustering). Reason: a code with only 30 claims that hold
+         +s 2 upcoded claims can have an SD of about 0.3 x the mean, push
+         +ing the threshold to about 1.65 x the mean => a 1.6x upcoded cl
+         +aim is missed (masking).                                       
+      25  
+      28 -## Cách tính mean / SD (đã chốt ở B1)                          
+      26 +## How mean / SD are computed (settled in B1)                  
+      27  
+      30 -- Tính mean và SD trên **toàn bộ claim có cùng mã**, gồm cả cla
+         -im upcoded. Giữ đúng chữ của đề ("mean for that procedure code"
+         -).                                                             
+      31 -- Hệ quả đã biết (masking): claim upcoded làm tăng mean và SD =
+         -> ngưỡng mean + 2 SD bị đẩy lên, một số claim upcoded có thể kh
+         -ông vượt ngưỡng => giảm recall.                                
+      32 -- Cách xử lý: đo recall của rule upcoding trên dataset trước. C
+         -hỉ khi không đạt mục tiêu mới đổi sang loại trừ claim đang xét 
+         -(leave-one-out). Ghi kết quả đo và quyết định vào writeup.     
+      28 +- Mean and SD are computed over **every claim with the same cod
+         +e**, upcoded claims included. This keeps the brief's wording ("
+         +mean for that procedure code").                                
+      29 +- Known consequence (masking): upcoded claims raise the mean an
+         +d SD => the mean + 2 SD threshold goes up and some upcoded clai
+         +ms may not exceed it => lower recall.                          
+      30 +- Handling: measure the recall of the upcoding rule on the data
+         +set first. Switch to excluding the claim under review (leave-on
+         +e-out) only if the target is missed. Record the measurement and
+         + the decision in the writeup.                                  
+      31  
+      34 -## Số claim tối thiểu                                          
+      32 +## Minimum number of claims                                    
+      33  
+      36 -- Mã có < 10 claim: **không xét upcoding** (không đủ dữ liệu lị
+         -ch sử để kết luận khai giá cao).                               
+      37 -- Generator sinh mỗi mã >= 30 claim để mọi mã đều được xét.    
+      34 +- Codes with < 10 claims: **not checked for upcoding** (not eno
+         +ugh history to conclude an amount is inflated).                
+      35 +- The generator creates >= 30 claims per code so every code is 
+         +checked.                                                       
+      36  
+      39 -## Claim có nhiều mã (đã chốt)                                 
+      37 +## Claims with several codes (settled)                         
+      38  
+      41 -- Chỉ claim có **đúng 1 mã** tham gia tính mean/SD và được xét 
+         -upcoding.                                                      
+      42 -- Claim nhiều mã chỉ có ở fraud unbundling; amount của nó là tổ
+         -ng giá lẻ nên không so được với "mean for that procedure code".
+      43 -- Số claim tối thiểu (10 / 30) đếm trên claim 1 mã.            
+      39 +- Only claims with **exactly 1 code** take part in the mean / S
+         +D and are checked for upcoding.                                
+      40 +- Claims with several codes only appear as unbundling fraud; th
+         +eir amount is a sum of individual prices, so it cannot be compa
+         +red with the "mean for that procedure code".                   
+      41 +- The minimum claim counts (10 / 30) are counted over single-co
+         +de claims.                                                     
+
+⏺ Write(AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/business-
+       rule/bundling.md)
+  ⎿  Added 11 lines, removed 14 lines
+       1 -# Bundling và Unbundling (tách gói)                            
+       1 +# Bundling and unbundling                                      
+       2  
+       3 -## Thuật ngữ                                                   
+       3 +Terms (bundle, unbundling): see `glossary.md`.                 
+       4  
+       5 -- Bundle (gói): nhóm procedure luôn đi cùng nhau, tính bằng 1 m
+         -ã gói, rẻ hơn tổng giá lẻ.                                     
+       6 -- Unbundling: khai từng procedure lẻ thay vì mã gói để thu nhiề
+         -u tiền hơn. Ví dụ khai riêng mổ ruột thừa (P-3001) + gây mê (P-
+         -3010) thay vì gói B-3101.                                      
+       5 +## Source in the brief                                         
+       6  
+       8 -## Nguồn trong đề                                              
+       9 -                                                               
+       7  - Dataset: "25 unbundled claims (individual procedures that sho
+          uld be a single bundled code)".
+       8  - Rule 4: "multiple individual procedures when a bundled code e
+          xists (provide a mapping of at least 5 bundles)".
+       9  
+      13 -## Thế nào là "chuẩn"                                          
+      10 +## What "normal" means                                         
+      11  
+      15 -- 5 bundle và thành phần: xem `catalog.md`, mục Bundle.        
+      16 -- Claim hợp lệ có thành phần thuộc một gói thì dùng mã gói (1 m
+         -ã duy nhất).                                                   
+      12 +- The 5 bundles and their components: see `catalog.md`, section
+         + Bundles.                                                      
+      13 +- A legitimate claim whose procedures belong to a bundle uses t
+         +he bundle code (a single code).                                
+      14  
+      15  ## Rule
+      16  
+      20 -- Flag khi `procedure_codes` của claim chứa **đủ tất cả** thành
+         - phần của một bundle.                                          
+      21 -- Claim chỉ chứa một phần thành phần: không flag.              
+      17 +- Flag when the claim's `procedure_codes` contain **all** the c
+         +omponents of a bundle.                                         
+      18 +- A claim with only some of the components: no flag.           
+      19  
+      23 -## Quy tắc sinh fraud                                          
+      20 +## Fraud generation                                            
+      21  
+      25 -- Claim unbundled: `procedure_codes` = toàn bộ thành phần của m
+         -ột gói; amount = tổng giá lẻ x hệ số dao động.                 
+      26 -- Diagnosis phải là chẩn đoán hợp lệ cho gói đó (để không dính 
+         -thêm mismatch).                                                
+      22 +- Unbundled claim: `procedure_codes` = every component of one b
+         +undle; amount = sum of the component prices x a variation facto
+         +r.                                                             
+      23 +- The diagnosis must be a valid diagnosis for that bundle (so t
+         +he claim does not also trip the mismatch rule).                
+
+⏺ Write(AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/business-
+       rule/diagnosis-procedure-mismatch.md)
+  ⎿  Added 11 lines, removed 13 lines
+       1 -# Diagnosis-procedure mismatch (chẩn đoán không khớp thủ thuật)
+       1 +# Diagnosis-procedure mismatch                                 
+       2  
+       3 -## Thuật ngữ                                                   
+       3 +Terms (diagnosis-procedure mismatch, valid diagnosis-procedure 
+         +pair): see `glossary.md`.                                      
+       4  
+       5 -Mismatch: procedure không phù hợp về mặt y khoa với chẩn đoán. 
+         -Ví dụ chẩn đoán sâu răng (K02.1) nhưng khai mổ ruột thừa (P-300
+         -1).                                                            
+       5 +## Source in the brief                                         
+       6  
+       7 -## Nguồn trong đề                                              
+       8 -                                                               
+       7  - Dataset: "20 diagnosis-procedure mismatches".
+       8  - Rule 7: "procedure not clinically associated with diagnosis (
+          provide a mapping of at least 10 valid diagnosis-procedure pair
+          s)".
+       9  
+      12 -## Thế nào là "chuẩn": các cặp hợp lệ                          
+      10 +## What "normal" means: the valid pairs                        
+      11  
+      14 -Mọi cặp nằm ngoài bảng là mismatch.                            
+      12 +Every pair outside this table is a mismatch.                   
+      13  
+      16 -| Diagnosis | Procedure / bundle hợp lệ |                      
+      14 +| Diagnosis | Valid procedures / bundles |                     
+      15  |---|---|
+      16  | J06.9 | P-1001, P-1002, P-1003, B-1001 |
+      17  | I10 | P-1001, P-1002, P-1003, B-1001 |
+     ...
+      26  | K02.1 | P-4001, P-4002, P-4003 |
+      27  | K04.0 | P-4002, P-4004, B-4101 |
+      28  
+      31 -Tổng: 35 cặp (đề yêu cầu >= 10).                               
+      29 +Total: 35 pairs (the brief asks for >= 10).                    
+      30  
+      33 -claim_type của diagnosis (`icd-10.md`) chỉ để tham khảo; claim_
+         -type của claim lấy theo mã procedure / bundle. Vì vậy cặp hợp l
+         -ệ có thể khác claim_type: `K80.2 - P-1005` (siêu âm bụng ngoại 
+         -trú cho bệnh nhân sỏi mật), `J18.9 - P-1004` (X-quang ngực ngoạ
+         -i trú cho bệnh nhân viêm phổi) tạo claim OUTPATIENT.           
+      31 +The claim_type of a diagnosis (`icd-10.md`) is for reference on
+         +ly; a claim's claim_type comes from its procedure / bundle code
+         +. So a valid pair can cross claim types: `K80.2 - P-1005` (outp
+         +atient abdominal ultrasound for a gallstone patient) and `J18.9
+         + - P-1004` (outpatient chest X-ray for a pneumonia patient) pro
+         +duce OUTPATIENT claims.                                        
+      32  
+      35 -Ràng buộc: diagnosis hợp lệ của một bundle phải hợp lệ với **mọ
+         -i** thành phần của bundle đó, nếu không claim unbundled sẽ dính
+         - thêm mismatch. Vì vậy có 3 cặp `J06.9 - P-1003`, `I10 - P-1003
+         -` (khám tổng quát có xét nghiệm nước tiểu) và `E11.9 - P-1002` 
+         -(theo dõi đái tháo đường có công thức máu); thêm ngày 2026-10-2
+         -4 khi đối chiếu thành phần B-1001, B-1002.                     
+      33 +Constraint: a valid diagnosis of a bundle must be valid for **e
+         +very** component of that bundle, otherwise an unbundled claim w
+         +ould also trip the mismatch rule. That is why the pairs `J06.9 
+         +- P-1003`, `I10 - P-1003` (a general check-up includes a urinal
+         +ysis) and `E11.9 - P-1002` (diabetes follow-up includes a compl
+         +ete blood count) exist; added on 2026-10-24 when checking the c
+         +omponents of B-1001 and B-1002.                                
+      34  
+      37 -## Quy tắc sinh fraud                                          
+      35 +## Fraud generation                                            
+      36  
+      39 -- Claim mismatch: chọn diagnosis rồi gán procedure ngoài danh s
+         -ách hợp lệ của diagnosis đó; amount theo giá chuẩn của procedur
+         -e (để không dính thêm upcoding). Chọn procedure cùng claim_type
+         -, không dùng mã bundle.                                        
+      37 +- Mismatch claim: pick a diagnosis, then a procedure outside th
+         +at diagnosis's valid list; amount based on the procedure's stan
+         +dard price (so the claim does not also trip upcoding). The proc
+         +edure has the same claim_type; bundle codes are not used.      
+
+⏺ Write(AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/business-
+       rule/amount-clustering.md)
+  ⎿  Added 9 lines, removed 12 lines
+       1 -# Amount clustering (khai sát ngưỡng auto-approval)            
+       1 +# Amount clustering                                            
+       2  
+       3 -## Thuật ngữ                                                   
+       3 +Terms (auto-approval threshold, amount clustering, natural FP):
+         + see `glossary.md`.                                            
+       4  
+       5 -- Auto-approval threshold: claim dưới ngưỡng được tự duyệt, khô
+         -ng qua người thẩm định. Đề dùng 50,000 (VNĐ).                  
+       6 -- Amount clustering: amount dồn sát dưới ngưỡng để né thẩm định
+         -.                                                              
+       5 +## Source in the brief                                         
+       6  
+       8 -## Nguồn trong đề                                              
+       9 -                                                               
+       7  - Dataset: "20 amount clustering (amounts just below the 50,000
+           auto-approval threshold)".
+       8  - Rule 8: "claim amounts within 5% below the 50,000 auto-approv
+          al threshold (47,500-49,999)".
+       9  
+      13 -## Quy tắc sinh dữ liệu                                        
+      10 +## Data generation                                             
+      11  
+      15 -- Procedure dùng cho clustering: **P-1003 Xét nghiệm nước tiểu*
+         -*, giá chuẩn 40,000, dao động 15%.                             
+      16 -- Claim fraud clustering: P-1003, amount trong 47,500-49,999.  
+      17 -- Không dính upcoding: SD khoảng 6,000 => ngưỡng upcoding khoản
+         -g 52,000 > 49,999.                                             
+      18 -- Claim P-1003 hợp lệ có thể tự rơi vào dải (ước lượng khoảng 6
+         -% số claim P-1003); đây là FP tự nhiên có chủ đích, đếm và báo 
+         -trong metrics.                                                 
+      19 -- Bằng chứng thực tế: giá không BHYT của tổng phân tích nước ti
+         -ểu ở một bệnh viện công là 48,000 VNĐ (xem `catalog.md`, mục Ng
+         -uồn), nằm đúng trong dải.                                      
+      12 +- Procedure used for clustering: **P-1003 Urinalysis**, standar
+         +d price 40,000, variation 15%.                                 
+      13 +- Clustering fraud claim: P-1003, amount in 47,500-49,999.     
+      14 +- Does not trip upcoding: SD about 6,000 => upcoding threshold 
+         +about 52,000 > 49,999.                                         
+      15 +- Legitimate P-1003 claims can fall into the band by themselves
+         + (estimated at about 6% of P-1003 claims); this is an intention
+         +al natural FP, counted and reported in the metrics.            
+      16 +- Real-world evidence: the price of a urinalysis without public
+         + health insurance at one public hospital is 48,000 VND (see `ca
+         +talog.md`, section Price sources), right inside the band.      
+
+⏺ Write(AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/business-
+       rule/metrics.md)
+  ⎿  Added 15 lines, removed 15 lines
+       1  # Metrics (C2)
+       2  
+       3 -Đề yêu cầu: "Report precision and recall against the known frau
+         -dulent claims. Target: >= 70% recall with <= 20% false positive
+         - rate".                                                        
+       4 -Định nghĩa TP / FP / FN / TN, precision, recall, FPR: xem `cata
+         -log.md`, mục "Thuật ngữ đánh giá".                             
+       3 +The brief asks: "Report precision and recall against the known 
+         +fraudulent claims. Target: >= 70% recall with <= 20% false posi
+         +tive rate".                                                    
+       4 +Definitions of TP / FP / FN / TN, precision, recall, FPR, natur
+         +al FP: see `glossary.md`, section Evaluation.                  
+       5  
+       6 -## Dự đoán fraud                                               
+       6 +## Predicting fraud                                            
+       7  
+       8 -- Engine trả score 0-100; ground truth chỉ có fraud / không fra
+         -ud => cần ngưỡng đổi score thành có / không.                   
+       9 -- Metrics chính: **dự đoán fraud khi `risk_score` > 0** (có >= 
+         -1 flag).                                                       
+      10 -- Lý do: đề ưu tiên recall >= 70%; ngưỡng cao hơn (vd >= 40) sẽ
+         - bỏ sót các fraud chỉ dính rule yếu (weekend, clustering = 39 đ
+         -iểm), khoảng 40 claim = 20% số fraud.                          
+      11 -- FPR = FP / (FP + TN) (định nghĩa chuẩn).                     
+       8 +- The engine returns a 0-100 score; the ground truth is only fr
+         +aud / not fraud => a threshold is needed to turn the score into
+         + yes / no.                                                     
+       9 +- Main metrics: **predict fraud when `risk_score` > 0** (>= 1 f
+         +lag).                                                          
+      10 +- Reason: the brief puts recall >= 70% first; a higher threshol
+         +d (e.g. >= 40) would miss the fraud caught only by weak rules (
+         +weekend, clustering = 39 points), about 40 claims = 20% of the 
+         +fraud.                                                         
+      11 +- FPR = FP / (FP + TN) (the standard definition).              
+      12  
+      13 -## Bảng bổ sung theo ngưỡng                                    
+      13 +## Extra table by threshold                                    
+      14  
+      15 -- Report thêm recall và FPR tại các ngưỡng score 0, 40, 70 để t
+         -hấy đánh đổi.                                                  
+      16 -- Ý nghĩa thực tế: nếu người thẩm định chỉ xem claim score cao 
+         -thì bỏ sót bao nhiêu fraud.                                    
+      15 +- Also report recall and FPR at score thresholds 0, 40 and 70 t
+         +o show the trade-off.                                          
+      16 +- Practical meaning: if claim adjusters only review high-score 
+         +claims, how much fraud is missed.                              
+      17  
+      18  ## Metrics report (C3)
+      19  
+      20 -Report gồm 4 phần:                                             
+      20 +The report has 4 parts:                                        
+      21  
+      22 -1. **Tổng thể**: TP, FP, FN, TN, precision, recall, FPR; so với
+         - mục tiêu recall >= 70%, FPR <= 20%.                           
+      23 -2. **Theo pattern**: mỗi pattern có bao nhiêu claim fraud, bắt 
+         -được bao nhiêu (chỉ ra rule yếu, vd upcoding bị masking).      
+      24 -3. **FP tự nhiên theo rule**: đếm báo nhầm theo từng rule (chứn
+         -g minh dữ liệu có nhiễu thật).                                 
+      25 -4. **Bảng theo ngưỡng**: recall / FPR tại ngưỡng score 0, 40, 7
+         -0.                                                             
+      22 +1. **Overall**: TP, FP, FN, TN, precision, recall, FPR; compare
+         +d with the targets recall >= 70%, FPR <= 20%.                  
+      23 +2. **By pattern**: for each pattern, how many fraudulent claims
+         + and how many were caught (shows weak rules, e.g. upcoding hit 
+         +by masking).                                                   
+      24 +3. **Natural FP by rule**: false alarms counted per rule (shows
+         + the data has real noise).                                     
+      25 +4. **Threshold table**: recall / FPR at score thresholds 0, 40,
+         + 70.                                                           
+
+⏺ Sửa 2 chỗ trong glossary đang ghi như đã chốt trong khi mục 1 và 2 của plan
+  chưa được duyệt:
+
+⏺ Update(AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/business
+        -rule/glossary.md)
+  ⎿  Added 1 line, removed 1 line
+      51  |---|---|
+      52  | Mean | The average: sum of the values / number of values. |
+      53  | Standard deviation (SD) | How spread out values are around th
+          e mean. Most values of a roughly normal distribution lie within
+           mean +- 2 SD, so a value above mean + 2 SD is unusual. The upc
+          oding rule flags amounts above this threshold. |
+      54 -| Population SD (`statistics.pstdev`) | SD computed with diviso
+         -r n. Used when the data is the whole group being described. The
+         - upcoding rule uses it: mean / SD are computed over every singl
+         -e-code claim of the code in the dataset. |                     
+      54 +| Population SD (`statistics.pstdev`) | SD computed with diviso
+         +r n. Used when the data is the whole group being described, as 
+         +in the upcoding rule, where mean / SD are computed over every s
+         +ingle-code claim of the code in the dataset. |                 
+      55  | Sample SD (`statistics.stdev`) | SD computed with divisor n -
+           1. Used when the data is a sample and the SD of a larger popul
+          ation is being estimated. It is slightly larger than the popula
+          tion SD (under 1.2% for n >= 44). |
+      56  | Masking | Outliers inflate the mean and SD they are compared 
+          against, so the threshold rises and some outliers no longer exc
+          eed it. Lowers the recall of the upcoding rule. |
+      57  | Leave-one-out | Computing the mean / SD for a claim without t
+          hat claim itself. The fallback against masking, used only if up
+          coding recall is too low. |
+
+⏺ Update(AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/business
+        -rule/glossary.md)
+  ⎿  Added 1 line, removed 1 line
+      62  | Term | Meaning |
+      63  |---|---|
+      64  | Rule | One of the 8 checks in `detection-rules.md`. |
+      65 -| Flag | A rule's verdict that a claim is suspicious, with seve
+         -rity and evidence. A rule raises at most one flag per claim. | 
+      65 +| Flag | A rule's verdict that a claim is suspicious, with seve
+         +rity and evidence. |                                           
+      66  | Evidence | The text attached to a flag: the claim's observed 
+          value, the rule's comparison value and threshold, and the relat
+          ed claims. See `evidence.md`. |
+      67  | Severity / weight | A configurable number 1-5 per rule, sayin
+          g how strongly a flag points to fraud. See `scoring-weights.md`
+          . |
+      68  | Risk score | 0-100 per claim, computed from the weights of th
+          e rules that flagged it. See `scoring.md`. |
+
+⏺ Giờ sửa plan: thêm phase test hệ thống, sửa chữ "đọc evidence bằng mắt", tách
+  mục quy trình.
+
+⏺ Update(.claude/docs/plans/todo/02-rule-engine.md)
+  ⎿  Added 30 lines, removed 6 lines
+      54    - In: số claim có flag, số claim theo từng rule, top 10 claim
+          . Ghi `output/scored_output.json`.
+      55  - Docstring đầu `cli.py` thêm lệnh `score`; cập nhật hướng dẫn 
+          chạy ở `README.md` của project nếu đã có mục chạy lệnh.
+      56  
+      57 +## Phase 4 - Test hệ thống (pytest)                            
+      58 +                                                               
+      59 +Phân biệt 2 loại test (người dùng chốt 2026-10-24):            
+      60 +- **Test hệ thống** (phase này, #02): kiểm code đã implement đú
+         +ng thiết kế kỹ thuật đã thảo luận (load input, load weights, fo
+         +rmat output, xếp hạng, ranh giới engine / ground truth). Viết c
+         +ùng lúc với code.                                              
+      61 +- **Test business** (19 test trong `docs/business-rule/test-cas
+         +es.md`, #03): kiểm 8 rule và scoring cho kết quả đúng nghiệp vụ
+         +.                                                              
+      62 +                                                               
+      63 +File `tests/test_system_*.py`, dữ liệu dựng trong test (không đ
+         +ọc `data/`):                                                   
+      64 +                                                               
+      65 +| # | Nhóm | Test | Kết quả mong đợi |                         
+      66 +|---|---|---|---|                                              
+      67 +| S1 | Weights | Weight 0, 6, `"4"`, `true`, `4.0` | `WeightsEr
+         +ror`, liệt kê đủ mọi lỗi trong 1 lần |                         
+      68 +| S2 | Weights | Thiếu 1 rule / thừa 1 key lạ | `WeightsError` 
+         +nêu tên rule thiếu / key lạ |                                  
+      69 +| S3 | Weights | Đổi 1 weight hợp lệ (vd upcoding 4 -> 5) | Sco
+         +re của claim dính rule đó đổi theo, không sửa code |           
+      70 +| S4 | Input | Sai header, trùng `claim_id`, mã procedure / dia
+         +gnosis lạ, amount không phải số nguyên, `is_weekend` = 2 | Load
+         +er báo lỗi, liệt kê đủ |                                       
+      71 +| S5 | Output | 1 claim không flag, 1 claim nhiều flag | Mọi cl
+         +aim có mặt; mỗi phần tử đúng 3 trường `claim_id`, `risk_score`,
+         + `flags`; mỗi flag đúng 3 trường `rule`, `severity`, `evidence`
+         + |                                                             
+      72 +| S6 | Output | Claim dính rapid với 2 claim khác | Chỉ 1 flag 
+         +`rapid_resubmission`, evidence nêu cả 2 claim (mục 1) |        
+      73 +| S7 | Xếp hạng | Các claim bằng điểm, khác số flag / `claim_id
+         +` | Đúng thứ tự score -> số flag -> `claim_id`; flag trong clai
+         +m sắp theo severity |                                          
+      74 +| S8 | Evidence | Helper `vnd`, `code_label` | `48,500 VND`; `P
+         +-3001 (Laparoscopic appendectomy)`, `K02.1 (Dental caries)` |  
+      75 +| S9 | Ranh giới | Quét source `src/claims.py`, `src/rules/`, `
+         +src/scoring/` | Không chứa `ground_truth`, không import `genera
+         +tor` |                                                         
+      76 +                                                               
+      77 +Thời gian < 30 giây trên dataset thật thuộc test tích hợp của #
+         +03.                                                            
+      78 +                                                               
+      79  ## Verify
+      80  
+      59 -- `score` chạy trên dataset seed 2024: < 30 giây (kỳ vọng < 1 g
+         -iây), 2,000 phần tử trong output, `claim_id` duy nhất, đã sắp đ
+         -úng thứ tự.                                                    
+      81 +- `uv run pytest` pass toàn bộ test hệ thống S1-S9.            
+      82 +- `score` chạy trên dataset seed 2024: 2,000 phần tử trong outp
+         +ut, in thời gian chạy (kỳ vọng < 1 giây).                      
+      83  - Đếm nhanh số claim theo rule, so với số đo thật trong `docs/e
+          xperiences/dataset-generation-pitfalls.md`: duplicate 30, phant
+          om 31, unbundling 25, weekend 20, mismatch 20, clustering 22 (2
+          0 + 2 hợp lệ), rapid 50 (30 + 20 hợp lệ), upcoding 53 (30 + 23 
+          hợp lệ). Lệch => dừng lại tìm nguyên nhân trước khi sang #03.
+      61 -- Đọc mắt evidence của 1 claim mỗi rule: đủ 3 phần (quan sát / 
+         -ngưỡng / claim liên quan), mã có tên tiếng Anh, tiền có dấu phâ
+         -n cách và `VND`.                                               
+      62 -- Kiểm tay 1 claim upcoding + clustering (nếu có) hoặc dựng cla
+         -im giả total = 6 => score 78.                                  
+      63 -- Sửa `weights.json` thành 0 / 6 / `"4"` / thiếu 1 rule => load
+         - báo lỗi. Đổi 1 weight hợp lệ => score đổi mà không sửa code.  
+      64 -- `grep -rn ground_truth src/rules src/scoring src/claims.py` k
+         -hông ra kết quả.                                               
+      65 -- Áp dụng `/pyfriend-claco-bunhy` khi viết code; review diff tr
+         -ước commit; chạy `/pjdoc-mgmt-claco-bunhy pre-commit`.         
+      84 +- Đọc evidence bằng mắt (mở `scored_output.json`, xem tay 1 cla
+         +im mỗi rule; không phải test tự động): câu dễ hiểu với người th
+         +ẩm định, đủ 3 phần (quan sát / ngưỡng / claim liên quan), mã có
+         + tên tiếng Anh, tiền có dấu phân cách và `VND`.                
+      85 +                                                               
+      86 +## Quy trình                                                   
+      87 +                                                               
+      88 +- Áp dụng `/pyfriend-claco-bunhy` khi viết code.               
+      89 +- Review diff trước commit; chạy `/pjdoc-mgmt-claco-bunhy pre-c
+         +ommit`.                                                        
+
+⏺ Update(.claude/docs/plans/todo/02-rule-engine.md)
+  ⎿  Added 2 lines, removed 2 lines
+       2  
+       3  > **Ticket:** #02 - trạng thái và mục tiêu nằm ở ticket; file n
+          ày chỉ chứa chi tiết thực thi.
+       4  
+       5 -Nguồn business: `docs/business-rule/detection-rules.md`, `evide
+         -nce.md`, `scoring.md`, `scoring-weights.md`, `upcoding.md`, `bu
+         -ndling.md`, `diagnosis-procedure-mismatch.md`, `duplicate-and-r
+         -apid-resubmission.md`, `weekday-only-providers.md`, `amount-clu
+         -stering.md`. Kỹ thuật: `docs/decisions/tech-and-structure.md`, 
+         -`dataset-format.md`. Tên rule: `src/rule_names.py`.            
+       5 +Nguồn business: `docs/business-rule/detection-rules.md`, `evide
+         +nce.md`, `scoring.md`, `scoring-weights.md`, `upcoding.md`, `bu
+         +ndling.md`, `diagnosis-procedure-mismatch.md`, `duplicate-and-r
+         +apid-resubmission.md`, `weekday-only-providers.md`, `amount-clu
+         +stering.md`. Kỹ thuật: `docs/decisions/tech-and-structure.md`, 
+         +`dataset-format.md`. Tên rule: `src/rule_names.py`. Thuật ngữ: 
+         +`docs/business-rule/glossary.md`.                              
+       6  
+       7 -Phạm vi: engine + CLI `score`. 19 unit test, metrics, test tích
+         - hợp thuộc #03; ở đây chỉ chạy kiểm nhanh (phần Verify).       
+       7 +Phạm vi: engine + CLI `score` + test hệ thống (Phase 4). 19 tes
+         +t business, metrics, test tích hợp thuộc #03.                  
+       8  
+       9  ## Cần chốt trước khi code
+      10  
+
+⏺ Update(AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/AGENTS.md)
+  ⎿  Added 1 line
+      35  
+      36  - Original brief (Challenge 10 + general rules, verbatim): `doc
+          s/requirements/original-brief.md`
+      37  - Handbook notes for Challenge 10: `docs/handbook-notes.md`. Re
+          mind the user per its "Khi nào nhắc" table when they analyze th
+          e brief, choose a solution, estimate the timeline, write the RE
+          ADME, review AI output, or name things / write evidence in insu
+          rance-domain terms.
+      38 +- Business terms (single source; other docs link here instead o
+         +f redefining terms): `docs/business-rule/glossary.md`.         
+      39  - A/B/C/D requirement breakdown, settled decisions, open questi
+          ons: `docs/requirements/challenge-10-requirements.md`. Update i
+          t whenever a new decision is made.
+      40  
+      41  ## What Papaya grades (from the general README)
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin && git status --short && grep -rn
+      "Thuật ngữ\|mục Nguồn\|mục Bundle"
+      AI_Engineering_Challenges/AI_Challenge_10_Fraud_Dete…)
+  ⎿  M  .claude/docs/plans/README.md
+      M AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/AGENTS.md
+      M AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/back
+     … +15 lines (ctrl+o to expand)
+
+⏺ Tôi đã làm xong 3 việc, chưa commit.
+
+  1. "Đọc evidence bằng mắt"
+
+  Plan đã ghi rõ chữ này, kèm giải thích: mở scored_output.json, xem tay 1 claim
+  cho mỗi rule. Đây không phải test tự động.
+
+  2. Phương án b: file thuật ngữ và chuyển doc sang tiếng Anh
+  - Tạo docs/business-rule/glossary.md bằng tiếng Anh, là nguồn duy nhất cho
+    thuật ngữ. File có 6 nhóm: claim và các bên, procedure và giá, 8 pattern
+    fraud, thống kê, output và scoring, metrics. Nhóm thống kê có SD, pstdev và
+    stdev, masking, leave-one-out, log-normal.
+  - Chuyển toàn bộ sang tiếng Anh 6 file: catalog, upcoding, bundling,
+    diagnosis-procedure-mismatch và amount-clustering (có mục thuật ngữ), cộng
+    metrics (trỏ tới mục thuật ngữ của catalog). Mục "Thuật ngữ" trong các file
+    đó đã bỏ, thay bằng link tới glossary. Nội dung giữ nguyên, chỉ dịch.
+  - Thêm glossary vào mục Required reading của AGENTS.md trong project.
+  - Còn 9 file trong business-rule/ vẫn tiếng Việt: detection-rules, evidence,
+    scoring, scoring-weights, test-cases, duplicate-and-rapid-resubmission,
+    weekday-only-providers, fraud-injection, icd-10. Theo quy ước, file nào sửa
+    tới thì dịch file đó. Nếu bạn muốn dịch hết ngay thì báo tôi.
+
+  3. Tách test hệ thống khỏi test business
+
+  Plan có thêm Phase 4 "Test hệ thống" gồm 9 test pytest (S1-S9), viết cùng code
+  ở #02:
+  - S1-S3: kiểm load weights (giá trị sai, thiếu hoặc thừa key, đổi weight thì
+    score đổi).
+  - S4: input lỗi.
+  - S5-S7: format output, mỗi rule 1 flag, thứ tự xếp hạng.
+  - S8: helper định dạng evidence.
+  - S9: engine không chạm ground_truth và không import generator.
+
+  19 test business vẫn thuộc #03. Mục "Verify" giờ chỉ còn chạy pytest, chạy
+  score trên dataset thật, đếm số claim theo rule và đọc evidence bằng mắt.
+  /pyfriend và /pjdoc-mgmt chuyển sang mục riêng "Quy trình".
+
+  Còn chờ bạn: duyệt 7 mục "Cần chốt trước khi code" trong plan. Khi bạn duyệt,
+  tôi ghi các quyết định vào challenge-10-requirements.md, gồm cả 2 quyết định
+  hôm nay (glossary là nguồn duy nhất, tách 2 loại test). File đó đang tiếng
+  Việt nên sẽ được dịch cả file sang tiếng Anh trong lần sửa đó.
+
+✻ Worked for 2m 47s · done 20:41
+
+※ recap: Mục tiêu là chuẩn bị ticket #02 (engine 8 rule và scoring): đã có plan, glossary và 6 doc đã chuyển sang tiếng Anh, chưa commit. Việc tiếp theo là bạn duyệt 7 mục "Cần chốt trước khi code" trong plan. (disable recaps in /config)
+
+❯ 7 mục:ok. commit                                                              
+
+⏺ Tôi sẽ ghi 7 quyết định vào doc (theo quy ước, file tiếng Việt nào bị sửa thì
+  dịch cả file sang tiếng Anh), rồi commit.
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin/AI_Engineering_Challenges/AI_Chall
+      enge_10_Fraud_Detection && cat -n
+      docs/requirements/challenge-10-requirements.md | sed…)  ⎿       1  # Challenge 10 - Phân rã yêu cầu
+     2
+          3  Phân rã yêu cầu của AI Challenge 10 - Fraud Detection Scoring
+     En
+     … +64 lines (ctrl+o to expand)
+
+⏺ Write(AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/requireme
+       nts/challenge-10-requirements.md)
+  ⎿  Added 97 lines, removed 88 lines
+        1 -# Challenge 10 - Phân rã yêu cầu                              
+        1 +# Challenge 10 - Requirement breakdown                        
+        2  
+        3 -Phân rã yêu cầu của AI Challenge 10 - Fraud Detection Scoring 
+          -Engine thành các mục chính và chi tiết.                       
+        4 -Nguồn: `docs/requirements/original-brief.md`, Phần 1 (R1-R7) v
+          -à Phần 2 (R8).                                                
+        5 -Đường dẫn trong file này tính từ thư mục project `AI_Challenge
+          -_10_Fraud_Detection/`.                                        
+        6 -Giai đoạn: New Task (theo Task_Lifecycle). Chưa chọn công nghệ
+          -.                                                             
+        3 +Breaks AI Challenge 10 - Fraud Detection Scoring Engine down i
+          +nto main parts and details.                                   
+        4 +Source: `docs/requirements/original-brief.md`, Part 1 (R1-R7) 
+          +and Part 2 (R8).                                              
+        5 +Paths in this file are relative to the project folder `AI_Chal
+          +lenge_10_Fraud_Detection/`.                                   
+        6 +Stage: New Task (per Task_Lifecycle). Technology not chosen ye
+          +t.                                                            
+        7  
+        8 -## Danh sách yêu cầu gốc (R)                                  
+        8 +## Original requirements (R)                                  
+        9  
+       10 -| Mã | Yêu cầu | Nguồn |                                      
+       10 +| Code | Requirement | Source |                               
+       11  |---|---|---|
+       12 -| R1 | Ước lượng và báo timeline | Đề, mục Note |             
+       13 -| R2 | Sinh dataset 2,000 claim, 10 cột, nhúng ~200 fraud theo
+          - 8 pattern, có ground truth | Đề, mục Dataset |               
+       14 -| R3 | Dữ liệu tham chiếu: >= 5 bundle, >= 10 cặp diagnosis-pr
+          -ocedure hợp lệ, bộ mã dùng chung | Đề, mục Detection Rules |  
+       15 -| R4 | 8 rule phát hiện, mỗi flag có evidence cụ thể | Đề, mục
+          - Detection Rules + Evaluation Criteria |                      
+       16 -| R5 | Weight 1-5 cấu hình được, score 0-100, ranked list, JSO
+          -N per claim, giải thích weight | Đề, mục Output + Scoring + Ev
+          -aluation Criteria |                                           
+       17 -| R6 | Precision, recall so với ground truth; recall >= 70%, F
+          -PR <= 20%; metrics report | Đề, mục Metrics + Submission |    
+       18 -| R7 | >= 15 unit test (từng rule + edge case); 2,000 claim ch
+          -ạy < 30 giây | Đề, mục Evaluation Criteria |                  
+       19 -| R8 | Repo GitHub, writeup, log hội thoại AI nguyên văn (bắt 
+          -buộc, thiếu là trượt), không one-shot | README chung |        
+       12 +| R1 | Estimate and report the timeline | Brief, section Note 
+          +|                                                             
+       13 +| R2 | Generate a dataset of 2,000 claims, 10 columns, embeddi
+          +ng ~200 fraud cases across 8 patterns, with ground truth | Bri
+          +ef, section Dataset |                                         
+       14 +| R3 | Reference data: >= 5 bundles, >= 10 valid diagnosis-pro
+          +cedure pairs, a shared code set | Brief, section Detection Rul
+          +es |                                                          
+       15 +| R4 | 8 detection rules, every flag with specific evidence | 
+          +Brief, sections Detection Rules + Evaluation Criteria |       
+       16 +| R5 | Configurable weights 1-5, score 0-100, ranked list, JSO
+          +N per claim, weights explained | Brief, sections Output + Scor
+          +ing + Evaluation Criteria |                                   
+       17 +| R6 | Precision, recall against the ground truth; recall >= 7
+          +0%, FPR <= 20%; metrics report | Brief, sections Metrics + Sub
+          +mission |                                                     
+       18 +| R7 | >= 15 unit tests (each rule + edge cases); 2,000 claims
+          + processed in < 30 seconds | Brief, section Evaluation Criteri
+          +a |                                                           
+       19 +| R8 | GitHub repo, writeup, verbatim AI conversation logs (ma
+          +ndatory, missing = fail), no one-shot | General README |      
+       20  
+       21 -## Mục chính và chi tiết                                      
+       21 +## Main parts and details                                     
+       22  
+       23 -### A. Tạo dataset                                            
+       23 +### A. Generate the dataset                                   
+       24  
+       25 -- A1. Schema 10 cột, 2,000 claim, ~500 member, ~50 provider, n
+          -ăm 2024; `is_weekend` suy ra từ `claim_date`. (R2)            
+       26 -- A2. Dữ liệu tham chiếu: bộ mã ICD-10 và procedure, >= 5 bund
+          -le, >= 10 cặp diagnosis-procedure hợp lệ, danh sách procedure 
+          -surgical. Dùng chung cho mục B. (R3)                          
+       27 -- A3. Nhúng ~200 fraud theo 8 pattern, đúng số lượng đề. (R2) 
+       28 -- A4. Nhãn ground truth cho từng claim. (R2)                  
+       29 -- A5. Xuất file dataset để nộp. (R8)                          
+       25 +- A1. 10-column schema, 2,000 claims, ~500 members, ~50 provid
+          +ers, year 2024; `is_weekend` derived from `claim_date`. (R2)  
+       26 +- A2. Reference data: ICD-10 and procedure codes, >= 5 bundles
+          +, >= 10 valid diagnosis-procedure pairs, list of surgical proc
+          +edures. Shared with part B. (R3)                              
+       27 +- A3. Embed ~200 fraud cases across 8 patterns, with the brief
+          +'s counts. (R2)                                               
+       28 +- A4. Ground-truth label for every claim. (R2)                
+       29 +- A5. Export the dataset files for submission. (R8)           
+       30  
+       31 -### B. Viết rule logic (engine)                               
+       31 +### B. Rule logic (engine)                                    
+       32  
+       33 -- B1. 8 rule phát hiện. (R4)                                  
+       34 -- B2. Evidence cụ thể, có số liệu cho từng flag. (R4)         
+       35 -- B3. Weight 1-5 cấu hình được, kèm lý do chọn. (R5)          
+       36 -- B4. Score 0-100, output JSON per claim, danh sách xếp hạng t
+          -heo score. (R5)                                               
+       37 -- B5. Ràng buộc hiệu năng: 2,000 claim < 30 giây. (R7)        
+       33 +- B1. 8 detection rules. (R4)                                 
+       34 +- B2. Specific evidence with numbers for every flag. (R4)     
+       35 +- B3. Configurable weights 1-5, with the reasons for each choi
+          +ce. (R5)                                                      
+       36 +- B4. Score 0-100, JSON output per claim, list ranked by score
+          +. (R5)                                                        
+       37 +- B5. Performance constraint: 2,000 claims in < 30 seconds. (R
+          +7)                                                            
+       38  
+       39 -### C. Kiểm chứng                                             
+       39 +### C. Verification                                           
+       40  
+       41 -- C1. >= 15 unit test cho từng rule và edge case. (R7)        
+       42 -- C2. Precision và recall so với ground truth; mục tiêu recall
+          - >= 70%, FPR <= 20%. (R6)                                     
+       41 +- C1. >= 15 unit tests for each rule and edge cases. (R7)     
+       42 +- C2. Precision and recall against the ground truth; targets r
+          +ecall >= 70%, FPR <= 20%. (R6)                                
+       43  - C3. Metrics report. (R6)
+       44 -- C4. Đo thời gian chạy để chứng minh B5. (R7)                
+       44 +- C4. Measure the runtime to prove B5. (R7)                   
+       45  
+       46 -### D. Bàn giao (không phải code)                             
+       46 +### D. Delivery (not code)                                    
+       47  
+       48 -- D1. Ước lượng timeline gửi Papaya. (R1)                     
+       49 -- D2. Writeup trong README: cách tiếp cận, quyết định, lý do c
+          -họn weight. (R5, R8)                                          
+       50 -- D3. Log hội thoại AI nguyên văn, bắt buộc. (R8)             
+       51 -- D4. Repo GitHub chứa đủ dataset, scored output, metrics repo
+          -rt. (R8)                                                      
+       48 +- D1. Timeline estimate sent to Papaya. (R1)                  
+       49 +- D2. Writeup in the README: approach, decisions, reasons for 
+          +the weights. (R5, R8)                                         
+       50 +- D3. Verbatim AI conversation logs, mandatory. (R8)          
+       51 +- D4. GitHub repo with the dataset, scored output and metrics 
+          +report. (R8)                                                  
+       52  
+       53 -## Quyết định đã chốt                                         
+       53 +## Settled decisions                                          
+       54  
+       55 -- Giai đoạn hiện tại: New Task. Chọn công nghệ để sau (có thể 
+          -làm ở Claude Code).                                           
+       56 -- Timeline mục tiêu 4-6 giờ, chưa cam kết đến khi phân tích xo
+          -ng đề.                                                        
+       57 -- Timeline 5-7h (kế hoạch 6h): dataset 1.5h, logic 1.75h, unit
+          - test 1.25h (gồm C2, C3, C4), buffer 1.5h. Ghi tại `README.md`
+          - của project.                                                 
+       58 -- A: viết code generator, ràng buộc sinh đủ các pattern fraud 
+          -theo đề.                                                      
+       59 -- A: dữ liệu hợp lệ được phép tự nhiên kích hoạt rule (FP tự n
+          -hiên), đếm và báo trong metrics.                              
+       60 -- A2: diagnosis dùng mã ICD-10 thật; procedure dùng mã tự đặt 
+          -`P-xxxx`. Xem `docs/business-rule/icd-10.md`.                 
+       61 -- A4: tách input (`claims.csv`, chỉ 10 cột của đề) và ground t
+          -ruth (`ground_truth.csv`: claim_id, is_fraud, fraud_pattern). 
+          -Engine không đọc ground truth.                                
+       62 -- A: seed cố định để tái lập dataset.                         
+       63 -- A3: một claim fraud chỉ mang 1 pattern (giới hạn có chủ đích
+          -; thực tế có thể nhiều).                                      
+       64 -- A3: có nhóm provider weekday-only. Xem `docs/business-rule/w
+          -eekday-only-providers.md`.                                    
+       65 -- Cách đếm fraud: phương án C, đếm theo claim, tổng 200 claim 
+          -fraud. Duplicate 15 cặp (30 claim). Phantom: 1 provider-day có
+          - 31 claim = 25 claim nhãn phantom + 6 claim nhãn upcoding/mism
+          -atch.                                                         
+       66 -- Provider: 50 provider, 3 loại (bệnh viện, phòng khám, nha kh
+          -oa); 10 bệnh viện weekday-only, mỗi provider nhận 2 claim week
+          -end fraud.                                                    
+       67 -- Đơn vị VNĐ, giữ nguyên số của đề; mặt bằng giá bệnh viện tư.
+       68 -- A2 đã ghi: `docs/business-rule/` (catalog, icd-10, upcoding,
+          - bundling, diagnosis-procedure-mismatch, amount-clustering, we
+          -ekday-only-providers).                                        
+       69 -- Claim hợp lệ có đúng 1 mã procedure; amount = giá chuẩn x lo
+          -g-normal dao động 15%; upcoded = giá chuẩn x 1.6-2.5.         
+       70 -- Unbundling flag khi claim chứa đủ tất cả thành phần của bund
+          -le.                                                           
+       71 -- Amount clustering dùng P-1003 (giá chuẩn 40,000, dao động 15
+          -%).                                                           
+       72 -- A3: rapid re-submission 15 cặp (30 claim), cả 2 claim mang n
+          -hãn fraud, cách nhau 1-7 ngày. Tổng hợp: `docs/business-rule/f
+          -raud-injection.md`.                                           
+       73 -- A5: CSV RFC 4180 (phân cách `,`), `procedure_codes` phân các
+          -h `|`, ngày `YYYY-MM-DD`, amount số nguyên VNĐ, `is_weekend` 1
+          -/0, ground truth file riêng. Xem `docs/decisions/dataset-forma
+          -t.md`.                                                        
+       74 -- Mục A: đã chốt xong.                                        
+       75 -- Công nghệ: A dùng Python; B dự định TypeScript, đang cân nhắ
+          -c Python cho cả A và B (đề không yêu cầu API). Cấu trúc `src/`
+          - và `conversations/`: `docs/decisions/tech-and-structure.md`. 
+       76 -- Bỏ hẳn khái niệm cấp cứu ra khỏi phạm vi.                   
+       77 -- B1 upcoding: mã < 10 claim không xét; generator sinh >= 30 c
+          -laim mỗi mã.                                                  
+       78 -- B2 evidence: tiếng Anh, kèm tên tiếng Anh của mã, đủ 3 phần 
+          -(quan sát / ngưỡng / claim liên quan). Xem `docs/business-rule
+          -/evidence.md`.                                                
+       79 -- B3 trọng số: Duplicate 5, Phantom 4, Upcoding 4, Mismatch 4,
+          - Unbundling 3, Rapid 3, Weekend 2, Clustering 2. Xem `docs/bus
+          -iness-rule/scoring-weights.md`.                               
+       80 -- B4 scoring: weighted sum + scale bão hòa `100 x (1 - e^(-0.2
+          -5 x total))` (khớp ví dụ đề 78); xếp hạng giảm dần; output toà
+          -n bộ claim. Xem `docs/business-rule/scoring.md`.              
+       81 -- C2 metrics: dự đoán fraud khi score > 0; FPR = FP/(FP+TN); t
+          -hêm bảng theo ngưỡng 0/40/70. Xem `docs/business-rule/metrics.
+          -md`.                                                          
+       82 -- C1 test: 19 test (mỗi rule 1 ca flag + 1 ca không flag + ca 
+          -biên, cộng scoring). Xem `docs/business-rule/test-cases.md`.  
+       83 -- C3 metrics report: 4 phần (tổng thể, theo pattern, FP tự nhi
+          -ên theo rule, bảng theo ngưỡng). Xem `docs/business-rule/metri
+          -cs.md`.                                                       
+       84 -- Project tự đứng độc lập: đề và quy định chung gộp trong `doc
+          -s/requirements/original-brief.md`; phân rã yêu cầu, handbook n
+          -otes nằm trong `docs/`.                                       
+       85 -- B1 weekend: rule tính trên toàn bộ claim của provider; mỗi b
+          -ệnh viện weekday-only >= 60 claim.                            
+       86 -- Business 8 rule: `docs/business-rule/detection-rules.md`.   
+       87 -- B1 upcoding: mean/SD tính trên toàn bộ claim cùng mã (gồm cả
+          - claim upcoded), chấp nhận masking; đo recall trước, chỉ đổi s
+          -ang leave-one-out nếu không đạt. Xem `docs/business-rule/upcod
+          -ing.md`.                                                      
+       88 -- B1 duplicate: unique key `(member_id, provider_id, claim_dat
+          -e, diagnosis_code)`; nhóm >= 2 claim => flag tất cả.          
+       89 -- B1 rapid re-submission: chỉ bỏ qua cặp trùng unique key dupl
+          -icate; cặp cùng ngày khác provider vẫn là rapid. Xem `docs/bus
+          -iness-rule/duplicate-and-rapid-resubmission.md`.              
+       90 -- Duplicate: dữ liệu đã qua validate input, không có double-su
+          -bmit; hai claim trùng là hai claim độc lập và là fraud. Rule f
+          -lag cả 2 claim trong cặp, cả 2 mang nhãn fraud.               
+       91 -- Công nghệ (chốt 2026-10-24): Python cho cả A, B, C; chỉ thư 
+          -viện chuẩn + pytest; bỏ `src/api/`. Xem `docs/decisions/tech-a
+          -nd-structure.md`.                                             
+       92 -- B1 upcoding: chỉ claim có đúng 1 mã tham gia tính mean/SD và
+          - được xét; claim nhiều mã (unbundling) bỏ qua. Mismatch xét từ
+          -ng mã. Xem `docs/business-rule/upcoding.md`.                  
+       93 -- A: generator chỉ kiểm cấu trúc sau khi generate; kiểm chéo r
+          -ule với nhãn chuyển sang C (test tích hợp). Xem `docs/business
+          --rule/fraud-injection.md`.                                    
+       94 -- A1 provider (2026-10-24): 50 provider đặt cố định trong `src
+          -/config/providers.json` (id, tên không dấu, loại), ID xen kẽ l
+          -oại; danh sách weekday-only không ghi trong config mà generato
+          -r chọn theo seed.                                             
+       95 -- A1 member (2026-10-24): chọn đều trong `MEM-0001..0500`, khô
+          -ng chia trước; "~500" được kiểm tự động là >= 480 member khác 
+          -nhau (kỳ vọng ~491).                                          
+       96 -- A2 claim_type (2026-10-24): claim_type của diagnosis chỉ để 
+          -tham khảo, claim_type của claim lấy theo mã. Giữ 2 cặp khác cl
+          -aim_type `K80.2 - P-1005`, `J18.9 - P-1004`. Xem `docs/busines
+          -s-rule/diagnosis-procedure-mismatch.md`.                      
+       97 -- A amount (2026-10-24): mọi amount làm tròn tới 100 VNĐ, cả h
+          -ợp lệ lẫn fraud (bản trước làm tròn khác nhau => lộ nhãn clust
+          -ering). Xem `docs/business-rule/fraud-injection.md`.          
+       98 -- B5 / C4: rapid group theo `(member_id, diagnosis_code)`; đo 
+          -thời gian bằng `time.perf_counter()` trong CLI, ghi vào metric
+          -s report.                                                     
+       99 -- Rủi ro đã ước lượng trước khi code: `docs/experiences/datase
+          -t-generation-pitfalls.md`.                                    
+      100 -- A2 sửa cặp hợp lệ: thêm `J06.9 - P-1003`, `I10 - P-1003`, `E
+          -11.9 - P-1002` (35 cặp) để claim unbundled B-1001 / B-1002 khô
+          -ng dính mismatch. Xem `docs/business-rule/diagnosis-procedure-
+          -mismatch.md`.                                                 
+      101 -- A3: amount claim fraud không thuộc pattern amount kẹp hệ số 
+          -[0.85, 1.15]; upcoded rải trên mã >= 60 claim, tối đa 2 claim/
+          -mã. Xem `fraud-injection.md`, `upcoding.md`.                  
+      102 -- Quản lý việc: ticket ở `docs/backlog/`, plan ở `.claude/docs
+          -/plans/` (root repo).                                         
+       55 +- Current stage: New Task. Technology chosen later (possibly i
+          +n Claude Code).                                               
+       56 +- Target timeline 4-6 hours, not committed until the brief is 
+          +fully analyzed.                                               
+       57 +- Timeline 5-7h (plan 6h): dataset 1.5h, logic 1.75h, unit tes
+          +ts 1.25h (including C2, C3, C4), buffer 1.5h. Recorded in the 
+          +project `README.md`.                                          
+       58 +- A: write generator code, constrained to produce every fraud 
+          +pattern of the brief.                                         
+       59 +- A: legitimate data may trigger rules naturally (natural FP),
+          + counted and reported in the metrics.                         
+       60 +- A2: diagnoses use real ICD-10 codes; procedures use made-up 
+          +`P-xxxx` codes. See `docs/business-rule/icd-10.md`.           
+       61 +- A4: input (`claims.csv`, only the brief's 10 columns) is sep
+          +arate from the ground truth (`ground_truth.csv`: claim_id, is_
+          +fraud, fraud_pattern). The engine does not read the ground tru
+          +th.                                                           
+       62 +- A: fixed seed so the dataset is reproducible.               
+       63 +- A3: a fraudulent claim carries only 1 pattern (a deliberate 
+          +limitation; in reality there can be several).                 
+       64 +- A3: there is a group of weekday-only providers. See `docs/bu
+          +siness-rule/weekday-only-providers.md`.                       
+       65 +- Fraud counting: option C, counted per claim, 200 fraudulent 
+          +claims in total. Duplicate 15 pairs (30 claims). Phantom: 1 pr
+          +ovider-day with 31 claims = 25 claims labeled phantom + 6 clai
+          +ms labeled upcoding / mismatch.                               
+       66 +- Providers: 50 providers of 3 types (hospital, clinic, dental
+          + clinic); 10 weekday-only hospitals, each receiving 2 weekend 
+          +fraud claims.                                                 
+       67 +- Currency VND, keeping the brief's numbers; private hospital 
+          +price level.                                                  
+       68 +- A2 recorded in: `docs/business-rule/` (catalog, icd-10, upco
+          +ding, bundling, diagnosis-procedure-mismatch, amount-clusterin
+          +g, weekday-only-providers).                                   
+       69 +- A legitimate claim has exactly 1 procedure code; amount = st
+          +andard price x log-normal with 15% variation; upcoded = standa
+          +rd price x 1.6-2.5.                                           
+       70 +- Unbundling flags when a claim contains all the components of
+          + a bundle.                                                    
+       71 +- Amount clustering uses P-1003 (standard price 40,000, 15% va
+          +riation).                                                     
+       72 +- A3: rapid re-submission 15 pairs (30 claims), both claims la
+          +beled fraud, 1-7 days apart. Summary: `docs/business-rule/frau
+          +d-injection.md`.                                              
+       73 +- A5: CSV RFC 4180 (`,` separator), `procedure_codes` separate
+          +d by `|`, dates `YYYY-MM-DD`, amount as integer VND, `is_weeke
+          +nd` 1/0, ground truth in a separate file. See `docs/decisions/
+          +dataset-format.md`.                                           
+       74 +- Part A: fully settled.                                      
+       75 +- Technology: A uses Python; B was planned in TypeScript, Pyth
+          +on for both A and B under consideration (the brief asks for no
+          + API). Structure of `src/` and `conversations/`: `docs/decisio
+          +ns/tech-and-structure.md`.                                    
+       76 +- The emergency concept is left out of scope entirely.        
+       77 +- B1 upcoding: codes with < 10 claims are not checked; the gen
+          +erator creates >= 30 claims per code.                         
+       78 +- B2 evidence: English, with the English name of every code, a
+          +ll 3 parts (observed / threshold / related claims). See `docs/
+          +business-rule/evidence.md`.                                   
+       79 +- B3 weights: Duplicate 5, Phantom 4, Upcoding 4, Mismatch 4, 
+          +Unbundling 3, Rapid 3, Weekend 2, Clustering 2. See `docs/busi
+          +ness-rule/scoring-weights.md`.                                
+       80 +- B4 scoring: weighted sum + saturating scale `100 x (1 - e^(-
+          +0.25 x total))` (matches the brief's example of 78); ranked de
+          +scending; output covers every claim. See `docs/business-rule/s
+          +coring.md`.                                                   
+       81 +- C2 metrics: predict fraud when score > 0; FPR = FP/(FP+TN); 
+          +extra table at thresholds 0/40/70. See `docs/business-rule/met
+          +rics.md`.                                                     
+       82 +- C1 tests: 19 tests (each rule 1 flag case + 1 no-flag case +
+          + boundary cases, plus scoring). See `docs/business-rule/test-c
+          +ases.md`.                                                     
+       83 +- C3 metrics report: 4 parts (overall, by pattern, natural FP 
+          +by rule, threshold table). See `docs/business-rule/metrics.md`
+          +.                                                             
+       84 +- The project stands on its own: the brief and the general rul
+          +es are merged in `docs/requirements/original-brief.md`; requir
+          +ement breakdown and handbook notes live in `docs/`.           
+       85 +- B1 weekend: the rule is computed over all of the provider's 
+          +claims; every weekday-only hospital has >= 60 claims.         
+       86 +- Business of the 8 rules: `docs/business-rule/detection-rules
+          +.md`.                                                         
+       87 +- B1 upcoding: mean/SD computed over every claim with the same
+          + code (upcoded claims included), masking accepted; measure rec
+          +all first, switch to leave-one-out only if the target is misse
+          +d. See `docs/business-rule/upcoding.md`.                      
+       88 +- B1 duplicate: unique key `(member_id, provider_id, claim_dat
+          +e, diagnosis_code)`; a group of >= 2 claims => flag all of the
+          +m.                                                            
+       89 +- B1 rapid re-submission: only pairs on the same duplicate uni
+          +que key are skipped; same-day pairs at different providers are
+          + still rapid. See `docs/business-rule/duplicate-and-rapid-resu
+          +bmission.md`.                                                 
+       90 +- Duplicate: the data has passed input validation, there is no
+          + double-submit; two matching claims are two independent claims
+          + and are fraud. The rule flags both claims of the pair, both l
+          +abeled fraud.                                                 
+       91 +- Technology (settled 2026-10-24): Python for A, B and C; stan
+          +dard library + pytest only; `src/api/` dropped. See `docs/deci
+          +sions/tech-and-structure.md`.                                 
+       92 +- B1 upcoding: only claims with exactly 1 code take part in th
+          +e mean/SD and are checked; claims with several codes (unbundli
+          +ng) are skipped. Mismatch checks every code. See `docs/busines
+          +s-rule/upcoding.md`.                                          
+       93 +- A: the generator only runs structural checks after generatin
+          +g; cross-checking rules against labels moved to C (integration
+          + test). See `docs/business-rule/fraud-injection.md`.          
+       94 +- A1 providers (2026-10-24): 50 providers fixed in `src/config
+          +/providers.json` (id, name without diacritics, type), IDs inte
+          +rleaved across types; the weekday-only list is not in the conf
+          +ig, the generator picks it by seed.                           
+       95 +- A1 members (2026-10-24): picked uniformly from `MEM-0001..05
+          +00`, no pre-allocation; "~500" is checked automatically as >= 
+          +480 distinct members (expected ~491).                         
+       96 +- A2 claim_type (2026-10-24): a diagnosis's claim_type is for 
+          +reference only, a claim's claim_type comes from its code. The 
+          +2 cross-type pairs `K80.2 - P-1005`, `J18.9 - P-1004` are kept
+          +. See `docs/business-rule/diagnosis-procedure-mismatch.md`.   
+       97 +- A amounts (2026-10-24): every amount is rounded to 100 VND, 
+          +legitimate and fraud alike (an earlier version rounded them di
+          +fferently => the clustering label leaked). See `docs/business-
+          +rule/fraud-injection.md`.                                     
+       98 +- B5 / C4: rapid groups by `(member_id, diagnosis_code)`; runt
+          +ime measured with `time.perf_counter()` in the CLI, written to
+          + the metrics report.                                          
+       99 +- Risks estimated before coding: `docs/experiences/dataset-gen
+          +eration-pitfalls.md`.                                         
+      100 +- A2 valid pairs fixed: added `J06.9 - P-1003`, `I10 - P-1003`
+          +, `E11.9 - P-1002` (35 pairs) so unbundled B-1001 / B-1002 cla
+          +ims do not trip mismatch. See `docs/business-rule/diagnosis-pr
+          +ocedure-mismatch.md`.                                         
+      101 +- A3: amounts of fraud claims outside the amount patterns are 
+          +clamped to a factor in [0.85, 1.15]; upcoded claims are spread
+          + over codes with >= 60 claims, at most 2 per code. See `fraud-
+          +injection.md`, `upcoding.md`.                                 
+      102 +- Work tracking: tickets in `docs/backlog/`, plans in `.claude
+          +/docs/plans/` (repo root).                                    
+      103 +- Docs (2026-10-24): business terms have a single source, `doc
+          +s/business-rule/glossary.md`; other docs link to it instead of
+          + defining terms.                                              
+      104 +- Tests (2026-10-24): two kinds. **System tests** (#02) check 
+          +that the code implements the technical design discussed (input
+          + / weights loading, output format, ranking, engine / ground-tr
+          +uth boundary). **Business tests** (#03, the 19 in `docs/busine
+          +ss-rule/test-cases.md`) check that the 8 rules and scoring giv
+          +e correct business results.                                   
+      105 +- B4 (2026-10-24): a rule raises at most 1 flag per claim; the
+          + evidence lists every related claim. Reason: the score sums th
+          +e weights of the triggered rules, so 2 flags of one rule would
+          + count its weight twice. See `docs/business-rule/scoring.md`. 
+      106 +- B1 upcoding (2026-10-24): SD = `statistics.pstdev` (populati
+          +on SD, the data is every claim of the code, not a sample); fla
+          +g on `>` mean + 2 SD; SD = 0 => no flag. See `docs/business-ru
+          +le/upcoding.md`.                                              
+      107 +- B2 rapid evidence (2026-10-24): worded by time order (after 
+          +/ followed by / same day at another provider). See `docs/busin
+          +ess-rule/evidence.md`.                                        
+      108 +- B1 weekend (2026-10-24): "surgical" = at least 1 code in `pr
+          +ocedure_codes` is a procedure or bundle with `surgical = true`
+          +; weekend taken from the `is_weekend` column. See `docs/busine
+          +ss-rule/weekday-only-providers.md`.                           
+      109 +- B input (2026-10-24): invalid input stops the engine with th
+          +e full list of problems; no rows are skipped. See `docs/decisi
+          +ons/tech-and-structure.md`.                                   
+      110 +- B config (2026-10-24): only the weights are configurable (th
+          +e brief only asks for weights); rule thresholds are constants 
+          +at the top of each rule file. See `docs/decisions/tech-and-str
+          +ucture.md`.                                                   
+      111 +- B4 output (2026-10-24): `output/scored_output.json` is a ran
+          +ked JSON array; each element has exactly the brief's 3 fields;
+          + flags inside a claim sorted by severity descending. See `docs
+          +/business-rule/scoring.md`.                                   
+      112  
+      104 -## Câu hỏi mở (bàn khi đi vào chi tiết từng mục)              
+      113 +## Open questions (discussed when each part is detailed)      
+      114  
+      106 -| Mục | Câu hỏi |                                             
+      115 +| Part | Question |                                           
+      116  |---|---|
+
+⏺ Bash(git diff --stat docs/requirements/challenge-10-requirements.md; git show
+      HEAD:AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/requir
+      ements/challe…)
+  ⎿   .../docs/requirements/challenge-10-requirements.md | 197 +++++++++++-
+     ---------
+      1 file changed, 103 insertions(+), 94 deletions(-)
+     … +2 lines (ctrl+o to expand)
+
+⏺ Không mất dòng nào (66 dòng cũ + 9 quyết định mới = 75). Giờ cập nhật các
+  business doc liên quan:
+
+⏺ Write(AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/business-
+       rule/scoring.md)
+  ⎿  Added 19 lines, removed 18 lines
+       1  # Scoring (B4)
+       2  
+       3 -Đề yêu cầu: "Composite score = weighted sum of triggered rules,
+         - normalized to 0-100" và "Output ranked list of claims by risk 
+         -score".                                                        
+       3 +The brief asks: "Composite score = weighted sum of triggered ru
+         +les, normalized to 0-100" and "Output ranked list of claims by 
+         +risk score".                                                   
+       4  
+       5 -## 3 bước cho mỗi claim                                        
+       5 +## 3 steps per claim                                           
+       6  
+       7 -1. **8 rule kiểm tra điều kiện** => mỗi rule trả về có / không 
+         -+ evidence (`detection-rules.md`, `evidence.md`).              
+       8 -2. **Weighted scoring**: `total = tổng weight của các rule bị f
+         -lag` (weight: `scoring-weights.md`).                           
+       7 +1. **The 8 rules check their conditions** => each rule returns 
+         +yes / no + evidence (`detection-rules.md`, `evidence.md`). A ru
+         +le raises **at most 1 flag per claim**; when several claims are
+         + related (e.g. a claim re-submitted with 2 others), the single 
+         +evidence lists all of them. Reason: step 2 sums the weights of 
+         +the triggered rules, so 2 flags of one rule would count its wei
+         +ght twice.                                                     
+       8 +2. **Weighted scoring**: `total = sum of the weights of the fla
+         +gged rules` (weights: `scoring-weights.md`).                   
+       9  3. **Scoring scale (0-100)**: `risk_score = round(100 x (1 - e^
+          (-0.25 x total)))`.
+      10  
+      11 -Bước 2 và 3 là một công thức áp cho mọi claim; xử lý theo từng 
+         -loại case chỉ nằm ở bước 1.                                    
+      11 +Steps 2 and 3 are one formula applied to every claim; case-spec
+         +ific handling lives only in step 1.                            
+      12  
+      13 -## Vì sao chọn công thức bão hòa (k = 0.25)                    
+      13 +## Why a saturating formula (k = 0.25)                         
+      14  
+      15 -| Cách | Công thức | Ví dụ đề (4 + 2 = 6) | Chỉ Duplicate (5) |
+         - Chỉ Clustering (2) |                                          
+      15 +| Approach | Formula | Brief's example (4 + 2 = 6) | Duplicate 
+         +only (5) | Clustering only (2) |                               
+      16  |---|---|---|---|---|
+      17 -| Chia tổng weight | total / 27 x 100 | 22 | 19 | 7 |          
+      18 -| Chia mốc trần 10 | min(100, total / 10 x 100) | 60 | 50 | 20 
+         -|                                                              
+      19 -| **Bão hòa** | **100 x (1 - e^(-0.25 x total))** | **78** | **
+         -71** | **39** |                                                
+      17 +| Divide by total weight | total / 27 x 100 | 22 | 19 | 7 |    
+      18 +| Cap at 10 | min(100, total / 10 x 100) | 60 | 50 | 20 |      
+      19 +| **Saturating** | **100 x (1 - e^(-0.25 x total))** | **78** |
+         + **71** | **39** |                                             
+      20  
+      21 -- Khớp đúng ví dụ output của đề (score 78 cho upcoding + cluste
+         -ring): 1 - e^(-1.5) = 0.777.                                   
+      22 -- Không bao giờ vượt 100 dù dính nhiều rule.                   
+      23 -- Một rule mạnh đơn lẻ vẫn cho score cao (Duplicate => 71), phả
+         -n ánh đúng mức rủi ro.                                         
+      21 +- Matches the brief's example output exactly (score 78 for upco
+         +ding + clustering): 1 - e^(-1.5) = 0.777.                      
+      22 +- Never exceeds 100, however many rules fire.                  
+      23 +- A single strong rule still gives a high score (Duplicate => 7
+         +1), reflecting the real risk.                                  
+      24  
+      25 -Bảng tham chiếu: total 2 => 39, 3 => 53, 4 => 63, 5 => 71, 6 =>
+         - 78, 8 => 86, 10 => 92.                                        
+      25 +Reference table: total 2 => 39, 3 => 53, 4 => 63, 5 => 71, 6 =>
+         + 78, 8 => 86, 10 => 92.                                        
+      26  
+      27 -## Xếp hạng và output                                          
+      27 +## Ranking and output                                          
+      28  
+      29 -- Sắp xếp `risk_score` giảm dần; bằng điểm thì số flag nhiều hơ
+         -n trước, sau đó theo `claim_id`.                               
+      30 -- Output gồm **toàn bộ 2,000 claim**; claim không dính rule có 
+         -`risk_score` = 0 và `flags: []`.                               
+      31 -- Mỗi flag có `rule`, `severity` (= weight của rule), `evidence
+         -`. Format theo ví dụ của đề.                                   
+      29 +- Sorted by `risk_score` descending; on equal scores, more flag
+         +s first, then by `claim_id`.                                   
+      30 +- The output covers **all 2,000 claims**; a claim with no flag 
+         +has `risk_score` = 0 and `flags: []`.                          
+      31 +- `output/scored_output.json` is a JSON array in ranked order. 
+         +Each element has exactly the brief's 3 fields `claim_id`, `risk
+         +_score`, `flags`; no extra fields (rank, total weight), so the 
+         +output matches the brief's example.                            
+      32 +- Each flag has `rule`, `severity` (= the rule's weight), `evid
+         +ence`. Flags inside a claim are sorted by severity descending, 
+         +then by rule order (`src/rule_names.py`).                      
+
+⏺ Write(AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/business-
+       rule/evidence.md)
+  ⎿  Added 22 lines, removed 9 lines
+       1  # Evidence (B2)
+       2  
+       3 -Đề yêu cầu: "Each flag includes specific, actionable evidence (
+         -not just 'flagged by rule 3')".                                
+       3 +The brief asks: "Each flag includes specific, actionable eviden
+         +ce (not just 'flagged by rule 3')".                            
+       4  
+       5 -## Nguyên tắc                                                  
+       5 +## Principles                                                  
+       6  
+       7 -- Ngôn ngữ: **tiếng Anh** (theo ví dụ output của đề).          
+       8 -- Mỗi evidence có đủ 3 phần: **giá trị quan sát** của claim, **
+         -giá trị so sánh + ngưỡng** của rule, **claim liên quan** (nếu c
+         -ó).                                                            
+       9 -- Mã procedure / diagnosis luôn kèm **tên tiếng Anh** (xem `cat
+         -alog.md`, `icd-10.md`) để người thẩm định đọc hiểu không cần tr
+         -a mã.                                                          
+      10 -- Số tiền định dạng có dấu phân cách hàng nghìn và đơn vị VND. 
+       7 +- Language: **English** (following the brief's example output).
+       8 +- Every evidence has 3 parts: the claim's **observed value**, t
+         +he rule's **comparison value + threshold**, the **related claim
+         +s** (if any).                                                  
+       9 +- Procedure / diagnosis codes always come with their **English 
+         +name** (see `catalog.md`, `icd-10.md`) so a claim adjuster can 
+         +read it without looking codes up.                              
+      10 +- Amounts use a thousands separator and the unit VND.          
+      11 +- Numbers in evidence come from the rule's constants and the da
+         +ta, never typed into the text by hand.                         
+      12  
+      12 -## Mẫu cho 8 rule                                              
+      13 +## Templates for the 8 rules                                   
+      14  
+      14 -| # | Rule | Mẫu evidence |                                    
+      15 +| # | Rule | Evidence template |                               
+      16  |---|---|---|
+      17  | 1 | Duplicate | `Duplicate of CLM-00456: same member MEM-0042
+          , provider PRV-007, date 2024-03-15, diagnosis K35.8 (Acute app
+          endicitis) - 2 claims share this key` |
+      18  | 2 | Rapid re-submission | `Re-submitted 3 days after CLM-0045
+          6 (2024-03-12) for the same member MEM-0042 and diagnosis J06.9
+           (Acute upper respiratory infection) - window: 7 days` |
+     ...
+      23  | 7 | Diagnosis-procedure mismatch | `Procedure P-3001 (Laparos
+          copic appendectomy) is not valid for diagnosis K02.1 (Dental ca
+          ries); valid procedures: P-4001, P-4002, P-4003` |
+      24  | 8 | Amount clustering | `Amount 48,500 VND is 97% of the 50,0
+          00 VND auto-approval threshold (band 47,500-49,999)` |
+      25  
+      25 -Số liệu trong mẫu là minh họa; evidence thật lấy số từ dataset.
+      26 +The numbers in the templates are illustrative; real evidence ta
+         +kes its numbers from the dataset.                              
+      27 +                                                               
+      28 +## Rapid re-submission: wording by time order                  
+      29 +                                                               
+      30 +A rapid flag is raised on both claims of a pair, so the wording
+         + depends on which side the claim is on:                        
+      31 +                                                               
+      32 +| Case | Evidence template |                                   
+      33 +|---|---|                                                      
+      34 +| Later claim | `Re-submitted 3 days after CLM-00456 (2024-03-1
+         +2) ...` (template 2 above) |                                   
+      35 +| Earlier claim | `Followed 3 days later by CLM-00789 (2024-03-
+         +15) for the same member MEM-0042 and diagnosis J06.9 (Acute upp
+         +er respiratory infection) - window: 7 days` |                  
+      36 +| Same day, another provider | `Submitted on the same day as CL
+         +M-00456 at another provider PRV-015 for the same member MEM-004
+         +2 and diagnosis J06.9 (Acute upper respiratory infection) - win
+         +dow: 7 days` |                                                 
+      37 +                                                               
+      38 +A claim related to several claims gets one flag whose evidence 
+         +lists each related claim (`scoring.md`).                       
+
+⏺ Write(AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/business-
+       rule/weekday-only-providers.md)
+  ⎿  Added 19 lines, removed 14 lines
+       1 -# Provider không làm cuối tuần (weekday-only)                  
+       1 +# Weekday-only providers                                       
+       2  
+       3 -Phục vụ pattern "weekend surgical anomaly" (rule 6).           
+       3 +Supports the "weekend surgical anomaly" pattern (rule 6). Terms
+         + (weekday-only provider, weekend anomaly, surgical): see `gloss
+         +ary.md`.                                                       
+       4  
+       5 -## Nguồn trong đề                                              
+       5 +## Source in the brief                                         
+       6  
+       7  - Dataset: "20 weekend surgical anomalies (surgical procedures 
+          on weekends from providers who never operate on weekends)".
+       8  - Rule: "surgical procedures on weekends from providers with < 
+          5% historical weekend volume".
+       9  
+      10 -## Quy tắc sinh dữ liệu                                        
+      10 +## Data generation                                             
+      11  
+      12 -- Generator chọn **10 bệnh viện** (loại provider có phẫu thuật)
+         - làm weekday-only.                                             
+      13 -- Claim hợp lệ của nhóm này chỉ rơi vào thứ Hai - thứ Sáu.     
+      14 -- 20 claim fraud weekend surgical được chèn vào thứ Bảy / Chủ n
+         -hật, chia đều 2 claim cho mỗi provider weekday-only.           
+      15 -- Procedure surgical: P-3001, P-3002, P-3003, B-3101, B-3102 (x
+         -em `catalog.md`).                                              
+      16 -- Danh sách provider weekday-only được ghi lại sau khi generate
+         -.                                                              
+      12 +- The generator picks **10 hospitals** (the provider type that 
+         +does surgery) as weekday-only.                                 
+      13 +- Legitimate claims of this group fall only on Monday - Friday.
+      14 +- The 20 weekend surgical fraud claims are placed on Saturday /
+         + Sunday, 2 claims for each weekday-only provider.              
+      15 +- Surgical procedures: P-3001, P-3002, P-3003, B-3101, B-3102 (
+         +see `catalog.md`).                                             
+      16 +- The list of weekday-only providers is recorded after generati
+         +on.                                                            
+      17  
+      18 -## Cách tính tỷ lệ cuối tuần (đã chốt)                         
+      18 +## Weekend ratio (settled)                                     
+      19  
+      20 -- Rule 6 tính tỷ lệ cuối tuần trên **toàn bộ claim** của provid
+         -er, đúng nguyên văn đề.                                        
+      21 -- Generator cho mỗi bệnh viện weekday-only **>= 60 claim** (ngẫ
+         -u nhiên 62-70 claim hợp lệ, không nhận thêm để nhóm này không t
+         -hành 10 bệnh viện lớn nhất). 2 claim fraud cuối tuần => 2/60 = 
+         -3.3% < 5% => rule bắt được.                                    
+      22 -- Lý do: với ~40 claim/provider, 2/40 = 5% không < 5% => bỏ sót
+         -.                                                              
+      23 -- Không đưa khái niệm cấp cứu vào phạm vi.                     
+      20 +- Rule 6 computes the weekend ratio over **all claims** of the 
+         +provider, as the brief words it.                               
+      21 +- The generator gives each weekday-only hospital **>= 60 claims
+         +** (a random 62-70 legitimate claims, with no extra ones, so th
+         +is group does not become the 10 largest hospitals). 2 weekend f
+         +raud claims => 2/60 = 3.3% < 5% => the rule catches them.      
+      22 +- Reason: with ~40 claims per provider, 2/40 = 5% is not < 5% =
+         +> missed.                                                      
+      23 +- The emergency concept is out of scope.                       
+      24 +                                                               
+      25 +## What counts as a surgical weekend claim (settled 2026-10-24)
+      26 +                                                               
+      27 +- **Surgical:** at least 1 code in `procedure_codes` is a proce
+         +dure or bundle with `surgical = true` in the catalog.          
+      28 +- **Weekend:** taken from the `is_weekend` column of the input;
+         + the day name in the evidence (`Saturday`) is derived from `cla
+         +im_date`.                                                      
+
+⏺ Update(AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/business
+        -rule/upcoding.md)
+  ⎿  Added 1 line
+      27  
+      28  - Mean and SD are computed over **every claim with the same cod
+          e**, upcoded claims included. This keeps the brief's wording ("
+          mean for that procedure code").
+      29  - Known consequence (masking): upcoded claims raise the mean an
+          d SD => the mean + 2 SD threshold goes up and some upcoded clai
+          ms may not exceed it => lower recall.
+      30 +- SD = **population SD** (`statistics.pstdev`), because the dat
+         +a is every claim of the code, not a sample (settled 2026-10-24;
+         + see `glossary.md`). Flag when amount `>` mean + 2 x SD (the br
+         +ief says "> 2 standard deviations"). SD = 0 => no flag. The evi
+         +dence states `(amount - mean) / SD` with 1 decimal.            
+      31  - Handling: measure the recall of the upcoding rule on the data
+          set first. Switch to excluding the claim under review (leave-on
+          e-out) only if the target is missed. Record the measurement and
+           the decision in the writeup.
+      32  
+      33  ## Minimum number of claims
+
+⏺ Update(AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/business
+        -rule/glossary.md)
+  ⎿  Added 1 line, removed 1 line
+      62  | Term | Meaning |
+      63  |---|---|
+      64  | Rule | One of the 8 checks in `detection-rules.md`. |
+      65 -| Flag | A rule's verdict that a claim is suspicious, with seve
+         -rity and evidence. |                                           
+      65 +| Flag | A rule's verdict that a claim is suspicious, with seve
+         +rity and evidence. A rule raises at most one flag per claim. | 
+      66  | Evidence | The text attached to a flag: the claim's observed 
+          value, the rule's comparison value and threshold, and the relat
+          ed claims. See `evidence.md`. |
+      67  | Severity / weight | A configurable number 1-5 per rule, sayin
+          g how strongly a flag points to fraud. See `scoring-weights.md`
+          . |
+      68  | Risk score | 0-100 per claim, computed from the weights of th
+          e rules that flagged it. See `scoring.md`. |
+
+⏺ Update(AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/decision
+        s/tech-and-structure.md)
+  ⎿  Added 4 lines
+      25  - `config/` holds shared JSON files (bundle map, valid pairs, s
+          tandard prices, weights) so the generator and the engine cannot
+           drift apart. Weights 1-5 are validated on load.
+      26  - No API (the brief does not ask for one). Batch runs through t
+          he CLI, writing files.
+      27  - Every rule has the same signature: it takes the full list of 
+          claims and returns flags by `claim_id`. Reason: 5 of the 8 rule
+          s need to look at several claims (duplicate, rapid, upcoding, p
+          hantom, weekend).
+      28 +- Rules return evidence only (`claim_id -> evidence`); the engi
+         +ne attaches the severity from the weights, so a rule never know
+         +s its weight.                                                  
+      29 +- The engine never imports from `generator/` (the generator kno
+         +ws the labels). Input loading lives in `src/claims.py`, next to
+         + `catalog.py`.                                                 
+      30 +- Invalid input (settled 2026-10-24): the claims loader checks 
+         +the 10 columns, unique `claim_id`, valid dates, positive intege
+         +r amounts, `is_weekend` 0/1 and that every code exists in the c
+         +atalog. Any problem => the full list goes to stderr and the CLI
+         + exits 1; no rows are skipped. Reason: an unknown code would ma
+         +ke the mismatch / upcoding rules silently wrong.               
+      31 +- Configuration (settled 2026-10-24): only the weights are conf
+         +igurable (`src/config/weights.json`, the brief only asks for we
+         +ights). Rule thresholds (7 days, 2 SD, 10 claims, 30 claims per
+         + day, 5%, 50,000 / 47,500) are constants at the top of each rul
+         +e file, and evidence reads them from there.                    
+      32  - Performance (B5): the rapid rule only compares pairs inside a
+           `(member_id, diagnosis_code)` group of a few claims => no O(n^
+          2) over the whole dataset.
+      33  - Timing (C4): `time.perf_counter()` around the whole load -> r
+          ules -> score -> write flow in the CLI; the result goes into th
+          e metrics report.
+      34  - The generator assigns `claim_id` after sorting all claims by 
+          date, so fraudulent claims do not cluster at the end of the ID 
+          range.
+
+⏺ Update(.claude/docs/plans/todo/02-rule-engine.md)
+  ⎿  Added 2 lines, removed 2 lines
+       6  
+       7  Phạm vi: engine + CLI `score` + test hệ thống (Phase 4). 19 tes
+          t business, metrics, test tích hợp thuộc #03.
+       8  
+       9 -## Cần chốt trước khi code                                     
+       9 +## Đã chốt trước khi code (2026-10-24)                         
+      10  
+      11 -Mỗi mục có đề xuất; người dùng duyệt rồi ghi kết quả vào busine
+         -ss doc / `challenge-10-requirements.md`.                       
+      11 +Người dùng duyệt cả 7 mục theo đề xuất. Đã ghi vào: mục 1, 7 ->
+         + `scoring.md`; mục 2 -> `upcoding.md`; mục 3 -> `evidence.md`; 
+         +mục 4 -> `weekday-only-providers.md`; mục 5, 6 -> `docs/decisio
+         +ns/tech-and-structure.md`; tất cả -> `challenge-10-requirements
+         +.md`.                                                          
+      12  
+      13  1. **Mỗi rule tối đa 1 flag cho 1 claim.** Claim dính rapid với
+           2 claim khác vẫn chỉ 1 flag `rapid_resubmission`, evidence liệ
+          t kê mọi claim liên quan. Lý do: score = tổng weight của các ru
+          le bị flag (`scoring.md`); 2 flag cùng rule sẽ cộng weight 2 lầ
+          n.
+      14  2. **SD của upcoding: `statistics.pstdev` (độ lệch chuẩn tổng t
+          hể).** Lý do: mean/SD tính trên toàn bộ claim cùng mã trong dat
+          aset, không phải ước lượng từ mẫu. Với mã >= 44 claim 1 mã, chê
+          nh với `stdev` < 1.2%. Điều kiện flag giữ dấu `>` (đề: "> 2 sta
+          ndard deviations"). Evidence ghi số SD = `(amount - mean) / SD`
+          , 1 chữ số thập phân.
+
+⏺ Skill(pjdoc-mgmt-claco-bunhy)
+  ⎿  Successfully loaded skill · claude-sonnet-5-5
+
+⏺ Toàn bộ thay đổi chỉ là doc nên không cần changelog, nhưng có 2 quyết định kỹ
+  thuật (xử lý input lỗi và đặt ngưỡng) cần được viết thành ADR theo quy ước
+  project. Tôi sẽ xem format của ADR-001 trước khi tách thành 2 ADR mới.
+
+⏺ Bash(cat docs/decisions/ADR-001-separate-dataset-check-command.md; ls
+      docs/decisions; git -C /Volumes/D/papaya-insurtech-pumpkin diff --cached
+      --stat)
+  ⎿  # ADR-001: Dataset checks are a separate `check` command, not part of
+     `generate`
+     … +55 lines (ctrl+o to expand)
+
+⏺ Write(AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/decisions
+       /ADR-002-invalid-input-stops-the-engine.md)
+  ⎿  Wrote 43 lines to AI_Engineering_Challenges/AI_Challenge_10_Fraud_Dete
+     ction/docs/decisions/ADR-002-invalid-input-stops-the-engine.md
+      1 # ADR-002: Invalid claims input stops the engine instead of skipp
+      2 
+      4 
+      5 Accepted (2026-10-24)
+      7 ## Context
+      9 The engine (ticket #02) reads `data/claims.csv`. Several rules de
+        he mismatch rule looks a diagnosis up in `valid_pairs`, the upcod
+        ing rule groups amounts by code, the weekend rule reads `surgical
+        t crash these rules; it makes them silently wrong (an unknown dia
+        ; a skipped row shifts a code's mean and SD).
+     … +54 lines (ctrl+o to expand)
+
+⏺ Write(AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/decisions
+       /ADR-003-only-weights-are-configurable.md)
+  ⎿  Wrote 35 lines to AI_Engineering_Challenges/AI_Challenge_10_Fraud_Dete
+     ction/docs/decisions/ADR-003-only-weights-are-configurable.md
+      1 # ADR-003: Only rule weights are configurable; rule thresholds ar
+      2 
+      3 ## Status
+      5 Accepted (2026-10-24)
+      6 
+      8 
+      9 The brief asks for "a configurable severity weight (1-5)" per rul
+        laim minimum (upcoding), more than 30 claims per day (phantom), <
+         5% weekend volume (weekend), the 50,000 VND threshold and the 47
+         the weights, or in the code.
+     … +48 lines (ctrl+o to expand)
+
+⏺ Update(AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/decision
+        s/tech-and-structure.md)
+  ⎿  Added 2 lines, removed 2 lines
+      27  - Every rule has the same signature: it takes the full list of 
+          claims and returns flags by `claim_id`. Reason: 5 of the 8 rule
+          s need to look at several claims (duplicate, rapid, upcoding, p
+          hantom, weekend).
+      28  - Rules return evidence only (`claim_id -> evidence`); the engi
+          ne attaches the severity from the weights, so a rule never know
+          s its weight.
+      29  - The engine never imports from `generator/` (the generator kno
+          ws the labels). Input loading lives in `src/claims.py`, next to
+           `catalog.py`.
+      30 -- Invalid input (settled 2026-10-24): the claims loader checks 
+         -the 10 columns, unique `claim_id`, valid dates, positive intege
+         -r amounts, `is_weekend` 0/1 and that every code exists in the c
+         -atalog. Any problem => the full list goes to stderr and the CLI
+         - exits 1; no rows are skipped. Reason: an unknown code would ma
+         -ke the mismatch / upcoding rules silently wrong.               
+      31 -- Configuration (settled 2026-10-24): only the weights are conf
+         -igurable (`src/config/weights.json`, the brief only asks for we
+         -ights). Rule thresholds (7 days, 2 SD, 10 claims, 30 claims per
+         - day, 5%, 50,000 / 47,500) are constants at the top of each rul
+         -e file, and evidence reads them from there.                    
+      30 +- Invalid input stops the engine with the full list of problems
+         +; no rows are skipped (`ADR-002-invalid-input-stops-the-engine.
+         +md`).                                                          
+      31 +- Only the weights are configurable (`src/config/weights.json`)
+         +; rule thresholds are constants at the top of each rule file (`
+         +ADR-003-only-weights-are-configurable.md`).                    
+      32  - Performance (B5): the rapid rule only compares pairs inside a
+           `(member_id, diagnosis_code)` group of a few claims => no O(n^
+          2) over the whole dataset.
+      33  - Timing (C4): `time.perf_counter()` around the whole load -> r
+          ules -> score -> write flow in the CLI; the result goes into th
+          e metrics report.
+      34  - The generator assigns `claim_id` after sorting all claims by 
+          date, so fraudulent claims do not cluster at the end of the ID 
+          range.
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin && python3 - <<'EOF'
+      from pathlib import Path…)
+  ⎿  .claude/docs/plans/todo/02-rule-engine.md:11:Người dùng duyệt cả 7 mục
+      theo đề xuất. Đã ghi vào: mục 1, 7 -> `scoring.md`; mục 2 -> `upcodin
+     g.md`; mục 3 -> `evidence.md`; mục 4 -> `weekday-only-providers.md`; m
+     … +35 lines (ctrl+o to expand)
+  ⎿  Updated .claude/docs/plans/README.md (+1 -1)
+      12  
+      13  ## TODO
+      14  
+      15 -- [02 - B: Engine 8 rule + scoring](todo/02-rule-engine.md) - t
+         -icket #02. Load input + weights, 8 rule, scoring 0-100, CLI `sc
+         -ore`; 7 mục cần chốt trước khi code.                           
+      15 +- [02 - B: Engine 8 rule + scoring](todo/02-rule-engine.md) - t
+         +icket #02. Load input + weights, 8 rule, scoring 0-100, CLI `sc
+         +ore`; 7 mục đã chốt trước khi code.                            
+  ⎿  Updated .claude/docs/plans/todo/02-rule-engine.md (+1 -1)
+       8  
+       9  ## Đã chốt trước khi code (2026-10-24)
+      10  
+      11 -Người dùng duyệt cả 7 mục theo đề xuất. Đã ghi vào: mục 1, 7 ->
+         - `scoring.md`; mục 2 -> `upcoding.md`; mục 3 -> `evidence.md`; 
+         -mục 4 -> `weekday-only-providers.md`; mục 5, 6 -> `docs/decisio
+         -ns/tech-and-structure.md`; tất cả -> `challenge-10-requirements
+         -.md`.                                                          
+      11 +Người dùng duyệt cả 7 mục theo đề xuất. Đã ghi vào: mục 1, 7 ->
+         + `scoring.md`; mục 2 -> `upcoding.md`; mục 3 -> `evidence.md`; 
+         +mục 4 -> `weekday-only-providers.md`; mục 5 -> `docs/decisions/
+         +ADR-002-invalid-input-stops-the-engine.md`, mục 6 -> `ADR-003-o
+         +nly-weights-are-configurable.md`; tất cả -> `challenge-10-requi
+         +rements.md`.                                                   
+      12  
+      13  1. **Mỗi rule tối đa 1 flag cho 1 claim.** Claim dính rapid với
+           2 claim khác vẫn chỉ 1 flag `rapid_resubmission`, evidence liệ
+          t kê mọi claim liên quan. Lý do: score = tổng weight của các ru
+          le bị flag (`scoring.md`); 2 flag cùng rule sẽ cộng weight 2 lầ
+          n.
+      14  2. **SD của upcoding: `statistics.pstdev` (độ lệch chuẩn tổng t
+          hể).** Lý do: mean/SD tính trên toàn bộ claim cùng mã trong dat
+          aset, không phải ước lượng từ mẫu. Với mã >= 44 claim 1 mã, chê
+          nh với `stdev` < 1.2%. Điều kiện flag giữ dấu `>` (đề: "> 2 sta
+          ndard deviations"). Evidence ghi số SD = `(amount - mean) / SD`
+          , 1 chữ số thập phân.
+  ⎿  Updated AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs
+     /requirements/challenge-10-requirements.md (+2 -2)
+      106  - B1 upcoding (2026-10-24): SD = `statistics.pstdev` (populati
+           on SD, the data is every claim of the code, not a sample); fla
+           g on `>` mean + 2 SD; SD = 0 => no flag. See `docs/business-ru
+           le/upcoding.md`.
+      107  - B2 rapid evidence (2026-10-24): worded by time order (after 
+           / followed by / same day at another provider). See `docs/busin
+           ess-rule/evidence.md`.
+      108  - B1 weekend (2026-10-24): "surgical" = at least 1 code in `pr
+           ocedure_codes` is a procedure or bundle with `surgical = true`
+           ; weekend taken from the `is_weekend` column. See `docs/busine
+           ss-rule/weekday-only-providers.md`.
+      109 -- B input (2026-10-24): invalid input stops the engine with th
+          -e full list of problems; no rows are skipped. See `docs/decisi
+          -ons/tech-and-structure.md`.                                   
+      110 -- B config (2026-10-24): only the weights are configurable (th
+          -e brief only asks for weights); rule thresholds are constants 
+          -at the top of each rule file. See `docs/decisions/tech-and-str
+          -ucture.md`.                                                   
+      109 +- B input (2026-10-24): invalid input stops the engine with th
+          +e full list of problems; no rows are skipped. See `docs/decisi
+          +ons/ADR-002-invalid-input-stops-the-engine.md`.               
+      110 +- B config (2026-10-24): only the weights are configurable (th
+          +e brief only asks for weights); rule thresholds are constants 
+          +at the top of each rule file. See `docs/decisions/ADR-003-only
+          +-weights-are-configurable.md`.                                
+      111  - B4 output (2026-10-24): `output/scored_output.json` is a ran
+           ked JSON array; each element has exactly the brief's 3 fields;
+            flags inside a claim sorted by severity descending. See `docs
+           /business-rule/scoring.md`.
+      112  
+      113  ## Open questions (discussed when each part is detailed)
+
+⏺ Bash(python3 - <<'PY'
+      import re, subprocess…)
+  ⎿  f1d46a3 docs: add plan 02, glossary and engine decisions
+
+⏺ Tôi đã commit: f1d46a3 docs: add plan 02, glossary and engine decisions.
+  Working tree sạch. Theo quy ước của bạn, commit không có dòng Co-Authored-By.
+
+  Commit gồm:
+  - Plan 02: 7 mục ghi là đã chốt, kèm chỗ ghi từng mục. Thêm Phase 4 test hệ
+    thống S1-S9. Mục "Verify" sửa thành "đọc evidence bằng mắt", thêm mục "Quy
+    trình" riêng. Cập nhật index plan và dòng Plan trong ticket #02.
+  - Glossary: docs/business-rule/glossary.md là nguồn duy nhất cho thuật ngữ.
+  - Doc chuyển sang tiếng Anh (10 file): catalog, upcoding, bundling,
+    diagnosis-procedure-mismatch, amount-clustering, metrics, scoring, evidence,
+    weekday-only-providers, challenge-10-requirements.
+  - Nơi ghi 7 quyết định:
+    - Mục 1 và 7 (mỗi rule 1 flag, format output): scoring.md.
+    - Mục 2 (pstdev): upcoding.md.
+    - Mục 3 (2 mẫu evidence rapid mới): evidence.md.
+    - Mục 4 (định nghĩa surgical): weekday-only-providers.md.
+    - Cả 7 mục, cùng 2 quyết định hôm nay (glossary, tách 2 loại test):
+      challenge-10-requirements.md.
+  - 2 ADR mới: mục 5 và 6 đã cân nhắc giữa nhiều phương án, nên theo quy ước của
+    project tôi viết thành ADR. tech-and-structure.md chỉ link tới 2 file này.
+    - ADR-002-invalid-input-stops-the-engine.md: input lỗi thì engine dừng,
+      không bỏ qua dòng.
+    - ADR-003-only-weights-are-configurable.md: chỉ weight cấu hình được, ngưỡng
+      là hằng số trong code.
+
+  Sweep trước commit: không có code nên không cần changelog; không còn ký tự §;
+  không có | chưa escape trong bảng.
+
+  Bước tiếp theo là Phase 1 của plan 02 (load input và weights). Đây cũng là mốc
+  hợp lý để bạn export log của phiên này vào conversations/.
+
+✻ Baked for 2m 30s · done 20:49
+
+❯ mục AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/business-r 
+  ule/catalog.md mục ## Procedure nên ghi bằng tiếng Việt. tạm thời cứ giữ      
+  nguyên.                                                                       
+                                                                                
+  sử dụng /agentsetup-claco-bunhy setup agent cho dự án này. ở plan 01 ta quên  
+  setup cũng chưa review code                                                   
+
+⏺ Skill(agentsetup-claco-bunhy)  ⎿  Successfully loaded skill
+
+  Listed 1 directory (ctrl+o to expand)
+
+⏺ Skill(agentsdotmd-claco-bunhy)
+  ⎿  Successfully loaded skill · claude-sonnet-5-5
+
+⏺ Đã ghi nhận: mục ## Procedure trong catalog.md tạm giữ tiếng Anh.
+
+  Trước khi tạo agent, có một điểm vướng và hai lựa chọn thiết kế cần bạn chốt.
+
+⏺ User answered Claude's questions:
+  ⎿  · Bảng trigger agent cần nằm ở AGENTS.md gốc, vì file này luôn được nạp. 
+     Skill agentsdotmd quy định AGENTS.md viết tiếng Anh và file lệch thì dịch 
+     khi sửa tới; file gốc hiện đang tiếng Việt. Xử lý thế nào? → Dịch sang 
+     tiếng Anh (Recommended)
+     · Có cần agent doc-sweep (chạy /pjdoc-mgmt pre-commit) không? → Main thread
+     tự làm (Recommended)
+     · Review code của plan 01 (generator, catalog, cli) làm khi nào? → Ngay sau
+     khi setup (Recommended)
+
+⏺ Đã xác nhận: AGENTS.md gốc sẽ dịch sang tiếng Anh, còn các file trong
+  .claude/agents/*.md giữ tiếng Việt theo quy định của skill agentsdotmd. Giờ
+  tôi sẽ để main thread làm sweep và chạy review #01 ngay sau setup.
+
+⏺ Bash(ls CLAUDE.md .claude/CLAUDE.md CLAUDE.local.md 2>/dev/null; ls
+      AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/tests
+      2>/dev/null; ls ~/.claude/skills/…)
+  ⎿  /Users/ppt/.claude/skills/code-review-claco-bunhy/SKILL.md
+
+     /Users/ppt/.claude/skills/code-review-claco-bunhy:
+     … +41 lines (ctrl+o to expand)
+
+⏺ Write(.claude/agents/coder.md)
+  ⎿  Wrote 35 lines to .claude/agents/coder.md
+       1 ---
+       3 description: Viết hoặc sửa code Python cho Challenge 10 (src/, t
+         ests/) theo một spec đã chốt mà main thread đưa vào. Dùng cho lo
+         gic mới, sửa > ~30 dòng, hoặc việc cần đọc rộng. Không dùng cho 
+       4 tools: Read, Grep, Glob, Edit, Write, Bash, Skill
+       5 model: sonnet
+       7 
+       8 Bạn là executor: nhận một spec đã chốt và thực hiện đúng spec đó
+         , không thiết kế lại.
+      10 ## Bắt đầu
+     … +42 lines (ctrl+o to expand)
+
+⏺ Write(.claude/agents/reviewer.md)
+  ⎿  Wrote 50 lines to .claude/agents/reviewer.md
+      1 ---
+      2 name: reviewer
+        một diff, hoặc một danh sách file khi review toàn bộ một ticket. 
+        Tìm lỗi logic và chỗ lệch với business rule đã chốt. Không sửa co
+        de.
+      5 model: opus
+      6 effort: high
+      7 ---
+      9 Bạn là reviewer. Đầu vào nhỏ (diff hoặc vài file), nhưng mọi lỗi 
+        bạn bỏ sót sẽ vào bài nộp.
+     … +56 lines (ctrl+o to expand)
+
+⏺ Giờ dịch AGENTS.md gốc sang tiếng Anh và thêm bảng trigger:
+
+⏺ Write(AGENTS.md)
+  ⎿  Added 59 lines, removed 29 lines
+       1  # AGENTS.md
+       2  
+       3 -## Mục đích                                                    
+       3 +[//]: # (Specific for each project)                            
+       4  
+       5 -Repo nộp bài test tuyển dụng của Papaya Insurtech. Gồm 2 phần, 
+         -nộp chung bằng 1 link GitHub/GitLab qua email, hạn 5 ngày kể từ
+         - ngày nhận email.                                              
+       5 +## Purpose                                                     
+       6  
+       7 -1. **Logical_Questions**: trả lời >= 5 câu, bắt buộc Q1 (ký ức 
+         -đầu tiên) và Q5 (lần cuối bỏ quên một món đồ).                 
+       8 -2. **AI_Engineering_Challenges**: tổng 3 điểm. Đã chọn 1 câu Ad
+         -vanced: **AI Challenge 10 - Fraud Detection Scoring Engine**.  
+       7 +Repository for the Papaya Insurtech hiring test. Two parts, sub
+         +mitted together as one GitHub/GitLab link by email, due 5 days 
+         +after the email was received.                                  
+       8  
+      10 -## Cấu trúc                                                    
+       9 +1. **Logical_Questions**: answer >= 5 questions, Q1 (first memo
+         +ry) and Q5 (last time you forgot something) are mandatory.     
+      10 +2. **AI_Engineering_Challenges**: 3 points in total. One Advanc
+         +ed challenge chosen: **AI Challenge 10 - Fraud Detection Scorin
+         +g Engine**.                                                    
+      11  
+      12 +## Structure                                                   
+      13 +                                                               
+      14  ```
+      15  .
+      14 -|-- AGENTS.md                         # file này: tổng quan dự 
+         -án                                                             
+      15 -|-- .claude/                        # cấu hình agent; docs/plan
+         -s/ = plan thực thi của Challenge 10 (tài liệu khác nằm trong do
+         -cs/ của project)                                               
+      16 -|-- Logical_Questions/                # câu trả lời phần logic,
+         - mỗi câu 1 file Q_<n>-<Ten>.md                                 
+      16 +|-- AGENTS.md                         # this file: project over
+         +view                                                           
+      17 +|-- .claude/                          # agent config; agents/ =
+         + subagent definitions; docs/plans/ = execution plans of Challen
+         +ge 10 (other docs live in the project's docs/)                 
+      18 +|-- Logical_Questions/                # answers to the logic pa
+         +rt, one file per question Q_<n>-<Name>.md                      
+      19  |-- AI_Engineering_Challenges/
+      18 -|   `-- AI_Challenge_10_Fraud_Detection/  # project Challenge 1
+         -0                                                              
+      19 -|       |-- README.md                 # writeup nộp bài (dự kiế
+         -n)                                                             
+      20 -|       |-- AGENTS.md                 # hướng dẫn riêng cho thi
+         -ết kế Challenge 10                                             
+      21 -|       |-- src/                      # source code (dự kiến)  
+      22 -|       `-- conversations/            # log hội thoại AI (bắt b
+         -uộc nộp, dự kiến)                                              
+      20 +|   `-- AI_Challenge_10_Fraud_Detection/  # Challenge 10 projec
+         +t                                                              
+      21 +|       |-- README.md                 # submission writeup (pla
+         +nned)                                                          
+      22 +|       |-- AGENTS.md                 # instructions specific t
+         +o the Challenge 10 design                                      
+      23 +|       |-- src/                      # source code            
+      24 +|       `-- conversations/            # AI conversation logs (m
+         +andatory for submission)                                       
+      25  |           `-- README.md
+      24 -`-- .tmp/pumpkin-main/                # bản clone repo đề gốc (
+         -gitignored, chỉ đọc)                                           
+      26 +`-- .tmp/pumpkin-main/                # local clone of the orig
+         +inal brief repo (gitignored, read-only)                        
+      27  ```
+      28  
+      27 -## Nguồn tham chiếu                                            
+      29 +## Reference sources                                           
+      30  
+      29 -- Đề gốc nằm ở `.tmp/pumpkin-main` (bản clone local). **Không đ
+         -ọc repo GitHub online** `papaya-insurtech/pumpkin`.            
+      30 -- Đề Challenge 10: `.tmp/pumpkin-main/Hiring/AI_Engineering_Cha
+         -llenges/AI_Challenge_10.md`                                    
+      31 -- Quy định chung phần AI: `.tmp/pumpkin-main/Hiring/AI_Engineer
+         -ing_Challenges/README.md`                                      
+      32 -- Quy định phần logic: `.tmp/pumpkin-main/Hiring/Logical_Questi
+         -ons/README.md`                                                 
+      33 -- Handbook của team: `.tmp/pumpkin-main/Software_Artisan_Handbo
+         -ok/`                                                           
+      34 -- **Ghi chú Handbook đã lọc cho Challenge 10: `AI_Engineering_C
+         -hallenges/AI_Challenge_10_Fraud_Detection/docs/handbook-notes.m
+         -d`.** Khi người dùng đụng tới chủ đề có trong bảng "Khi nào nhắ
+         -c" của file này (phân tích đề, so sánh giải pháp, timeline, REA
+         -DME, review output AI, domain bảo hiểm, chọn stack, email nộp b
+         -ài), hãy nhắc ý liên quan.                                     
+      35 -- **Phân rã yêu cầu Challenge 10: `AI_Engineering_Challenges/AI
+         -_Challenge_10_Fraud_Detection/docs/requirements/challenge-10-re
+         -quirements.md`.** Dùng làm khung A/B/C/D khi bàn chi tiết; cập 
+         -nhật mục "Quyết định đã chốt" và "Câu hỏi mở" khi có quyết định
+         - mới.                                                          
+      31 +- The original brief is in `.tmp/pumpkin-main` (local clone). *
+         +*Do not read the online GitHub repo** `papaya-insurtech/pumpkin
+         +`.                                                             
+      32 +- Challenge 10 brief: `.tmp/pumpkin-main/Hiring/AI_Engineering_
+         +Challenges/AI_Challenge_10.md`                                 
+      33 +- General rules of the AI part: `.tmp/pumpkin-main/Hiring/AI_En
+         +gineering_Challenges/README.md`                                
+      34 +- Rules of the logic part: `.tmp/pumpkin-main/Hiring/Logical_Qu
+         +estions/README.md`                                             
+      35 +- Team handbook: `.tmp/pumpkin-main/Software_Artisan_Handbook/`
+      36 +- **Handbook notes filtered for Challenge 10: `AI_Engineering_C
+         +hallenges/AI_Challenge_10_Fraud_Detection/docs/handbook-notes.m
+         +d`.** When the user touches a topic in that file's "Khi nào nhắ
+         +c" table (analyzing the brief, comparing solutions, timeline, R
+         +EADME, reviewing AI output, insurance domain, choosing a stack,
+         + the submission email), remind them of the relevant point.     
+      37 +- **Challenge 10 requirement breakdown: `AI_Engineering_Challen
+         +ges/AI_Challenge_10_Fraud_Detection/docs/requirements/challenge
+         +-10-requirements.md`.** Use it as the A/B/C/D frame when discus
+         +sing details; update "Settled decisions" and "Open questions" w
+         +henever a new decision is made.                                
+      38  
+      37 -## Quy ước làm việc                                            
+      39 +## Working conventions                                         
+      40  
+      39 -- Ngôn ngữ trao đổi: tiếng Việt, xưng "tôi" và "bạn". Chỉ dùng 
+         -ký tự gõ được trên bàn phím (`->`, `-`, `...`, `"`).           
+      40 -- Trả lời ngắn gọn; code ưu tiên dễ đọc hơn trừu tượng.        
+      41 -- Commit theo Conventional Commits (`feat:`, `fix:`, `docs:`, `
+         -test:` ...).                                                   
+      42 -- Commit message không thêm dòng `Co-Authored-By` (người dùng c
+         -hốt 2026-10-24).                                               
+      43 -- `.tmp/` là tài liệu tham chiếu, không sửa và không commit.   
+      44 -- Phần Logical_Questions là câu trả lời cá nhân của người dùng:
+         - agent không tự viết hoặc sửa nội dung trả lời trừ khi được yêu
+         - cầu rõ.                                                       
+      41 +- Conversation language: Vietnamese, addressing each other as "
+         +tôi" and "bạn". Use only keyboard-typable characters (`->`, `-`
+         +, `...`, `"`).                                                 
+      42 +- Keep answers short; code favors readability over abstraction.
+      43 +- Commits follow Conventional Commits (`feat:`, `fix:`, `docs:`
+         +, `test:` ...).                                                
+      44 +- Commit messages carry no `Co-Authored-By` line (settled by th
+         +e user 2026-10-24).                                            
+      45 +- `.tmp/` is reference material: never edit it, never commit it
+         +.                                                              
+      46 +- Logical_Questions holds the user's personal answers: the agen
+         +t does not write or edit their content unless explicitly asked.
+      47 +- Language of each file: this file and code are English; Challe
+         +nge 10 `docs/` per its own `AGENTS.md`; `.claude/docs/plans/` a
+         +nd `.claude/agents/` are Vietnamese.                           
+      48 +                                                               
+      49 +## Agent workflow (Claude Code only)                           
+      50 +                                                               
+      51 +Subagent definitions: `.claude/agents/coder.md`, `.claude/agent
+         +s/reviewer.md`. The main thread is the orchestrator: it writes 
+         +the spec, triages, verifies reports, and runs the pre-commit sw
+         +eep itself.                                                    
+      52 +                                                               
+      53 +"Code change" = any path under `AI_Engineering_Challenges/AI_Ch
+         +allenge_10_Fraud_Detection/src/`, `.../tests/` or `.../pyprojec
+         +t.toml`. Everything else (docs, plans, tickets, `data/`, `outpu
+         +t/`) is not code.                                              
+      54 +                                                               
+      55 +| When | Call | Prompt must carry | Then |                     
+      56 +|---|---|---|---|                                              
+      57 +| New logic, an edit > ~30 lines, or work that needs wide readi
+         +ng | `coder` | plan phase + exact spec, target files + line ran
+         +ges (`grep -n` first), doc + section to follow, "do NOT read <X
+         +>", negative scope | Go to the review row |                    
+      58 +| Edit <= ~30 lines in a region already in context | - (main th
+         +read edits) | - | Review row still applies if it touches logic 
+         +|                                                              
+      59 +| A plan phase is complete and the diff touches logic | `review
+         +er` | the diff (or file list), the intent / plan phase it imple
+         +ments, "do not re-read the whole docs tree" | Findings -> resum
+         +e `coder` with the findings to fix -> resume `reviewer`; clean 
+         +-> stop |                                                      
+      60 +| Diff is comments / docstrings / formatting only | - (skip rev
+         +iew) | - | Done |                                              
+      61 +| User says "commit" | - (main thread runs `/pjdoc-mgmt-claco-b
+         +unhy pre-commit`) | - | Commit after the sweep |               
+      62 +                                                               
+      63 +- **Resume, do not respawn** (`SendMessage`) within one plan ph
+         +ase.                                                           
+      64 +  **Why:** a fresh agent re-reads everything to rebuild context
+         + it already had.                                               
+      65 +  **How to apply:** new phase or new ticket -> fresh spawn; fix
+         + round in the same phase -> resume.                            
+      66 +- **Stop after 2 fix rounds** that still fail review, and repor
+         +t to the user.                                                 
+      67 +  **Why:** a third failure usually means the spec is wrong, whi
+         +ch more executor rounds cannot fix.                            
+      68 +  **How to apply:** count rounds per phase; at the limit, show 
+         +the open findings and ask.                                     
+      69 +- **Verify every report** before relaying it: re-run `uv run py
+         +test`, open the cited `file:line`.                             
+      70 +  **Why:** a subagent's "done" or "finding" can be wrong; the u
+         +ser only sees what the main thread relays.                     
+      71 +  **How to apply:** for each finding, read the line and decide 
+         +confirmed / rejected before fixing.                            
+      72 +- **The pre-commit sweep stays on the main thread**, not in a s
+         +ubagent.                                                       
+      73 +  **Why:** deciding whether an ADR is needed depends on the con
+         +versation, which a subagent never sees.                        
+      74 +  **How to apply:** run the skill directly before every commit.
+
+⏺ Tôi đã setup xong, chưa commit. Hai agent mới chỉ có hiệu lực sau khi bạn khởi
+  động lại session (hoặc mở panel /agents).
+
+  Hai agent (.claude/agents/, tiếng Việt):
+
+  Agent: coder
+  Model: sonnet
+  Tool: Read, Grep, Glob, Edit, Write, Bash, Skill
+  Vai trò: Viết code theo spec. Gọi /pyfriend trước khi viết. Phải pass uv run 
+  pytest mới báo xong. Báo cáo theo format cố định: file + dòng, test, phần
+  chưa làm, chỗ chưa chắc.
+  ────────────────────────────────────────
+  Agent: reviewer
+  Model: opus, effort high
+  Tool: Read, Grep, Glob, Bash, Skill (không có Edit/Write)
+  Vai trò: Review chỉ đọc bằng /code-review-claco-bunhy + /pyfriend. Đối chiếu
+  business rule, các bẫy trong docs/experiences/ và ADR. Soi riêng chuyện lộ
+  nhãn, ngưỡng biên, khả năng tái lập, lỗi lặng lẽ. Mỗi finding có file:line và
+   kịch bản gây lỗi.
+
+  - Cả hai đều không có tool Agent nên không thể spawn thêm agent. Gặp việc quá
+    rộng thì dừng lại và báo main thread.
+  - Reviewer xếp tier cao hơn coder vì đầu vào nhỏ, chạy ít lần, nhưng lỗi nó bỏ
+    sót sẽ vào bài nộp. Coder đã có pytest chặn phía sau.
+
+  Bảng trigger nằm trong AGENTS.md gốc (đã dịch toàn bộ sang tiếng Anh, giữ
+  nguyên các quy ước cũ):
+  - Logic mới hoặc sửa > ~30 dòng -> coder. Sửa <= ~30 dòng -> main thread sửa
+    trực tiếp.
+  - Xong một phase và diff có logic -> reviewer. Có finding -> resume coder sửa
+    -> resume reviewer kiểm lại. Diff chỉ có comment hoặc format -> bỏ qua
+    review.
+  - Dừng sau 2 vòng sửa vẫn fail và báo bạn. Main thread phải tự kiểm lại mọi
+    báo cáo (chạy lại pytest, mở đúng dòng được nêu).
+  - "Code change" định nghĩa theo đường dẫn: src/, tests/, pyproject.toml.
+  - /pjdoc-mgmt pre-commit vẫn do main thread chạy, vì việc có cần ADR hay không
+    phụ thuộc vào hội thoại mà subagent không thấy.
+
+  Bước tiếp theo:
+  1. Bạn khởi động lại session.
+  2. Tôi chạy reviewer trên toàn bộ code của #01 (src/catalog.py,
+     src/rule_names.py, src/cli.py, src/generator/). Đây cũng là lần thử xem
+     workflow có tự kích hoạt đúng không.
+  3. Có finding thì chuyển cho coder sửa theo bảng trigger, rồi mới sang Phase 1
+     của #02.
+
+  Bạn có muốn tôi commit phần setup này trước khi khởi động lại không?
+
+✻ Cogitated for 1m 56s · done 20:56
+
+❯ commit setup agent đi                                                         
+
+⏺ Bash(python3 - <<'EOF'
+      from pathlib import Path…)
+  ⎿   M AGENTS.md
+      M AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/requ
+     irements/challenge-10-requirements.md
+     … +2 lines (ctrl+o to expand)
+  ⎿  Updated AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs
+     /requirements/challenge-10-requirements.md (+1 -0)
+      100  - A2 valid pairs fixed: added `J06.9 - P-1003`, `I10 - P-1003`
+           , `E11.9 - P-1002` (35 pairs) so unbundled B-1001 / B-1002 cla
+           ims do not trip mismatch. See `docs/business-rule/diagnosis-pr
+           ocedure-mismatch.md`.
+      101  - A3: amounts of fraud claims outside the amount patterns are 
+           clamped to a factor in [0.85, 1.15]; upcoded claims are spread
+            over codes with >= 60 claims, at most 2 per code. See `fraud-
+           injection.md`, `upcoding.md`.
+      102  - Work tracking: tickets in `docs/backlog/`, plans in `.claude
+           /docs/plans/` (repo root).
+      103 +- Agent workflow (2026-10-24): subagents `coder` (sonnet) and 
+          +`reviewer` (opus, read-only) in `.claude/agents/`; trigger tab
+          +le in the repo-root `AGENTS.md`; the pre-commit doc sweep stay
+          +s on the main thread.                                         
+      104  - Docs (2026-10-24): business terms have a single source, `doc
+           s/business-rule/glossary.md`; other docs link to it instead of
+            defining terms.
+      105  - Tests (2026-10-24): two kinds. **System tests** (#02) check 
+           that the code implements the technical design discussed (input
+            / weights loading, output format, ranking, engine / ground-tr
+           uth boundary). **Business tests** (#03, the 19 in `docs/busine
+           ss-rule/test-cases.md`) check that the 8 rules and scoring giv
+           e correct business results.
+      106  - B4 (2026-10-24): a rule raises at most 1 flag per claim; the
+            evidence lists every related claim. Reason: the score sums th
+           e weights of the triggered rules, so 2 flags of one rule would
+            count its weight twice. See `docs/business-rule/scoring.md`.
+
+⏺ Tôi đã commit: 0f1ec06 chore: add coder and reviewer subagents with trigger 
+  rules. Working tree sạch.
+
+  Commit gồm:
+  - .claude/agents/coder.md, .claude/agents/reviewer.md
+  - AGENTS.md gốc: đã dịch sang tiếng Anh, có thêm bảng trigger cho agent
+  - challenge-10-requirements.md: thêm 1 dòng quyết định về agent workflow
+
+  Sweep trước commit tôi chạy trên main thread: thay đổi không có code nên không
+  cần changelog. Tôi không viết ADR, vì lý do của từng quy tắc đã ghi ngay
+  trong AGENTS.md (các dòng Why:), và đây là quy ước làm việc chứ không phải
+  thiết kế kỹ thuật của engine.
+
+  Bạn khởi động lại session để 2 agent có hiệu lực. Sau đó tôi sẽ chạy reviewer
+  trên toàn bộ code của #01.
+
+✻ Worked for 14s · done 20:58
