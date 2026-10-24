@@ -12,14 +12,18 @@ The engine (ticket #02) reads `data/claims.csv`. Several rules depend on every v
 
 `src/claims.py` validates the whole file before any rule runs:
 
-- exactly the 10 columns of `dataset-format.md`, in order;
-- unique `claim_id`;
+- the file is readable, valid CSV, and holds at least 1 claim after the header;
+- exactly the 10 columns of `dataset-format.md`, in order (a wrong header stops at once: rows cannot be read without it);
+- unique, non-empty `claim_id`; non-empty `member_id` and `provider_id`;
 - `claim_date` is a valid `YYYY-MM-DD` date;
+- `claim_type` is one of `OUTPATIENT`, `INPATIENT`, `DENTAL`;
 - `submitted_amount` is a positive integer;
-- `is_weekend` is `0` or `1`;
+- `is_weekend` is `0` or `1` and agrees with the weekday of `claim_date`;
 - every diagnosis and procedure / bundle code exists in the catalog.
 
 Any problem => the CLI prints the full list of problems to stderr and exits 1. No row is skipped.
+
+The checks on empty ids, `claim_type`, `is_weekend` vs `claim_date` and the empty file were added after the Phase 1 review (2026-10-24): the weekend rule reads `is_weekend` but names the weekday from `claim_date`, so a mismatch would yield a "Friday" weekend flag; empty member / provider ids would group unrelated claims into false duplicate / rapid flags; a header-only file would score as an empty success.
 
 ## Rationale
 

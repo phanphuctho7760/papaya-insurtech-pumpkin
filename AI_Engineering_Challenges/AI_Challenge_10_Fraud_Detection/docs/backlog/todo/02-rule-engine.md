@@ -1,6 +1,6 @@
 # 02 - B: Engine 8 rule + scoring
 
-**Status:** todo
+**Status:** doing
 **Type:** feature
 **Priority:** 2
 **Effort:** M (kế hoạch 1.75h)

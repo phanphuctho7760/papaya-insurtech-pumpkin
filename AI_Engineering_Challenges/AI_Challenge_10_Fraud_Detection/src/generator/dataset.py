@@ -11,15 +11,12 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from catalog import load_catalog
+from claims import CLAIMS_COLUMNS
 from generator.fraud import inject_fraud
 from generator.legit import generate_legit_claims
 from generator.models import GeneratedClaim, Provider, load_providers, pick_weekday_only
 
 DEFAULT_SEED = 2024
-CLAIMS_COLUMNS = [
-    "claim_id", "member_id", "provider_id", "provider_name", "claim_date", "claim_type",
-    "diagnosis_code", "procedure_codes", "submitted_amount", "is_weekend",
-]
 GROUND_TRUTH_COLUMNS = ["claim_id", "is_fraud", "fraud_pattern"]
 
 

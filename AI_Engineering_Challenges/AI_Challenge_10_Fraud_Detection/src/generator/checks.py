@@ -13,7 +13,8 @@ from pathlib import Path
 
 import rule_names as R
 from catalog import Catalog
-from generator.dataset import CLAIMS_COLUMNS, GROUND_TRUTH_COLUMNS
+from claims import CLAIMS_COLUMNS
+from generator.dataset import GROUND_TRUTH_COLUMNS
 from generator.fraud import CLUSTERING_AMOUNT, FRAUD_COUNTS, PHANTOM_DAY_EXTRAS, WEEKEND_PER_PROVIDER
 from generator.legit import AMOUNT_ROUNDING
 from generator.models import WEEKDAY_ONLY_COUNT, load_providers

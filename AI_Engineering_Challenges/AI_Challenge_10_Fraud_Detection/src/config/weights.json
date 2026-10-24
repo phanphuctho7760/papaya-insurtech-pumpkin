@@ -1,0 +1,10 @@
+{
+  "duplicate_claim": 5,
+  "rapid_resubmission": 3,
+  "upcoding": 4,
+  "unbundling": 3,
+  "phantom_billing": 4,
+  "weekend_anomaly": 2,
+  "diagnosis_procedure_mismatch": 4,
+  "amount_clustering": 2
+}
