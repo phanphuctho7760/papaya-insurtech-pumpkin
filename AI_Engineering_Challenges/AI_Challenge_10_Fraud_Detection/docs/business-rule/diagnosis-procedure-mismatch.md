@@ -1,19 +1,17 @@
-# Diagnosis-procedure mismatch (chẩn đoán không khớp thủ thuật)
+# Diagnosis-procedure mismatch
 
-## Thuật ngữ
+Terms (diagnosis-procedure mismatch, valid diagnosis-procedure pair): see `glossary.md`.
 
-Mismatch: procedure không phù hợp về mặt y khoa với chẩn đoán. Ví dụ chẩn đoán sâu răng (K02.1) nhưng khai mổ ruột thừa (P-3001).
-
-## Nguồn trong đề
+## Source in the brief
 
 - Dataset: "20 diagnosis-procedure mismatches".
 - Rule 7: "procedure not clinically associated with diagnosis (provide a mapping of at least 10 valid diagnosis-procedure pairs)".
 
-## Thế nào là "chuẩn": các cặp hợp lệ
+## What "normal" means: the valid pairs
 
-Mọi cặp nằm ngoài bảng là mismatch.
+Every pair outside this table is a mismatch.
 
-| Diagnosis | Procedure / bundle hợp lệ |
+| Diagnosis | Valid procedures / bundles |
 |---|---|
 | J06.9 | P-1001, P-1002, P-1003, B-1001 |
 | I10 | P-1001, P-1002, P-1003, B-1001 |
@@ -28,12 +26,12 @@ Mọi cặp nằm ngoài bảng là mismatch.
 | K02.1 | P-4001, P-4002, P-4003 |
 | K04.0 | P-4002, P-4004, B-4101 |
 
-Tổng: 35 cặp (đề yêu cầu >= 10).
+Total: 35 pairs (the brief asks for >= 10).
 
-claim_type của diagnosis (`icd-10.md`) chỉ để tham khảo; claim_type của claim lấy theo mã procedure / bundle. Vì vậy cặp hợp lệ có thể khác claim_type: `K80.2 - P-1005` (siêu âm bụng ngoại trú cho bệnh nhân sỏi mật), `J18.9 - P-1004` (X-quang ngực ngoại trú cho bệnh nhân viêm phổi) tạo claim OUTPATIENT.
+The claim_type of a diagnosis (`icd-10.md`) is for reference only; a claim's claim_type comes from its procedure / bundle code. So a valid pair can cross claim types: `K80.2 - P-1005` (outpatient abdominal ultrasound for a gallstone patient) and `J18.9 - P-1004` (outpatient chest X-ray for a pneumonia patient) produce OUTPATIENT claims.
 
-Ràng buộc: diagnosis hợp lệ của một bundle phải hợp lệ với **mọi** thành phần của bundle đó, nếu không claim unbundled sẽ dính thêm mismatch. Vì vậy có 3 cặp `J06.9 - P-1003`, `I10 - P-1003` (khám tổng quát có xét nghiệm nước tiểu) và `E11.9 - P-1002` (theo dõi đái tháo đường có công thức máu); thêm ngày 2026-10-24 khi đối chiếu thành phần B-1001, B-1002.
+Constraint: a valid diagnosis of a bundle must be valid for **every** component of that bundle, otherwise an unbundled claim would also trip the mismatch rule. That is why the pairs `J06.9 - P-1003`, `I10 - P-1003` (a general check-up includes a urinalysis) and `E11.9 - P-1002` (diabetes follow-up includes a complete blood count) exist; added on 2026-10-24 when checking the components of B-1001 and B-1002.
 
-## Quy tắc sinh fraud
+## Fraud generation
 
-- Claim mismatch: chọn diagnosis rồi gán procedure ngoài danh sách hợp lệ của diagnosis đó; amount theo giá chuẩn của procedure (để không dính thêm upcoding). Chọn procedure cùng claim_type, không dùng mã bundle.
+- Mismatch claim: pick a diagnosis, then a procedure outside that diagnosis's valid list; amount based on the procedure's standard price (so the claim does not also trip upcoding). The procedure has the same claim_type; bundle codes are not used.

@@ -1,17 +1,18 @@
 # Evidence (B2)
 
-Đề yêu cầu: "Each flag includes specific, actionable evidence (not just 'flagged by rule 3')".
+The brief asks: "Each flag includes specific, actionable evidence (not just 'flagged by rule 3')".
 
-## Nguyên tắc
+## Principles
 
-- Ngôn ngữ: **tiếng Anh** (theo ví dụ output của đề).
-- Mỗi evidence có đủ 3 phần: **giá trị quan sát** của claim, **giá trị so sánh + ngưỡng** của rule, **claim liên quan** (nếu có).
-- Mã procedure / diagnosis luôn kèm **tên tiếng Anh** (xem `catalog.md`, `icd-10.md`) để người thẩm định đọc hiểu không cần tra mã.
-- Số tiền định dạng có dấu phân cách hàng nghìn và đơn vị VND.
+- Language: **English** (following the brief's example output).
+- Every evidence has 3 parts: the claim's **observed value**, the rule's **comparison value + threshold**, the **related claims** (if any).
+- Procedure / diagnosis codes always come with their **English name** (see `catalog.md`, `icd-10.md`) so a claim adjuster can read it without looking codes up.
+- Amounts use a thousands separator and the unit VND.
+- Numbers in evidence come from the rule's constants and the data, never typed into the text by hand.
 
-## Mẫu cho 8 rule
+## Templates for the 8 rules
 
-| # | Rule | Mẫu evidence |
+| # | Rule | Evidence template |
 |---|---|---|
 | 1 | Duplicate | `Duplicate of CLM-00456: same member MEM-0042, provider PRV-007, date 2024-03-15, diagnosis K35.8 (Acute appendicitis) - 2 claims share this key` |
 | 2 | Rapid re-submission | `Re-submitted 3 days after CLM-00456 (2024-03-12) for the same member MEM-0042 and diagnosis J06.9 (Acute upper respiratory infection) - window: 7 days` |
@@ -22,4 +23,16 @@
 | 7 | Diagnosis-procedure mismatch | `Procedure P-3001 (Laparoscopic appendectomy) is not valid for diagnosis K02.1 (Dental caries); valid procedures: P-4001, P-4002, P-4003` |
 | 8 | Amount clustering | `Amount 48,500 VND is 97% of the 50,000 VND auto-approval threshold (band 47,500-49,999)` |
 
-Số liệu trong mẫu là minh họa; evidence thật lấy số từ dataset.
+The numbers in the templates are illustrative; real evidence takes its numbers from the dataset.
+
+## Rapid re-submission: wording by time order
+
+A rapid flag is raised on both claims of a pair, so the wording depends on which side the claim is on:
+
+| Case | Evidence template |
+|---|---|
+| Later claim | `Re-submitted 3 days after CLM-00456 (2024-03-12) ...` (template 2 above) |
+| Earlier claim | `Followed 3 days later by CLM-00789 (2024-03-15) for the same member MEM-0042 and diagnosis J06.9 (Acute upper respiratory infection) - window: 7 days` |
+| Same day, another provider | `Submitted on the same day as CLM-00456 at another provider PRV-015 for the same member MEM-0042 and diagnosis J06.9 (Acute upper respiratory infection) - window: 7 days` |
+
+A claim related to several claims gets one flag whose evidence lists each related claim (`scoring.md`).

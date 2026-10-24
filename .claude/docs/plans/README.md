@@ -12,4 +12,4 @@
 
 ## TODO
 
-(trống)
+- [02 - B: Engine 8 rule + scoring](todo/02-rule-engine.md) - ticket #02. Load input + weights, 8 rule, scoring 0-100, CLI `score`; 7 mục đã chốt trước khi code.

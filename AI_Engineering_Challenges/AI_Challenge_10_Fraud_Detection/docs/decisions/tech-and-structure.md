@@ -25,6 +25,10 @@
 - `config/` holds shared JSON files (bundle map, valid pairs, standard prices, weights) so the generator and the engine cannot drift apart. Weights 1-5 are validated on load.
 - No API (the brief does not ask for one). Batch runs through the CLI, writing files.
 - Every rule has the same signature: it takes the full list of claims and returns flags by `claim_id`. Reason: 5 of the 8 rules need to look at several claims (duplicate, rapid, upcoding, phantom, weekend).
+- Rules return evidence only (`claim_id -> evidence`); the engine attaches the severity from the weights, so a rule never knows its weight.
+- The engine never imports from `generator/` (the generator knows the labels). Input loading lives in `src/claims.py`, next to `catalog.py`.
+- Invalid input stops the engine with the full list of problems; no rows are skipped (`ADR-002-invalid-input-stops-the-engine.md`).
+- Only the weights are configurable (`src/config/weights.json`); rule thresholds are constants at the top of each rule file (`ADR-003-only-weights-are-configurable.md`).
 - Performance (B5): the rapid rule only compares pairs inside a `(member_id, diagnosis_code)` group of a few claims => no O(n^2) over the whole dataset.
 - Timing (C4): `time.perf_counter()` around the whole load -> rules -> score -> write flow in the CLI; the result goes into the metrics report.
 - The generator assigns `claim_id` after sorting all claims by date, so fraudulent claims do not cluster at the end of the ID range.

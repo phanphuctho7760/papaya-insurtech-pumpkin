@@ -1,23 +1,28 @@
-# Provider không làm cuối tuần (weekday-only)
+# Weekday-only providers
 
-Phục vụ pattern "weekend surgical anomaly" (rule 6).
+Supports the "weekend surgical anomaly" pattern (rule 6). Terms (weekday-only provider, weekend anomaly, surgical): see `glossary.md`.
 
-## Nguồn trong đề
+## Source in the brief
 
 - Dataset: "20 weekend surgical anomalies (surgical procedures on weekends from providers who never operate on weekends)".
 - Rule: "surgical procedures on weekends from providers with < 5% historical weekend volume".
 
-## Quy tắc sinh dữ liệu
+## Data generation
 
-- Generator chọn **10 bệnh viện** (loại provider có phẫu thuật) làm weekday-only.
-- Claim hợp lệ của nhóm này chỉ rơi vào thứ Hai - thứ Sáu.
-- 20 claim fraud weekend surgical được chèn vào thứ Bảy / Chủ nhật, chia đều 2 claim cho mỗi provider weekday-only.
-- Procedure surgical: P-3001, P-3002, P-3003, B-3101, B-3102 (xem `catalog.md`).
-- Danh sách provider weekday-only được ghi lại sau khi generate.
+- The generator picks **10 hospitals** (the provider type that does surgery) as weekday-only.
+- Legitimate claims of this group fall only on Monday - Friday.
+- The 20 weekend surgical fraud claims are placed on Saturday / Sunday, 2 claims for each weekday-only provider.
+- Surgical procedures: P-3001, P-3002, P-3003, B-3101, B-3102 (see `catalog.md`).
+- The list of weekday-only providers is recorded after generation.
 
-## Cách tính tỷ lệ cuối tuần (đã chốt)
+## Weekend ratio (settled)
 
-- Rule 6 tính tỷ lệ cuối tuần trên **toàn bộ claim** của provider, đúng nguyên văn đề.
-- Generator cho mỗi bệnh viện weekday-only **>= 60 claim** (ngẫu nhiên 62-70 claim hợp lệ, không nhận thêm để nhóm này không thành 10 bệnh viện lớn nhất). 2 claim fraud cuối tuần => 2/60 = 3.3% < 5% => rule bắt được.
-- Lý do: với ~40 claim/provider, 2/40 = 5% không < 5% => bỏ sót.
-- Không đưa khái niệm cấp cứu vào phạm vi.
+- Rule 6 computes the weekend ratio over **all claims** of the provider, as the brief words it.
+- The generator gives each weekday-only hospital **>= 60 claims** (a random 62-70 legitimate claims, with no extra ones, so this group does not become the 10 largest hospitals). 2 weekend fraud claims => 2/60 = 3.3% < 5% => the rule catches them.
+- Reason: with ~40 claims per provider, 2/40 = 5% is not < 5% => missed.
+- The emergency concept is out of scope.
+
+## What counts as a surgical weekend claim (settled 2026-10-24)
+
+- **Surgical:** at least 1 code in `procedure_codes` is a procedure or bundle with `surgical = true` in the catalog.
+- **Weekend:** taken from the `is_weekend` column of the input; the day name in the evidence (`Saturday`) is derived from `claim_date`.

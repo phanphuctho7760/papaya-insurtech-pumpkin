@@ -4,7 +4,7 @@
 **Type:** feature
 **Priority:** 2
 **Effort:** M (kế hoạch 1.75h)
-**Plan:** none yet
+**Plan:** `.claude/docs/plans/todo/02-rule-engine.md` (repo root)
 **Related:** #01, #03
 
 ## What

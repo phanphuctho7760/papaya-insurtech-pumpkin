@@ -1,43 +1,42 @@
-# Upcoding (khai nâng mức)
+# Upcoding
 
-## Thuật ngữ
+Terms (upcoding, mean, SD, masking, leave-one-out): see `glossary.md`.
 
-Upcoding: khai số tiền (hoặc mã) đắt hơn dịch vụ thực tế đã làm. Ví dụ trám răng giá chuẩn 400,000, khai 900,000.
-
-## Nguồn trong đề
+## Source in the brief
 
 - Dataset: "30 upcoded claims (amount > 2 standard deviations above mean for that procedure)".
 - Rule 3: "amount > 2 standard deviations above mean for that procedure code".
 
-## Thế nào là "chuẩn"
+## What "normal" means
 
-- Mỗi procedure / bundle có giá chuẩn (xem `catalog.md`).
-- Claim hợp lệ: amount = giá chuẩn x hệ số log-normal, dao động khoảng 15%.
-- Vì claim hợp lệ chỉ có 1 mã, "mean for that procedure" = mean amount của các claim có cùng mã đó.
+- Every procedure / bundle has a standard price (see `catalog.md`).
+- Legitimate claim: amount = standard price x a log-normal factor, variation about 15%.
+- Legitimate claims have exactly 1 code, so "mean for that procedure" = the mean amount of the claims with that code.
 
-## Lưu ý: "2 SD" không phải "gấp 2 lần"
+## Note: "2 SD" is not "2 times"
 
-- Ngưỡng rule = mean + 2 x SD. Với dao động 15%, SD khoảng 15% mean => ngưỡng khoảng 1.3 lần mean.
-- Ví dụ trám răng: mean 400,000, SD khoảng 60,000 => ngưỡng khoảng 520,000.
+- Rule threshold = mean + 2 x SD. With 15% variation, SD is about 15% of the mean => threshold about 1.3 x the mean.
+- Dental filling example: mean 400,000, SD about 60,000 => threshold about 520,000.
 
-## Quy tắc sinh fraud
+## Fraud generation
 
-- Claim upcoded: amount = giá chuẩn x hệ số 1.6-2.5 (vượt ngưỡng 2 SD, vẫn gần thực tế).
-- Rải claim upcoded trên các mã có >= 60 claim 1 mã, tối đa 2 claim upcoded mỗi mã, không dùng P-1003 (dành cho clustering). Lý do: mã chỉ có 30 claim mà chứa 2 claim upcoded thì SD có thể lên khoảng 0.3 x mean, ngưỡng thành khoảng 1.65 x mean => bỏ sót claim upcoded 1.6x (masking).
+- Upcoded claim: amount = standard price x a factor of 1.6-2.5 (above the 2 SD threshold, still realistic).
+- Upcoded claims are spread over codes with >= 60 single-code claims, at most 2 upcoded claims per code, never P-1003 (reserved for clustering). Reason: a code with only 30 claims that holds 2 upcoded claims can have an SD of about 0.3 x the mean, pushing the threshold to about 1.65 x the mean => a 1.6x upcoded claim is missed (masking).
 
-## Cách tính mean / SD (đã chốt ở B1)
+## How mean / SD are computed (settled in B1)
 
-- Tính mean và SD trên **toàn bộ claim có cùng mã**, gồm cả claim upcoded. Giữ đúng chữ của đề ("mean for that procedure code").
-- Hệ quả đã biết (masking): claim upcoded làm tăng mean và SD => ngưỡng mean + 2 SD bị đẩy lên, một số claim upcoded có thể không vượt ngưỡng => giảm recall.
-- Cách xử lý: đo recall của rule upcoding trên dataset trước. Chỉ khi không đạt mục tiêu mới đổi sang loại trừ claim đang xét (leave-one-out). Ghi kết quả đo và quyết định vào writeup.
+- Mean and SD are computed over **every claim with the same code**, upcoded claims included. This keeps the brief's wording ("mean for that procedure code").
+- Known consequence (masking): upcoded claims raise the mean and SD => the mean + 2 SD threshold goes up and some upcoded claims may not exceed it => lower recall.
+- SD = **population SD** (`statistics.pstdev`), because the data is every claim of the code, not a sample (settled 2026-10-24; see `glossary.md`). Flag when amount `>` mean + 2 x SD (the brief says "> 2 standard deviations"). SD = 0 => no flag. The evidence states `(amount - mean) / SD` with 1 decimal.
+- Handling: measure the recall of the upcoding rule on the dataset first. Switch to excluding the claim under review (leave-one-out) only if the target is missed. Record the measurement and the decision in the writeup.
 
-## Số claim tối thiểu
+## Minimum number of claims
 
-- Mã có < 10 claim: **không xét upcoding** (không đủ dữ liệu lịch sử để kết luận khai giá cao).
-- Generator sinh mỗi mã >= 30 claim để mọi mã đều được xét.
+- Codes with < 10 claims: **not checked for upcoding** (not enough history to conclude an amount is inflated).
+- The generator creates >= 30 claims per code so every code is checked.
 
-## Claim có nhiều mã (đã chốt)
+## Claims with several codes (settled)
 
-- Chỉ claim có **đúng 1 mã** tham gia tính mean/SD và được xét upcoding.
-- Claim nhiều mã chỉ có ở fraud unbundling; amount của nó là tổng giá lẻ nên không so được với "mean for that procedure code".
-- Số claim tối thiểu (10 / 30) đếm trên claim 1 mã.
+- Only claims with **exactly 1 code** take part in the mean / SD and are checked for upcoding.
+- Claims with several codes only appear as unbundling fraud; their amount is a sum of individual prices, so it cannot be compared with the "mean for that procedure code".
+- The minimum claim counts (10 / 30) are counted over single-code claims.
