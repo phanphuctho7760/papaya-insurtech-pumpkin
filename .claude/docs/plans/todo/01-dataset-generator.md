@@ -72,6 +72,12 @@ Nguồn business: `docs/business-rule/fraud-injection.md`, `catalog.md`, `icd-10
 - Ghi `data/generation_summary.json`: seed, danh sách provider weekday-only, provider-day phantom, số claim theo pattern, số claim theo mã.
 - CLI: `uv run python src/cli.py generate [--seed 2024]`.
 
+**Tiến độ (2026-10-24): xong** (`src/generator/dataset.py`, `src/cli.py`).
+- Thứ tự phụ trong cùng ngày: xáo cả danh sách theo seed rồi sort ổn định theo `claim_date`.
+- Verify: 2 lần generate cùng seed => sha256 giống hệt cho cả 3 file; 2,000 dòng, 10 cột, CRLF, không ô nào cần quote; claim fraud theo từng khoảng 200 ID: 19, 12, 22, 20, 17, 15, 15, 17, 49, 14 (khoảng thứ 9 chứa ngày phantom 31 claim, đúng thiết kế).
+- `generation_summary.json` chứa thông tin gần với đáp án (weekday-only, provider-day phantom), cùng loại với `ground_truth.csv`: engine không đọc.
+- Chưa làm: kiểm cấu trúc Phase 5 và in bảng tóm tắt (CLI hiện chỉ in số claim theo pattern).
+
 ## Phase 5 - Kiểm cấu trúc (chạy cuối lệnh generate, lỗi thì dừng)
 
 - 2,000 claim, `claim_id` duy nhất, đúng 10 cột; 200 fraud, đúng số theo pattern.

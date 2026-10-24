@@ -1,0 +1,87 @@
+{
+  "seed": 2024,
+  "total_claims": 2000,
+  "fraud_claims": 200,
+  "claims_per_pattern": {
+    "amount_clustering": 20,
+    "diagnosis_procedure_mismatch": 20,
+    "duplicate_claim": 30,
+    "phantom_billing": 25,
+    "rapid_resubmission": 30,
+    "unbundling": 25,
+    "upcoding": 30,
+    "weekend_anomaly": 20
+  },
+  "weekday_only_providers": [
+    {
+      "provider_id": "PRV-007",
+      "provider_name": "Benh vien Da khoa Ben Thanh"
+    },
+    {
+      "provider_id": "PRV-009",
+      "provider_name": "Benh vien Da khoa Truong Son"
+    },
+    {
+      "provider_id": "PRV-012",
+      "provider_name": "Benh vien Da khoa Lac Hong"
+    },
+    {
+      "provider_id": "PRV-017",
+      "provider_name": "Benh vien Da khoa Thanh Cong"
+    },
+    {
+      "provider_id": "PRV-021",
+      "provider_name": "Benh vien Da khoa Binh An"
+    },
+    {
+      "provider_id": "PRV-024",
+      "provider_name": "Benh vien Da khoa Thien An"
+    },
+    {
+      "provider_id": "PRV-028",
+      "provider_name": "Benh vien Da khoa Tan Tien"
+    },
+    {
+      "provider_id": "PRV-033",
+      "provider_name": "Benh vien Da khoa Phuc Khang"
+    },
+    {
+      "provider_id": "PRV-036",
+      "provider_name": "Benh vien Da khoa Hung Phat"
+    },
+    {
+      "provider_id": "PRV-041",
+      "provider_name": "Benh vien Da khoa Kim Long"
+    }
+  ],
+  "phantom_provider_day": {
+    "provider_id": "PRV-006",
+    "provider_name": "Benh vien Da khoa Hoa Binh",
+    "claim_date": "2024-11-05",
+    "claims": 31
+  },
+  "single_code_claims_per_code": {
+    "B-1001": 114,
+    "B-1002": 86,
+    "B-3101": 80,
+    "B-3102": 69,
+    "B-4101": 74,
+    "P-1001": 206,
+    "P-1002": 141,
+    "P-1003": 122,
+    "P-1004": 99,
+    "P-1005": 91,
+    "P-1006": 90,
+    "P-2001": 75,
+    "P-2002": 75,
+    "P-3001": 70,
+    "P-3002": 62,
+    "P-3003": 78,
+    "P-3010": 44,
+    "P-4001": 125,
+    "P-4002": 72,
+    "P-4003": 136,
+    "P-4004": 66
+  },
+  "multi_code_claims": 25
+}

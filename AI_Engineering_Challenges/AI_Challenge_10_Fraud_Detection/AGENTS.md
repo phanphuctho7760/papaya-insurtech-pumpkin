@@ -1,83 +1,83 @@
 # AGENTS.md - AI Engineering Challenges
 
-Thư mục này tập trung cho **AI Challenge 10 - Fraud Detection Scoring Engine** (Advanced, 3 điểm, ước lượng của đề 4-6 giờ).
-Code đặt trong thư mục này (`AI_Challenge_10_Fraud_Detection/`).
+This folder holds **AI Challenge 10 - Fraud Detection Scoring Engine** (Advanced, 3 points, the brief estimates 4-6 hours).
+Code lives in this folder (`AI_Challenge_10_Fraud_Detection/`).
 
-## Cấu trúc dự kiến của `AI_Challenge_10_Fraud_Detection/`
+## Planned layout of `AI_Challenge_10_Fraud_Detection/`
 
 ```
 AI_Challenge_10_Fraud_Detection/
-|-- README.md          # writeup nộp bài: cách tiếp cận, quyết định, trọng số, metrics, Agent Workflow
-|-- AGENTS.md          # hướng dẫn agent cấp project
+|-- README.md          # submission writeup: approach, decisions, weights, metrics, agent workflow
+|-- AGENTS.md          # project-level agent instructions
 |-- docs/
-|   |-- business-rule/  # business của 8 rule, catalog
-|   |-- requirements/   # original-brief.md (đề gốc), phân rã yêu cầu + quyết định đã chốt
+|   |-- business-rule/  # business meaning of the 8 rules, catalog
+|   |-- requirements/   # original-brief.md (verbatim brief), requirement breakdown + settled decisions
 |   |-- handbook-notes.md
-|   |-- backlog/        # ticket A/B/C/D: việc gì, vì sao, tiêu chí xong
-|   |-- experiences/    # bẫy / rủi ro khi implement
-|   `-- decisions/      # thiết kế kỹ thuật: công nghệ, cấu trúc, định dạng dữ liệu
-|-- src/               # source code, chi tiết: docs/decisions/tech-and-structure.md
+|   |-- backlog/        # A/B/C/D tickets: what, why, done criteria
+|   |-- experiences/    # pitfalls / risks met while implementing
+|   `-- decisions/      # technical design: technology, structure, data formats
+|-- src/               # source code, details: docs/decisions/tech-and-structure.md
 |-- tests/             # pytest
 |-- data/              # claims.csv, ground_truth.csv
 |-- output/            # scored_output.json, metrics_report.md
-`-- conversations/     # log hội thoại AI nguyên văn (bắt buộc nộp)
-    `-- README.md      # mục lục log: phiên nào, công cụ nào, nội dung chính
+`-- conversations/     # verbatim AI conversation logs (mandatory for submission)
+    `-- README.md      # log index: which session, which tool, main content
 ```
 
-## Lưu log hội thoại AI
+## Saving AI conversation logs
 
-- Claude Chat: đang cân nhắc lưu bằng skill `/noteconversaion-clacowo-bunhy`.
-- Claude Code: lưu bằng tính năng export.
-- Mọi log đặt trong `conversations/`, giữ nguyên văn, không chỉnh sửa lại nội dung. `conversations/README.md` liệt kê từng file log.
-- Agent nhắc người dùng lưu log khi kết thúc mỗi phiên làm việc quan trọng.
+- Claude Chat: considering the `/noteconversaion-clacowo-bunhy` skill.
+- Claude Code: use the export feature.
+- Every log goes in `conversations/`, kept verbatim, never edited. `conversations/README.md` lists each log file.
+- The agent reminds the user to save the log at the end of every important working session.
 
-## Tài liệu phải đọc
+## Required reading
 
-- Đề gốc (Challenge 10 + quy định chung, nguyên văn): `docs/requirements/original-brief.md`
-- Ghi chú Handbook cho Challenge 10: `docs/handbook-notes.md`. Nhắc người dùng theo bảng "Khi nào nhắc" khi họ phân tích đề, chọn giải pháp, ước lượng timeline, viết README, review output AI, đặt tên / viết evidence theo domain bảo hiểm.
-- Phân rã yêu cầu A/B/C/D, quyết định đã chốt, câu hỏi mở: `docs/requirements/challenge-10-requirements.md`. Cập nhật file này khi có quyết định mới.
+- Original brief (Challenge 10 + general rules, verbatim): `docs/requirements/original-brief.md`
+- Handbook notes for Challenge 10: `docs/handbook-notes.md`. Remind the user per its "Khi nào nhắc" table when they analyze the brief, choose a solution, estimate the timeline, write the README, review AI output, or name things / write evidence in insurance-domain terms.
+- A/B/C/D requirement breakdown, settled decisions, open questions: `docs/requirements/challenge-10-requirements.md`. Update it whenever a new decision is made.
 
-## Papaya chấm gì (từ README chung)
+## What Papaya grades (from the general README)
 
-- Software design: cách chia nhỏ bài toán, cấu trúc giải pháp.
-- Attention to detail: edge case, những điều đề không nói rõ.
-- Polish: kết quả "đúng cảm giác", không chỉ chạy được.
-- Learning velocity: tiếp thu domain bảo hiểm nhanh.
-- **One-shot = trượt.** Phải thấy được quá trình chỉ đạo, bắt lỗi AI, đánh đổi.
-- **Bắt buộc nộp log hội thoại AI nguyên văn** (export / transcript), thiếu là tự động trượt.
-- Có thể bị hỏi lại mọi quyết định khi phỏng vấn: mọi thứ trong bài phải hiểu và giải thích được.
+- Software design: how the problem is broken down and the solution structured.
+- Attention to detail: edge cases, things the brief leaves unsaid.
+- Polish: a result that "feels right", not just one that runs.
+- Learning velocity: picking up the insurance domain quickly.
+- **One-shot = fail.** The process of directing the AI, catching its mistakes and making trade-offs must be visible.
+- **Verbatim AI conversation logs are mandatory** (export / transcript); missing them is an automatic fail.
+- Any decision may be questioned in the interview: everything in the submission must be understood and explainable.
 
-## Yêu cầu cốt lõi của đề (checklist)
+## Core requirements of the brief (checklist)
 
-- [ ] Dataset 2,000 claim, ~500 member, ~50 provider, năm 2024, có `is_weekend`.
-- [ ] Nhúng ~200 claim gian lận (~10%) theo 8 pattern với số lượng đúng đề, có ground-truth label.
-- [ ] 8 rule: duplicate, rapid re-submission, upcoding, unbundling (>= 5 bundle), phantom billing, weekend anomaly, diagnosis-procedure mismatch (>= 10 cặp hợp lệ), amount clustering.
-- [ ] Output mỗi claim: `claim_id`, `risk_score` 0-100, `flags[]` gồm `rule`, `severity`, `evidence` cụ thể (có số liệu).
-- [ ] Severity weight 1-5 cấu hình được; score = weighted sum chuẩn hóa 0-100; danh sách xếp hạng theo score.
-- [ ] Giải thích lý do chọn trọng số.
-- [ ] Metrics: precision, recall; mục tiêu recall >= 70%, FPR <= 20%.
-- [ ] >= 15 unit test (từng rule + edge case).
-- [ ] Xử lý 2,000 claim < 30 giây.
-- [ ] Ước lượng và báo timeline.
-- [ ] Nộp: dataset, scored output, metrics report, writeup (`README.md`), log hội thoại AI (`conversations/`).
+- [ ] Dataset of 2,000 claims, ~500 members, ~50 providers, year 2024, with `is_weekend`.
+- [ ] ~200 fraudulent claims (~10%) embedded across 8 patterns with the brief's counts, with ground-truth labels.
+- [ ] 8 rules: duplicate, rapid re-submission, upcoding, unbundling (>= 5 bundles), phantom billing, weekend anomaly, diagnosis-procedure mismatch (>= 10 valid pairs), amount clustering.
+- [ ] Output per claim: `claim_id`, `risk_score` 0-100, `flags[]` with `rule`, `severity`, specific `evidence` (with numbers).
+- [ ] Configurable severity weight 1-5; score = weighted sum normalized to 0-100; list ranked by score.
+- [ ] Explain the weight choices.
+- [ ] Metrics: precision, recall; target recall >= 70%, FPR <= 20%.
+- [ ] >= 15 unit tests (each rule + edge cases).
+- [ ] Processing 2,000 claims takes < 30 seconds.
+- [ ] Estimate and report the timeline.
+- [ ] Submit: dataset, scored output, metrics report, writeup (`README.md`), AI conversation logs (`conversations/`).
 
-## Quyết định
+## Decisions
 
-Quyết định đã chốt và câu hỏi mở: `docs/requirements/challenge-10-requirements.md` (nguồn duy nhất, không chép lại ở đây).
+Settled decisions and open questions: `docs/requirements/challenge-10-requirements.md` (single source, not copied here).
 
-## Quy ước cho agent
+## Agent conventions
 
-- Làm theo phase: phân tích đề -> so sánh >= 2 giải pháp -> plan -> code -> test -> review -> writeup. Không nhảy thẳng vào code.
-- Người dùng review 100% plan / assumption trước khi code.
-- Không one-shot: chia việc nhỏ, mỗi bước có kiểm chứng.
-- Ghi lại mọi assumption về chỗ đề mơ hồ vào `docs/requirements/challenge-10-requirements.md` và vào writeup.
-- Code ưu tiên dễ đọc, tránh trừu tượng thừa; không thêm tính năng ngoài đề.
+- Work in phases: analyze the brief -> compare >= 2 solutions -> plan -> code -> test -> review -> writeup. Never jump straight into code.
+- The user reviews 100% of plans / assumptions before code is written.
+- No one-shot: split work into small steps, each with its own verification.
+- Record every assumption about ambiguous parts of the brief in `docs/requirements/challenge-10-requirements.md` and in the writeup.
+- Code favors readability over abstraction; no features beyond the brief.
 
-## Quy ước tài liệu (theo skill `pjdoc-mgmt-claco-bunhy`)
+## Documentation conventions (per the `pjdoc-mgmt-claco-bunhy` skill)
 
-- Việc cần làm: ticket ở `docs/backlog/{idea,todo,done}/NN-<slug>.md`; plan thực thi cùng số ở `.claude/docs/plans/{todo,done}/NN-<slug>.md` (root repo). Trạng thái nằm ở ticket, chi tiết thực thi nằm ở plan.
-- Quyết định kỹ thuật **mới** ghi theo định dạng ADR của skill: `docs/decisions/ADR-NNN-<title>.md`. Các file hiện có trong `docs/decisions/` giữ nguyên định dạng.
-- Bẫy / rủi ro đã gặp hoặc ước lượng: `docs/experiences/`.
-- Không dùng changelog: lịch sử commit và log hội thoại là đủ.
-- Ngôn ngữ: doc dưới `docs/`, `.claude/docs/` và `AGENTS.md` viết tiếng Việt; code, comment, commit message viết tiếng Anh.
-- Trước mỗi commit chạy `/pjdoc-mgmt-claco-bunhy pre-commit`. Khi viết code Python áp dụng `/pyfriend-claco-bunhy`.
+- Work items: tickets in `docs/backlog/{idea,todo,done}/NN-<slug>.md`; the execution plan with the same number in `.claude/docs/plans/{todo,done}/NN-<slug>.md` (repo root). Status lives in the ticket, execution detail in the plan.
+- **New** technical decisions use the skill's ADR format: `docs/decisions/ADR-NNN-<title>.md`. Existing files in `docs/decisions/` keep their current format.
+- Pitfalls / risks met or estimated: `docs/experiences/`.
+- No changelog: commit history and conversation logs are enough.
+- Language: every doc in this folder (`docs/`, `README.md`, `AGENTS.md`) is written in English; code, comments and commit messages are English too. Docs still in Vietnamese are converted to English when they are next edited (whole file at once, never two languages in one file), not in a bulk pass. The execution plans in `.claude/docs/` at the repo root stay in Vietnamese.
+- Before every commit run `/pjdoc-mgmt-claco-bunhy pre-commit`. When writing Python apply `/pyfriend-claco-bunhy`.
