@@ -1,7 +1,7 @@
 # Challenge 10 - Phân rã yêu cầu
 
 Phân rã yêu cầu của AI Challenge 10 - Fraud Detection Scoring Engine thành các mục chính và chi tiết.
-Nguồn: `docs/business-rule/AI_Challenge_10.md` (R1-R7) và `docs/requirements/AI_Engineering_Challenges_Original.md` (R8).
+Nguồn: `docs/requirements/original-brief.md`, Phần 1 (R1-R7) và Phần 2 (R8).
 Đường dẫn trong file này tính từ thư mục project `AI_Challenge_10_Fraud_Detection/`.
 Giai đoạn: New Task (theo Task_Lifecycle). Chưa chọn công nghệ.
 
@@ -81,7 +81,7 @@ Giai đoạn: New Task (theo Task_Lifecycle). Chưa chọn công nghệ.
 - C2 metrics: dự đoán fraud khi score > 0; FPR = FP/(FP+TN); thêm bảng theo ngưỡng 0/40/70. Xem `docs/business-rule/metrics.md`.
 - C1 test: 19 test (mỗi rule 1 ca flag + 1 ca không flag + ca biên, cộng scoring). Xem `docs/business-rule/test-cases.md`.
 - C3 metrics report: 4 phần (tổng thể, theo pattern, FP tự nhiên theo rule, bảng theo ngưỡng). Xem `docs/business-rule/metrics.md`.
-- Project tự đứng độc lập: đề, quy định chung, phân rã yêu cầu, handbook notes đã copy vào `docs/`.
+- Project tự đứng độc lập: đề và quy định chung gộp trong `docs/requirements/original-brief.md`; phân rã yêu cầu, handbook notes nằm trong `docs/`.
 - B1 weekend: rule tính trên toàn bộ claim của provider; mỗi bệnh viện weekday-only >= 60 claim.
 - Business 8 rule: `docs/business-rule/detection-rules.md`.
 - B1 upcoding: mean/SD tính trên toàn bộ claim cùng mã (gồm cả claim upcoded), chấp nhận masking; đo recall trước, chỉ đổi sang leave-one-out nếu không đạt. Xem `docs/business-rule/upcoding.md`.

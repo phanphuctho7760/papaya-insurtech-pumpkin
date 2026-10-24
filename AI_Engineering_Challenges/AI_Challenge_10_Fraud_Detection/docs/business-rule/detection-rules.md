@@ -1,6 +1,6 @@
 # 8 detection rule
 
-Tổng hợp business của 8 rule. Nguồn: `AI_Challenge_10.md`, mục Detection Rules. Dữ liệu tham chiếu (procedure, bundle, cặp hợp lệ): `catalog.md`.
+Tổng hợp business của 8 rule. Nguồn: `../requirements/original-brief.md`, Phần 1, mục Detection Rules. Dữ liệu tham chiếu (procedure, bundle, cặp hợp lệ): `catalog.md`.
 
 Quy ước chung:
 - Mỗi rule xét từng claim, trả về flag (có / không) kèm evidence cụ thể có số liệu. Mẫu evidence: `evidence.md`.

@@ -10,8 +10,8 @@ AI_Challenge_10_Fraud_Detection/
 |-- README.md          # writeup nộp bài: cách tiếp cận, quyết định, trọng số, metrics, Agent Workflow
 |-- AGENTS.md          # hướng dẫn agent cấp project
 |-- docs/
-|   |-- business-rule/  # business của 8 rule, catalog, đề gốc (AI_Challenge_10.md)
-|   |-- requirements/   # quy định chung, phân rã yêu cầu + quyết định đã chốt
+|   |-- business-rule/  # business của 8 rule, catalog
+|   |-- requirements/   # original-brief.md (đề gốc), phân rã yêu cầu + quyết định đã chốt
 |   |-- handbook-notes.md
 |   `-- decisions/      # thiết kế kỹ thuật: công nghệ, cấu trúc, định dạng dữ liệu
 |-- src/               # source code, chi tiết: docs/decisions/tech-and-structure.md
@@ -28,8 +28,7 @@ AI_Challenge_10_Fraud_Detection/
 
 ## Tài liệu phải đọc
 
-- Đề (bản copy nguyên văn): `docs/business-rule/AI_Challenge_10.md`
-- Quy định chung (bản copy nguyên văn): `docs/requirements/AI_Engineering_Challenges_Original.md`
+- Đề gốc (Challenge 10 + quy định chung, nguyên văn): `docs/requirements/original-brief.md`
 - Ghi chú Handbook cho Challenge 10: `docs/handbook-notes.md`. Nhắc người dùng theo bảng "Khi nào nhắc" khi họ phân tích đề, chọn giải pháp, ước lượng timeline, viết README, review output AI, đặt tên / viết evidence theo domain bảo hiểm.
 - Phân rã yêu cầu A/B/C/D, quyết định đã chốt, câu hỏi mở: `docs/requirements/challenge-10-requirements.md`. Cập nhật file này khi có quyết định mới.
 
