@@ -1,78 +1,83 @@
-# Bẫy khi sinh dataset làm lệch metrics hoặc lộ nhãn
+# Dataset generation pitfalls that skew metrics or leak labels
 
-**Found:** 2026-10-24 (ước lượng trước khi code, chưa đo)
-**Scope:** generator (A) và cách đọc metrics (C): phân phối amount, chọn mã cho fraud, gán `claim_id`, FP tự nhiên.
-**Artifact at time of discovery:** chưa có code; liên quan `src/generator/`, `src/rules/`
-**Status:** đã đo trên dataset đủ 2,000 claim (seed 2024, 2026-10-24) bằng script kiểm thô theo định nghĩa rule; đối chiếu lại bằng engine ở #03
+**Found:** 2026-10-24 (estimated before coding, then measured)
+**Scope:** generator (A) and how metrics are read (C): amount distribution, code choice for fraud, `claim_id` assignment, provider volume, natural FPs.
+**Artifact at time of discovery:** `src/generator/`; cross-checked against the rules in #03
+**Status:** measured on the full 2,000-claim dataset (seed 2024) with a rough script following each rule's definition. Last re-measured 2026-10-24 after the #01 review fixes (amount truncation, provider volume). Re-checked by the engine in #03.
 
-Mỗi mục: dự đoán -> cách xử lý khi sinh dữ liệu -> số đo thật (điền sau).
+Each item: prediction -> how generation handles it -> real measurement.
 
-## 1. FP tự nhiên của upcoding
+## 1. Natural FPs of upcoding
 
-- **Dự đoán:** amount hợp lệ = giá chuẩn x log-normal dao động 15% => khoảng 2.5% claim hợp lệ tự vượt mean + 2 SD, tức khoảng 40-45 claim trên 1,800 claim hợp lệ.
-- **Ảnh hưởng:** FPR vẫn thấp hơn nhiều so với 20%, nhưng precision giảm.
-- **Xử lý:** chấp nhận (đúng quyết định "cho phép FP tự nhiên"), báo trong metrics report phần 3 và writeup.
-- **Số đo sơ bộ:** 57 claim (3.2%), cao hơn dự đoán. Lý do: log-normal lệch phải, đuôi trên dày hơn phân phối chuẩn nên tỷ lệ vượt mean + 2 SD lớn hơn 2.5%.
-- **Bài học:** ước lượng tỷ lệ vượt ngưỡng theo phân phối chuẩn sẽ thấp hơn thực tế khi amount sinh bằng log-normal. Số chính thức sẽ khác vì claim upcoded làm tăng mean / SD (mục 2).
-- **Số đo thật (2,000 claim):** 23 claim hợp lệ vượt mean + 2 SD (1.3% của 1,800), giảm từ 57 vì 30 claim upcoded kéo SD của mã lên. Không claim fraud thuộc pattern khác vượt ngưỡng (amount kẹp +-15% có tác dụng).
-- **Bài học thêm:** FP tự nhiên của một rule thống kê phải đo trên dataset đã có fraud; đo trên dữ liệu sạch cho số sai hướng.
+- **Prediction:** legit amount = standard price x log-normal with 15% spread => about 2.5% of legit claims exceed mean + 2 SD on their own, i.e. about 40-45 of the 1,800 legit claims.
+- **Impact:** FPR stays far below 20%, but precision drops.
+- **Handling:** accepted (the "natural FPs are allowed" decision); reported in section 3 of the metrics report and in the writeup.
+- **Lesson:** the first rough measurement on clean data gave 57 claims (3.2%), above the prediction. The log-normal is right-skewed, so its upper tail is heavier than a normal one and more than 2.5% exceed mean + 2 SD.
+- **Real measurement (2,000 claims):** 18 legit claims exceed mean + 2 SD (1.0% of 1,800), because the 30 upcoded claims push each code's SD up. No fraud claim of another pattern exceeds the threshold (their amount factor stays within +-15%).
+- **Further lesson:** the natural FPs of a statistical rule must be measured on the dataset with fraud already in it; clean data gives a number that is off in the wrong direction.
 
-## 2. Masking làm giảm recall của upcoding
+## 2. Masking lowers upcoding recall
 
-- **Dự đoán:** mean/SD tính cả claim upcoded => nếu nhiều claim upcoded dồn vào 1 mã, ngưỡng mean + 2 SD bị đẩy lên và một số claim upcoded không vượt ngưỡng.
-- **Xử lý:** rải 30 claim upcoded ra nhiều mã (1 mã 1 claim upcoded là tốt nhất). Không dùng P-1003 cho upcoding vì P-1003 dành cho amount clustering.
-- **Nếu recall upcoding vẫn thấp:** đổi sang leave-one-out (xem `../business-rule/upcoding.md`).
-- **Số đo thật:** 30/30 claim upcoded vượt mean + 2 SD (tối đa 2 claim upcoded mỗi mã, chỉ mã >= 60 claim hợp lệ). Masking có xảy ra (làm FP tự nhiên giảm, mục 1) nhưng không làm sót claim upcoded nào => chưa cần leave-one-out.
+- **Prediction:** mean / SD include the upcoded claims => if many upcoded claims sit on one code, the mean + 2 SD threshold rises and some of them stay below it.
+- **Handling:** spread the 30 upcoded claims over many codes (at most 2 per code, only codes with >= 60 legit claims). P-1003 is never upcoded because it is reserved for amount clustering.
+- **If upcoding recall is still low:** switch to leave-one-out (see `../business-rule/upcoding.md`).
+- **Real measurement:** 30/30 upcoded claims exceed mean + 2 SD. Masking happens (it lowers the natural FPs, item 1) but misses no upcoded claim => leave-one-out not needed yet.
 
-## 3. FP tự nhiên của rapid re-submission
+## 3. Natural FPs of rapid re-submission
 
-- **Dự đoán:** 500 member, mỗi người khoảng 3-4 claim => sẽ có cặp ngẫu nhiên cùng diagnosis cách nhau <= 7 ngày, ước khoảng 10-20 claim hợp lệ bị flag.
-- **Xử lý:** chấp nhận và báo cáo. Sau khi generate đếm ngay; nếu vượt nhiều so với ước lượng thì xem lại cách rải ngày khám của một member.
-- **Số đo sơ bộ:** 32 claim, gấp khoảng 2 lần dự đoán. Vẫn xa ngưỡng FPR 20%; chưa đổi cách rải ngày, chờ số chính thức.
-- **Số đo thật (2,000 claim):** 20 claim hợp lệ nằm trong cặp cùng member + diagnosis cách <= 7 ngày (khác unique key duplicate), cùng 30 claim rapid chèn. Không claim fraud pattern khác dính (generator chặn khi đặt claim fraud). Số sơ bộ 32 khác vì đo trên bản Phase 2 trước khi sửa cách chia provider (chuỗi random đổi).
+- **Prediction:** 500 members with about 3-4 claims each => some random pairs share a diagnosis within <= 7 days, about 10-20 legit claims flagged.
+- **Handling:** accepted and reported. If the count is far above the estimate, revisit how one member's visit dates are spread.
+- **Real measurement (2,000 claims):** 24 legit claims sit in a pair with the same member + diagnosis <= 7 days apart (excluding the duplicate key), next to the 30 injected rapid claims. No fraud claim of another pattern is caught (the generator blocks it when placing fraud). Every re-generation changes the random sequence, so this number moves (20-32 seen so far).
 
-## 4. Lộ nhãn qua thứ tự `claim_id`
+## 4. Label leak through `claim_id` order
 
-- **Dự đoán:** nếu sinh claim hợp lệ trước rồi chèn fraud sau và gán ID theo thứ tự sinh, claim fraud sẽ nằm cụm ở cuối dãy ID (vd `CLM-01801` -> `CLM-02000`). Người đọc dataset nhìn là biết dữ liệu giả.
-- **Xử lý:** sinh xong toàn bộ claim, sắp theo `claim_date` (thứ tự phụ ngẫu nhiên theo seed), rồi mới gán `claim_id`.
-- **Kiểm:** sau khi generate, xem phân bố vị trí ID của claim fraud.
+- **Prediction:** generating legit claims first, injecting fraud after and assigning IDs in generation order puts the fraud claims at the end of the ID range (e.g. `CLM-01801` -> `CLM-02000`). Anyone reading the dataset sees it is fake.
+- **Handling:** generate every claim, sort by `claim_date` (secondary order random by seed), then assign `claim_id`.
+- **Check:** after generation, look at where the fraud IDs fall. Reviewed for #01: spread evenly over the deciles, the only cluster is the phantom day (31 claims on one date, unavoidable).
 
-## 5. Lộ nhãn qua định dạng amount
+## 5. Label leak through amount format and value
 
-- **Đã gặp (khi rà plan, trước khi code):** plan cũ làm tròn claim hợp lệ tới 1,000 và claim clustering tới 100 => mọi amount không chia hết cho 1,000 (vd 48,300) chắc chắn là fraud clustering.
-- **Xử lý:** mọi amount làm tròn tới 100, cả hợp lệ lẫn fraud.
-- **Bài học:** mọi quy tắc định dạng (làm tròn, kiểu số, cách viết mã) phải giống nhau giữa claim hợp lệ và fraud.
+- **Met (plan review, before code):** the old plan rounded legit claims to 1,000 and clustering claims to 100 => any amount not divisible by 1,000 (e.g. 48,300) was surely clustering fraud.
+- **Handling:** every amount is rounded to 100, legit and fraud alike.
+- **Met again (review of #01):** fraud claims of non-amount patterns clamped their amount factor to [0.85, 1.15], so every factor outside piled onto exactly `price x 0.85` or `price x 1.15`. 36 single-code claims had one of those two amounts, all of them fraud.
+- **Handling:** the factor is re-drawn until inside [0.85, 1.15] (truncated distribution, no pile-up). Measured after the fix: 0 fraud and 3 legit claims at those two amounts. Remaining, accepted: 100% of non-amount fraud lies within +-15% of the price versus 68% of legit claims; filtering on it lifts the fraud rate only from 10% to ~11%.
+- **Lesson:** every format rule (rounding, number type, code spelling) and every value-shaping rule (clamping, bounds) must act the same on legit and fraud claims, or leave no visible trace such as a pile-up.
 
-## 6. Lộ nhãn qua quy mô provider
+## 6. Label leak through provider volume
 
-- **Đã gặp (chạy thử Phase 2):** chia trước 62 claim cho mỗi bệnh viện weekday-only rồi vẫn cho bốc thêm => nhóm này có 84-95 claim, bệnh viện thường 15-27. 10 bệnh viện lớn nhất luôn là nhóm weekday-only.
-- **Xử lý:** mỗi bệnh viện weekday-only nhận ngẫu nhiên 62-70 claim và không nhận thêm. Đo lại: 63-69 so với bệnh viện thường 31-45.
-- **Bài học:** ràng buộc đặt riêng cho một nhóm provider (số claim tối thiểu, chỉ ngày thường) có thể biến nhóm đó thành ngoại lệ thống kê. Sau khi sinh, so phân phối của nhóm đặc biệt với nhóm còn lại.
+- **Met (Phase 2 dry run):** pre-assigning 62 claims to each weekday-only hospital and still letting them draw more => this group had 84-95 claims, regular hospitals 15-27.
+- **Met again (review of #01):** the first fix (62-70 claims for weekday-only hospitals, none extra) still left them at 67-78 versus 33-49 for regular hospitals: the 10 largest hospitals were the weekday-only ones. The fix after that (below) made clinics so small that drawing fraud providers uniformly gave clinics a ~24% fraud rate versus ~9% for hospitals.
+- **Handling:**
+  - 150 legit claims moved from DENTAL to OUTPATIENT codes, and all 20 hospitals get the same pre-assigned 58-62 OUTPATIENT / INPATIENT claims, weekday-only or not. See `../decisions/ADR-004-equal-volume-for-all-hospitals.md`.
+  - Fraud providers are drawn weighted by legit volume (the provider of a random legit claim of the same type).
+- **Real measurement (seed 2024):** weekday-only 70-86 claims, regular hospitals 68-79 (phantom hospital excluded). Fraud rate: hospital 163/1,555 (10%), dental 34/334 (10%), clinic 3/111 (3%; varies 3-12% across seeds around the 10% base, sample of ~110).
+- **Known limitation, accepted:** clinics get only 3-8 claims each (1-15 across seeds), dental providers 20-46.
+- **Lesson:** a constraint placed on one provider group (a minimum claim count, weekdays only) can make that group a statistical outlier, and fixing it can move the outlier elsewhere. After generation, compare the distribution of the special group with the rest, and the fraud rate per provider type.
 
-## 7. Số member sát ngưỡng kiểm
+## 7. Member count close to the check threshold
 
-- **Đo sơ bộ:** chọn member đều cho 1,800 claim hợp lệ => 483 member khác nhau, chỉ trên ngưỡng 480 một chút (kỳ vọng với 2,000 claim là ~491).
-- **Rủi ro:** đổi seed hoặc đổi số claim có thể làm Phase 5 fail ở ngưỡng 480.
-- **Xử lý nếu fail:** chia trước mỗi member 1 claim hợp lệ (phương án đã cân nhắc khi chốt ngưỡng), không hạ ngưỡng.
-- **Số đo thật (2,000 claim):** 488 member.
+- **Rough measurement:** uniform member choice for the 1,800 legit claims => 483 distinct members, just above the 480 threshold (expected ~491 with 2,000 claims).
+- **Risk:** a new seed or claim count could fail the 480 check.
+- **Handling if it fails:** pre-assign one legit claim to every member (the option weighed when the threshold was set); do not lower the threshold.
+- **Real measurement (2,000 claims):** 494 members.
 
-## 8. FP tự nhiên của amount clustering
+## 8. Natural FPs of amount clustering
 
-- **Dự đoán (`../business-rule/amount-clustering.md`):** khoảng 6% claim P-1003 hợp lệ tự rơi vào 47,500-49,999.
-- **Số đo thật (2,000 claim):** 2/90 claim P-1003 hợp lệ (2.2%) nằm trong dải, cùng 20 claim clustering chèn. Thấp hơn dự đoán do mẫu nhỏ (90 claim); ở bản Phase 2 trước đó là 6/90.
+- **Prediction (`../business-rule/amount-clustering.md`):** about 6% of legit P-1003 claims fall into 47,500-49,999 on their own.
+- **Real measurement (2,000 claims):** 4/90 legit P-1003 claims (4.4%) are in the band, next to the 20 injected clustering claims. Small sample (90 claims): earlier generations gave 2/90 and 6/90.
 
-## 9. Claim fraud vô tình dính rule khác
+## 9. Fraud claims accidentally caught by another rule
 
-- **Rủi ro:** claim fraud đặt ngẫu nhiên có thể tạo cặp rapid với claim khác, trùng unique key, rơi vào cuối tuần ở bệnh viện weekday-only, hoặc có amount vượt ngưỡng upcoding / rơi vào dải clustering => kiểm chéo ở #03 thấy 1 claim dính 2 rule.
-- **Xử lý:** khi đặt mỗi claim fraud, generator kiểm unique key, cửa sổ 7 ngày của member + diagnosis, ngày thường ở bệnh viện weekday-only; amount pattern không dựa vào amount kẹp +-15%; phantom sinh cuối để không claim nào rơi thêm vào provider-day 31 claim.
-- **Số đo thật (2,000 claim):** chỉ 1 provider-day > 30 (31 claim); đúng 15 nhóm duplicate; claim cuối tuần ở bệnh viện weekday-only chỉ là 20 claim weekend; claim mismatch chỉ gồm 20 claim mismatch; claim nhiều mã chỉ gồm 25 claim unbundling; không claim fraud nào dính rapid / upcoding / clustering ngoài pattern của mình. Ngoại lệ đã biết (6 claim ngày phantom) xem `../business-rule/fraud-injection.md`.
+- **Risk:** a randomly placed fraud claim can form a rapid pair with another claim, repeat a unique key, fall on a weekend at a weekday-only hospital, or have an amount above the upcoding threshold / inside the clustering band => the #03 cross-check sees 1 claim caught by 2 rules.
+- **Handling:** when placing each fraud claim the generator checks the unique key, the member + diagnosis 7-day window, and weekdays at weekday-only hospitals; non-amount patterns keep their amount factor within +-15%; phantom is generated last so no other claim lands on the 31-claim provider-day.
+- **Real measurement (2,000 claims):** `check` passes: only 1 provider-day > 30 (31 claims), exactly 15 duplicate groups, the only weekend claims at weekday-only hospitals are the 20 weekend claims, multi-code claims are only the 25 unbundling claims, and no fraud claim is caught by rapid / upcoding / clustering outside its own pattern. Known exception (the 6 claims on the phantom day): see `../business-rule/fraud-injection.md`.
 
 ## Rule derived
 
-- Mọi FP tự nhiên được chấp nhận phải có số đo thật trong metrics report, không chỉ ước lượng.
-- Generator không được để thứ tự hay định dạng của dữ liệu tiết lộ nhãn ground truth.
+- Every accepted natural FP must have a real measurement in the metrics report, not only an estimate.
+- The generator must not let the order, format, value shape or provider volume of the data reveal the ground-truth label.
 
 ## Related
 
 - `../business-rule/fraud-injection.md`, `../business-rule/upcoding.md`, `../business-rule/metrics.md`
-- `../decisions/tech-and-structure.md` (hiệu năng B5, đo thời gian C4)
+- `../decisions/tech-and-structure.md` (performance B5, timing C4)

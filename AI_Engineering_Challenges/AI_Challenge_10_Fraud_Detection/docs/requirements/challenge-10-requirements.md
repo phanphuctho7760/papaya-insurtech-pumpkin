@@ -98,7 +98,7 @@ Stage: New Task (per Task_Lifecycle). Technology not chosen yet.
 - B5 / C4: rapid groups by `(member_id, diagnosis_code)`; runtime measured with `time.perf_counter()` in the CLI, written to the metrics report.
 - Risks estimated before coding: `docs/experiences/dataset-generation-pitfalls.md`.
 - A2 valid pairs fixed: added `J06.9 - P-1003`, `I10 - P-1003`, `E11.9 - P-1002` (35 pairs) so unbundled B-1001 / B-1002 claims do not trip mismatch. See `docs/business-rule/diagnosis-procedure-mismatch.md`.
-- A3: amounts of fraud claims outside the amount patterns are clamped to a factor in [0.85, 1.15]; upcoded claims are spread over codes with >= 60 claims, at most 2 per code. See `fraud-injection.md`, `upcoding.md`.
+- A3 (revised 2026-10-24 after review of #01): amounts of fraud claims outside the amount patterns use a factor re-drawn until inside [0.85, 1.15] (truncated, not clamped: clamping piled amounts on 2 exact values that leaked the label); upcoded claims are spread over codes with >= 60 claims, at most 2 per code. See `fraud-injection.md`, `upcoding.md`.
 - Work tracking: tickets in `docs/backlog/`, plans in `.claude/docs/plans/` (repo root).
 - Agent workflow (2026-10-24): subagents `coder` (sonnet) and `reviewer` (opus, read-only) in `.claude/agents/`; trigger table in the repo-root `AGENTS.md`; the pre-commit doc sweep stays on the main thread.
 - Docs (2026-10-24): business terms have a single source, `docs/business-rule/glossary.md`; other docs link to it instead of defining terms.
@@ -110,6 +110,7 @@ Stage: New Task (per Task_Lifecycle). Technology not chosen yet.
 - B input (2026-10-24): invalid input stops the engine with the full list of problems; no rows are skipped. See `docs/decisions/ADR-002-invalid-input-stops-the-engine.md`.
 - B config (2026-10-24): only the weights are configurable (the brief only asks for weights); rule thresholds are constants at the top of each rule file. See `docs/decisions/ADR-003-only-weights-are-configurable.md`.
 - B4 output (2026-10-24): `output/scored_output.json` is a ranked JSON array; each element has exactly the brief's 3 fields; flags inside a claim sorted by severity descending. See `docs/business-rule/scoring.md`.
+- A provider volume (2026-10-24, review of #01): 150 legit claims moved from DENTAL to OUTPATIENT codes; all 20 hospitals get the same pre-assigned 58-62 OUTPATIENT / INPATIENT claims, so the weekday-only group is not the 10 largest; fraud providers are drawn weighted by legit volume, so no provider type has an outlier fraud rate. Known limitation, accepted: the 20 clinics get only ~1-15 claims each. Making them larger needs a lower weekday-only floor (< 60) or fewer dental providers; both rejected. See `docs/decisions/ADR-004-equal-volume-for-all-hospitals.md`.
 
 ## Open questions (discussed when each part is detailed)
 

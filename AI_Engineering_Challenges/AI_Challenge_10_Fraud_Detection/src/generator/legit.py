@@ -12,22 +12,25 @@ DAYS_IN_YEAR = 366  # 2024 is a leap year
 
 MEMBER_IDS = [f"MEM-{i:04d}" for i in range(1, 501)]
 
-# Exact number of legitimate claims per code (sum = 1,800). Outpatient is the most frequent,
-# every code gets >= 30 claims (upcoding needs history), and 18 codes besides P-1003 get >= 60
-# so the 27 upcoded claims can be spread at most 2 per code (see upcoding.md, masking).
+# Exact number of legitimate claims per code (sum = 1,800). Outpatient is the most frequent (it feeds
+# the 20 hospitals evenly), every code gets >= 30 claims (upcoding needs history), and 18 codes
+# besides P-1003 get >= 60 (P-3002 and P-3010 are the two below 60) so the 27 upcoded claims can be
+# spread at most 2 per code (see upcoding.md, masking).
 LEGIT_CLAIMS_PER_CODE = {
-    "P-1001": 200, "P-1002": 130, "P-1003": 90, "P-1004": 90, "P-1005": 80, "P-1006": 80,
-    "B-1001": 110, "B-1002": 80,
+    "P-1001": 240, "P-1002": 160, "P-1003": 90, "P-1004": 110, "P-1005": 100, "P-1006": 100,
+    "B-1001": 130, "B-1002": 80,
     "P-2001": 70, "P-2002": 70, "P-3001": 60, "P-3002": 50, "P-3003": 70, "P-3010": 40,
     "B-3101": 70, "B-3102": 60,
-    "P-4001": 120, "P-4002": 70, "P-4003": 130, "P-4004": 60, "B-4101": 70,
+    "P-4001": 60, "P-4002": 60, "P-4003": 60, "P-4004": 60, "B-4101": 60,
 }
 LEGIT_TOTAL = 1800
 
-# Each weekday-only hospital gets a random number of claims in this range and no others, so it
-# ends with >= 60 (2 weekend frauds out of >= 60 stays below the 5% weekend-volume threshold).
-# Not drawn again afterwards: otherwise these 10 would be by far the largest hospitals.
-WEEKDAY_ONLY_CLAIMS_RANGE = (62, 70)
+# Every one of the 20 hospitals first gets a random number of OUTPATIENT / INPATIENT claims drawn
+# from this one range, weekday-only or not, so the weekday-only ones cannot be told apart by volume.
+# The lower bound keeps a weekday-only hospital at >= 60 in total (>= 58 legit + 2 weekend frauds,
+# so the 2 weekend frauds stay below the 5% weekend-volume threshold). The rest of the claims are
+# spread over all eligible providers with no exception.
+HOSPITAL_PREASSIGNED_RANGE = (58, 62)
 
 AMOUNT_SIGMA = 0.15  # log-normal spread of legitimate amounts around the standard price
 AMOUNT_ROUNDING = 100  # VND; same rounding for every claim so the format does not leak labels
@@ -56,12 +59,13 @@ def generate_legit_claims(
     codes = [code for code, n in LEGIT_CLAIMS_PER_CODE.items() for _ in range(n)]
     rng.shuffle(codes)
 
-    # The first OUTPATIENT / INPATIENT codes go to the weekday-only hospitals,
-    # every other claim picks one of the remaining eligible providers.
-    preassigned = [p for p in weekday_only for _ in range(rng.randint(*WEEKDAY_ONLY_CLAIMS_RANGE))]
+    # The first OUTPATIENT / INPATIENT codes go to the hospitals (same range for all 20),
+    # every other claim picks any eligible provider.
+    hospitals = [p for p in providers if p.type == "HOSPITAL"]
+    preassigned = [p for p in hospitals for _ in range(rng.randint(*HOSPITAL_PREASSIGNED_RANGE))]
     weekday_only_ids = {p.id for p in weekday_only}
     eligible_by_type = {
-        claim_type: [p for p in providers if p.type in types and p.id not in weekday_only_ids]
+        claim_type: [p for p in providers if p.type in types]
         for claim_type, types in ELIGIBLE_PROVIDER_TYPES.items()
     }
 
@@ -95,5 +99,5 @@ def generate_legit_claims(
         used_keys.add(claim.duplicate_key())
         claims.append(claim)
 
-    assert not preassigned, "not enough OUTPATIENT / INPATIENT codes to pre-assign weekday-only hospitals"
+    assert not preassigned, "not enough OUTPATIENT / INPATIENT codes to pre-assign the hospitals"
     return claims

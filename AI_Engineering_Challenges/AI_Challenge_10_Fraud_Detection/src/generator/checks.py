@@ -14,7 +14,7 @@ from pathlib import Path
 import rule_names as R
 from catalog import Catalog
 from generator.dataset import CLAIMS_COLUMNS, GROUND_TRUTH_COLUMNS
-from generator.fraud import CLUSTERING_AMOUNT, FRAUD_COUNTS
+from generator.fraud import CLUSTERING_AMOUNT, FRAUD_COUNTS, PHANTOM_DAY_EXTRAS, WEEKEND_PER_PROVIDER
 from generator.legit import AMOUNT_ROUNDING
 from generator.models import load_providers
 
@@ -25,6 +25,7 @@ MIN_WEEKDAY_ONLY_CLAIMS = 60
 DUPLICATE_GROUPS = FRAUD_COUNTS[R.DUPLICATE_CLAIM] // 2
 PHANTOM_THRESHOLD = 30
 PHANTOM_DAY_CLAIMS = 31
+PHANTOM_DAY_OTHER_PATTERNS = {R.UPCODING: PHANTOM_DAY_EXTRAS, R.DIAGNOSIS_PROCEDURE_MISMATCH: PHANTOM_DAY_EXTRAS}
 
 
 def _read_csv(path: Path) -> tuple[list[str], list[dict]]:
@@ -116,16 +117,41 @@ def check_dataset(data_dir: Path, catalog: Catalog) -> tuple[list[str], dict]:
                      if c["provider_id"] in weekday_only and c["is_weekend"] == "1" and pattern_of[c["claim_id"]] != R.WEEKEND_ANOMALY]
     expect(not legit_weekend, f"weekend claims at weekday-only hospitals outside the weekend pattern: {legit_weekend[:5]}")
 
+    surgical = {code for code in catalog.all_billable_codes() if catalog.billable(code).surgical}
+    weekend_claims = [c for c in claims if pattern_of[c["claim_id"]] == R.WEEKEND_ANOMALY]
+    for c in weekend_claims:
+        cid = c["claim_id"]
+        expect(c["is_weekend"] == "1", f"{cid}: weekend_anomaly claim is not on a weekend")
+        expect(c["provider_id"] in weekday_only, f"{cid}: weekend_anomaly claim at {c['provider_id']}, not a weekday-only hospital")
+        expect(c["procedure_codes"] in surgical, f"{cid}: weekend_anomaly code {c['procedure_codes']} is not surgical")
+    weekend_per_provider = Counter(c["provider_id"] for c in weekend_claims)
+    expect(all(weekend_per_provider[pid] == WEEKEND_PER_PROVIDER for pid in weekday_only) and len(weekend_per_provider) == len(weekday_only),
+           f"weekend_anomaly claims per weekday-only hospital {dict(weekend_per_provider)}, expected {WEEKEND_PER_PROVIDER} each")
+
     # --- duplicate groups and phantom provider-day -------------------------------------------
     keys = Counter((c["member_id"], c["provider_id"], c["claim_date"], c["diagnosis_code"]) for c in claims)
     groups = [n for n in keys.values() if n > 1]
     expect(groups == [2] * DUPLICATE_GROUPS, f"duplicate groups {sorted(groups)}, expected {DUPLICATE_GROUPS} groups of 2")
+
+    duplicate_keys = {k for k, n in keys.items() if n > 1}
+    in_groups = {c["claim_id"] for c in claims
+                 if (c["member_id"], c["provider_id"], c["claim_date"], c["diagnosis_code"]) in duplicate_keys}
+    labelled = {cid for cid, p in pattern_of.items() if p == R.DUPLICATE_CLAIM}
+    expect(in_groups == labelled, f"claims in duplicate-key groups differ from duplicate_claim labels: {sorted(in_groups ^ labelled)[:5]}")
 
     provider_days = Counter((c["provider_id"], c["claim_date"]) for c in claims)
     busy = {k: n for k, n in provider_days.items() if n > PHANTOM_THRESHOLD}
     phantom = summary["phantom_provider_day"]
     expect(busy == {(phantom["provider_id"], phantom["claim_date"]): PHANTOM_DAY_CLAIMS},
            f"provider-days with > {PHANTOM_THRESHOLD} claims: {busy}, expected only the phantom day with {PHANTOM_DAY_CLAIMS}")
+
+    phantom_labelled = [c for c in claims if pattern_of[c["claim_id"]] == R.PHANTOM_BILLING]
+    expect(all((c["provider_id"], c["claim_date"]) == (phantom["provider_id"], phantom["claim_date"]) for c in phantom_labelled),
+           "phantom_billing claims outside the phantom provider-day of the summary")
+    on_phantom_day = Counter(pattern_of[c["claim_id"]] or "legit" for c in claims
+                             if (c["provider_id"], c["claim_date"]) == (phantom["provider_id"], phantom["claim_date"]))
+    expected_on_day = {R.PHANTOM_BILLING: FRAUD_COUNTS[R.PHANTOM_BILLING], **PHANTOM_DAY_OTHER_PATTERNS}
+    expect(dict(on_phantom_day) == expected_on_day, f"phantom provider-day holds {dict(on_phantom_day)}, expected {expected_on_day}")
 
     by_type = Counter(providers[c["provider_id"]].type for c in claims if c["provider_id"] in providers)
     stats = {

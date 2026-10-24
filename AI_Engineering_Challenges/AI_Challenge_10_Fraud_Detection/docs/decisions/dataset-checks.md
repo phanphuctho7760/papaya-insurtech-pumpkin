@@ -46,8 +46,11 @@ If a shape check (group 1) fails, the remaining checks are skipped: they assume 
 | 8 | Single-code claims per code | >= 30 for every one of the 21 codes | Upcoding needs history per code (`../business-rule/upcoding.md`) |
 | 9 | Weekday-only hospitals | >= 60 claims each | 2 weekend frauds out of >= 60 stays below the 5% weekend-volume threshold (`../business-rule/weekday-only-providers.md`) |
 | 9 | Weekend claims at weekday-only hospitals | Only the 20 `weekend_anomaly` claims | Same source |
+| 9 | `weekend_anomaly` claims | Each has `is_weekend = 1`, a weekday-only provider and a surgical code; exactly 2 per weekday-only hospital | Same source, `../business-rule/fraud-injection.md` |
 | 10 | Groups of the duplicate key `(member_id, provider_id, claim_date, diagnosis_code)` | Exactly 15 groups of 2, every other key unique | `../business-rule/duplicate-and-rapid-resubmission.md` |
+| 10 | Claims in duplicate groups | Exactly the claims labelled `duplicate_claim` | Same source |
 | 11 | Provider-days with > 30 claims | Only the phantom day of `generation_summary.json`, with exactly 31 claims | `../business-rule/fraud-injection.md` |
+| 11 | Labels on the phantom day | Every `phantom_billing` claim is on that day; the day holds exactly 25 `phantom_billing` + 3 `upcoding` + 3 `diagnosis_procedure_mismatch` | Same source |
 
 ## Not checked here
 
@@ -57,4 +60,4 @@ If a shape check (group 1) fails, the remaining checks are skipped: they assume 
 
 ## How the checks were verified
 
-Each check was run against copies of the dataset broken on purpose (2026-10-24): duplicated `claim_id`, wrong `is_weekend`, amount off by 50, an extra duplicate group, a legitimate claim with 2 codes, wrong `claim_type`, a pattern count off by one, a renamed provider, a date in 2023, a legitimate weekend claim at a weekday-only hospital, a second provider-day with 31 claims. All 11 were caught; the real dataset (seed 2024) passes.
+Each check was run against copies of the dataset broken on purpose (2026-10-24): duplicated `claim_id`, wrong `is_weekend`, amount off by 50, an extra duplicate group, a legitimate claim with 2 codes, wrong `claim_type`, a pattern count off by one, a renamed provider, a date in 2023, a legitimate weekend claim at a weekday-only hospital, a second provider-day with 31 claims. All 11 were caught; the real dataset (seed 2024) passes. The label-placement rows (added after the #01 review) were verified the same way: moving the `phantom_billing` label to a legitimate claim on another day fails the check.

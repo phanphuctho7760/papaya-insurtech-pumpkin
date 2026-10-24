@@ -18,7 +18,7 @@ Supports the "weekend surgical anomaly" pattern (rule 6). Terms (weekday-only pr
 ## Weekend ratio (settled)
 
 - Rule 6 computes the weekend ratio over **all claims** of the provider, as the brief words it.
-- The generator gives each weekday-only hospital **>= 60 claims** (a random 62-70 legitimate claims, with no extra ones, so this group does not become the 10 largest hospitals). 2 weekend fraud claims => 2/60 = 3.3% < 5% => the rule catches them.
+- The generator gives each weekday-only hospital **>= 60 claims** (every one of the 20 hospitals, weekday-only or not, is pre-assigned a random 58-62 legitimate claims, so this group cannot be told apart by volume; see `../decisions/ADR-004-equal-volume-for-all-hospitals.md`). 2 weekend fraud claims => 2/60 = 3.3% < 5% => the rule catches them.
 - Reason: with ~40 claims per provider, 2/40 = 5% is not < 5% => missed.
 - The emergency concept is out of scope.
 

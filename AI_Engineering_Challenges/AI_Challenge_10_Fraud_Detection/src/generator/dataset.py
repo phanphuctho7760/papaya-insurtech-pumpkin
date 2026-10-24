@@ -37,7 +37,7 @@ def build_dataset(seed: int = DEFAULT_SEED) -> Dataset:
     catalog, providers = load_catalog(), load_providers()
     weekday_only = pick_weekday_only(rng, providers)
     legit = generate_legit_claims(rng, catalog, providers, weekday_only)
-    fraud = inject_fraud(rng, catalog, providers, weekday_only, legit)
+    fraud = inject_fraud(rng, catalog, weekday_only, legit)
 
     # Sort by date with a random tie-break, then number: fraud claims spread over the whole ID
     # range instead of sitting at the end where they were generated.

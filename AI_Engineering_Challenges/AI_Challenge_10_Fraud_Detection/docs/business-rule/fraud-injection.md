@@ -1,30 +1,31 @@
-# Nhúng fraud vào dataset (A3)
+# Injecting fraud into the dataset (A3)
 
-Tổng hợp cách sinh 8 pattern fraud. Chi tiết "chuẩn" của từng rule xem các file cùng thư mục.
+How the 8 fraud patterns are generated. Each rule's own definition is in the file of the same folder.
 
-## Nguyên tắc chung
+## General principles
 
-- Đếm theo **claim** (phương án C): tổng **200 claim fraud** / 2,000 claim (10%), đúng "~200 fraudulent claims (~10%)" của đề.
-- Mỗi claim fraud mang **đúng 1 pattern** trong ground truth (giới hạn có chủ đích; thực tế 1 claim có thể nhiều pattern).
-- Claim hợp lệ được phép tự nhiên kích hoạt rule (FP tự nhiên), đếm và báo trong metrics.
-- Seed cố định để tái lập dataset.
-- Amount của claim fraud thuộc pattern không dựa vào amount (duplicate, rapid, unbundling, phantom, weekend, mismatch): hệ số dao động kẹp trong [0.85, 1.15] (khoảng +-1 SD), để không vô tình dính upcoding hay clustering. Claim hợp lệ không kẹp (giữ FP tự nhiên có chủ đích).
-- Mọi amount (hợp lệ và fraud) làm tròn tới 100 VNĐ; claim clustering lấy trong 47,500-49,999. Không làm tròn khác nhau giữa claim hợp lệ và fraud: khác nhau thì định dạng amount lộ nhãn.
-- Sau khi generate, generator (A) chỉ kiểm cấu trúc: đủ số claim theo pattern, mỗi mã >= 30 claim 1 mã, mỗi bệnh viện weekday-only >= 60 claim, không có nhóm duplicate ngoài 15 cặp chèn, không provider nào khác vượt 30 claim/ngày. Generator không chép lại logic rule.
-- Kiểm chéo bằng engine ở C (test tích hợp chạy engine trên dataset thật): mỗi claim fraud chỉ dính đúng rule của pattern mình. Ngoại lệ đã biết: 6 claim trong ngày phantom (dính thêm phantom), cặp duplicate tự thỏa điều kiện rapid re-submission, nhưng rule rapid bỏ qua cặp trùng unique key duplicate (xem `duplicate-and-rapid-resubmission.md`) nên không bị flag 2 lần.
+- Counted per **claim** (option C): **200 fraud claims** out of 2,000 (10%), matching the brief's "~200 fraudulent claims (~10%)".
+- Each fraud claim carries **exactly 1 pattern** in the ground truth (a deliberate limit; in reality one claim can have several).
+- Legitimate claims may trigger a rule on their own (natural FPs); they are counted and reported in the metrics.
+- Fixed seed, so the dataset is reproducible.
+- Amount of fraud claims in patterns not based on amount (duplicate, rapid, unbundling, phantom, weekend, mismatch): the factor is re-drawn until it falls inside [0.85, 1.15] (about +-1 SD, truncated rather than clamped), so they do not trigger upcoding or clustering by accident. Clamping was rejected: it piles amounts onto exactly `price x 0.85` / `price x 1.15`, which leaks the label. Legitimate claims are not truncated (natural FPs kept on purpose).
+- Every amount (legitimate and fraud) is rounded to 100 VND; clustering claims take 47,500-49,999. Legitimate and fraud claims are never rounded differently: a different format would leak the label.
+- Fraud claims pick their provider weighted by legitimate volume (the provider of a random legitimate claim of the same claim type), so no provider type gets an outlier fraud rate.
+- After generation, the generator (A) only checks structure and label placement: claim counts per pattern, >= 30 single-code claims per code, >= 60 claims per weekday-only hospital, no duplicate group besides the 15 injected pairs, no other provider above 30 claims per day, and each label sitting on the structure it was injected into (`../decisions/dataset-checks.md`). The generator does not copy the rule logic.
+- Cross-check with the engine in C (integration test running the engine on the real dataset): each fraud claim triggers only the rule of its own pattern. Known exceptions: the 6 claims on the phantom day (also trigger phantom); a duplicate pair also meets the rapid re-submission condition, but the rapid rule skips pairs sharing the duplicate unique key (see `duplicate-and-rapid-resubmission.md`), so it is not flagged twice.
 
-## Số lượng và cách sinh
+## Counts and generation
 
-| Pattern | Số claim | Cách sinh |
+| Pattern | Claims | How |
 |---|---|---|
-| Duplicate | 30 (15 cặp) | 2 claim cùng member + provider + date + diagnosis. Dữ liệu đã qua validate input, không có double-submit => 2 claim độc lập, **cả 2 mang nhãn fraud**. |
-| Rapid re-submission | 30 (15 cặp) | 2 claim cùng member + diagnosis, **cách nhau 1-7 ngày** (không cùng ngày để không thành duplicate). Cả 2 mang nhãn fraud. |
-| Upcoding | 30 | Amount = giá chuẩn x 1.6-2.5. Xem `upcoding.md`. |
-| Unbundling | 25 | `procedure_codes` = đủ thành phần của 1 bundle. Xem `bundling.md`. |
-| Phantom billing | 25 | 1 provider-day có **31 claim**: 25 claim nhãn phantom + 6 claim nhãn upcoding / mismatch (tính vào số của 2 pattern đó). Ngày thường, provider không thuộc nhóm weekday-only. |
-| Weekend surgical anomaly | 20 | Procedure surgical vào thứ Bảy / Chủ nhật tại 10 bệnh viện weekday-only, 2 claim mỗi bệnh viện. Xem `weekday-only-providers.md`. |
-| Diagnosis-procedure mismatch | 20 | Procedure ngoài danh sách hợp lệ của diagnosis. Xem `diagnosis-procedure-mismatch.md`. |
-| Amount clustering | 20 | P-1003, amount 47,500-49,999. Xem `amount-clustering.md`. |
-| **Tổng** | **200** | |
+| Duplicate | 30 (15 pairs) | 2 claims with the same member + provider + date + diagnosis. The data has passed input validation, so there is no double-submit => 2 independent claims, **both labelled fraud**. |
+| Rapid re-submission | 30 (15 pairs) | 2 claims with the same member + diagnosis, **1-7 days apart** (never the same day, so they do not become a duplicate). Both labelled fraud. |
+| Upcoding | 30 | Amount = standard price x 1.6-2.5. See `upcoding.md`. |
+| Unbundling | 25 | `procedure_codes` = all components of 1 bundle. See `bundling.md`. |
+| Phantom billing | 25 | 1 provider-day with **31 claims**: 25 labelled phantom + 3 labelled upcoding + 3 labelled mismatch (counted in those 2 patterns). A weekday, at a hospital outside the weekday-only group. |
+| Weekend surgical anomaly | 20 | Surgical procedure on Saturday / Sunday at the 10 weekday-only hospitals, 2 claims per hospital. See `weekday-only-providers.md`. |
+| Diagnosis-procedure mismatch | 20 | Procedure outside the diagnosis's valid list. See `diagnosis-procedure-mismatch.md`. |
+| Amount clustering | 20 | P-1003, amount 47,500-49,999. See `amount-clustering.md`. |
+| **Total** | **200** | |
 
-Ràng buộc cho 6 claim trong ngày phantom: chỉ dùng pattern xét được trên từng claim (upcoding, mismatch); không dùng duplicate / rapid (cần cặp claim) hay weekend (ngày phantom là ngày thường).
+Constraint on the 6 extra claims of the phantom day: only patterns that can be judged on a single claim (upcoding, mismatch); not duplicate / rapid (they need a pair) nor weekend (the phantom day is a weekday).

@@ -48,12 +48,12 @@ Structural checks passed for .../data: 2000 claims, 200 fraud
   unbundling                       25
   upcoding                         30
   weekend_anomaly                  20
-  members 488, providers 50, claims per provider type {'CLINIC': 330, 'DENTAL': 478, 'HOSPITAL': 1192}
-  weekday-only hospitals 67-78 claims, min single-code claims per code 44
-  duplicate groups 15, phantom day PRV-006 2024-11-05 (31 claims)
+  members 494, providers 50, claims per provider type {'CLINIC': 111, 'DENTAL': 334, 'HOSPITAL': 1555}
+  weekday-only hospitals 70-86 claims, min single-code claims per code 43
+  duplicate groups 15, phantom day PRV-049 2024-12-26 (31 claims)
 ```
 
-`check` reads the files back from disk and verifies counts per pattern, columns and formats, members, providers, codes, weekday-only hospitals, duplicate groups and the single phantom provider-day. If any check fails it prints the problems to stderr and exits with code 1; do not use the files in that case. Every check with its threshold and source: [`docs/decisions/dataset-checks.md`](docs/decisions/dataset-checks.md).
+`check` reads the files back from disk and verifies counts per pattern, columns and formats, members, providers, codes, weekday-only hospitals, duplicate groups, the single phantom provider-day, and that the weekend, duplicate and phantom labels sit on the claims they were injected into. If any check fails it prints the problems to stderr and exits with code 1; do not use the files in that case. Every check with its threshold and source: [`docs/decisions/dataset-checks.md`](docs/decisions/dataset-checks.md).
 
 ### Output files
 

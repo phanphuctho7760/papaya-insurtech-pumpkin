@@ -16,7 +16,7 @@ from datetime import date, timedelta
 import rule_names as R
 from catalog import Catalog
 from generator.legit import AMOUNT_SIGMA, LEGIT_CLAIMS_PER_CODE, MEMBER_IDS, YEAR_START, DAYS_IN_YEAR, random_date, round_amount
-from generator.models import ELIGIBLE_PROVIDER_TYPES, GeneratedClaim, Provider
+from generator.models import GeneratedClaim, Provider
 
 FRAUD_COUNTS = {
     R.DUPLICATE_CLAIM: 30,
@@ -30,7 +30,7 @@ FRAUD_COUNTS = {
 }
 
 RAPID_WINDOW_DAYS = 7
-AMOUNT_FACTOR_CLAMP = (0.85, 1.15)  # ~ +-1 SD, keeps non-amount frauds clear of upcoding / clustering
+AMOUNT_FACTOR_RANGE = (0.85, 1.15)  # ~ +-1 SD; factors are re-drawn until inside (truncated, no pile-up at the edges)
 UPCODING_FACTOR = (1.6, 2.5)  # x standard price, well above mean + 2 SD (~1.3x)
 UPCODING_MIN_CLAIMS = 60  # only codes with this many legit claims, so 2 upcoded claims cannot mask each other
 UPCODING_MAX_PER_CODE = 2
@@ -51,17 +51,19 @@ class FraudResult:
 
 
 class _Injector:
-    def __init__(self, rng: random.Random, catalog: Catalog, providers: list[Provider],
+    def __init__(self, rng: random.Random, catalog: Catalog,
                  weekday_only: list[Provider], legit: list[GeneratedClaim]):
         self.rng = rng
         self.catalog = catalog
-        self.providers = providers
         self.weekday_only_ids = {p.id for p in weekday_only}
         self.claims: list[GeneratedClaim] = []
         self.keys = set()
         self.dates_by_member_dx = defaultdict(list)
         self.provider_days = Counter()
+        # Provider of every legit claim, per claim type (list, so draws follow legit volume and stay deterministic).
+        self.legit_providers = defaultdict(list)
         for claim in legit:
+            self.legit_providers[claim.claim_type].append(claim.provider)
             self._index(claim)
 
     # --- bookkeeping -------------------------------------------------------------------------
@@ -95,8 +97,11 @@ class _Injector:
     # --- random choices ----------------------------------------------------------------------
 
     def _provider(self, claim_type: str, exclude: Collection[str] = ()) -> Provider:
-        eligible = [p for p in self.providers
-                    if p.type in ELIGIBLE_PROVIDER_TYPES[claim_type] and p.id not in exclude]
+        """Weighted by legit volume: the provider of a random legit claim of this type, so fraud does
+        not over-use small providers (which would leak the label through the provider type)."""
+        eligible = [p for p in self.legit_providers[claim_type] if p.id not in exclude]
+        if not eligible:
+            raise RuntimeError(f"no legit {claim_type} claim to take a provider from (exclude={sorted(exclude)})")
         return self.rng.choice(eligible)
 
     def _weekday_date(self, provider: Provider) -> date:
@@ -110,8 +115,10 @@ class _Injector:
         raise RuntimeError(f"no free member for {provider.id} {day} {dx}")
 
     def _normal_amount(self, price: int) -> int:
-        factor = math.exp(self.rng.gauss(0, AMOUNT_SIGMA))
-        return round_amount(price * min(max(factor, AMOUNT_FACTOR_CLAMP[0]), AMOUNT_FACTOR_CLAMP[1]))
+        while True:
+            factor = math.exp(self.rng.gauss(0, AMOUNT_SIGMA))
+            if AMOUNT_FACTOR_RANGE[0] <= factor <= AMOUNT_FACTOR_RANGE[1]:
+                return round_amount(price * factor)
 
     def _single_code_claim(self, pattern: str, code: str, dx: str, amount: int,
                            provider: Provider | None = None, day: date | None = None) -> None:
@@ -238,9 +245,9 @@ def _upcoding_codes(rng: random.Random, catalog: Catalog, total: int, on_phantom
     return slots[: total - on_phantom_day], phantom
 
 
-def inject_fraud(rng: random.Random, catalog: Catalog, providers: list[Provider],
+def inject_fraud(rng: random.Random, catalog: Catalog,
                  weekday_only: list[Provider], legit: list[GeneratedClaim]) -> FraudResult:
-    injector = _Injector(rng, catalog, providers, weekday_only, legit)
+    injector = _Injector(rng, catalog, weekday_only, legit)
     regular_upcoding, phantom_upcoding = _upcoding_codes(
         rng, catalog, FRAUD_COUNTS[R.UPCODING], PHANTOM_DAY_EXTRAS)
 
