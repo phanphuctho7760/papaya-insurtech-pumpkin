@@ -100,6 +100,7 @@ Stage: New Task (per Task_Lifecycle). Technology not chosen yet.
 - A2 valid pairs fixed: added `J06.9 - P-1003`, `I10 - P-1003`, `E11.9 - P-1002` (35 pairs) so unbundled B-1001 / B-1002 claims do not trip mismatch. See `docs/business-rule/diagnosis-procedure-mismatch.md`.
 - A3: amounts of fraud claims outside the amount patterns are clamped to a factor in [0.85, 1.15]; upcoded claims are spread over codes with >= 60 claims, at most 2 per code. See `fraud-injection.md`, `upcoding.md`.
 - Work tracking: tickets in `docs/backlog/`, plans in `.claude/docs/plans/` (repo root).
+- Agent workflow (2026-10-24): subagents `coder` (sonnet) and `reviewer` (opus, read-only) in `.claude/agents/`; trigger table in the repo-root `AGENTS.md`; the pre-commit doc sweep stays on the main thread.
 - Docs (2026-10-24): business terms have a single source, `docs/business-rule/glossary.md`; other docs link to it instead of defining terms.
 - Tests (2026-10-24): two kinds. **System tests** (#02) check that the code implements the technical design discussed (input / weights loading, output format, ranking, engine / ground-truth boundary). **Business tests** (#03, the 19 in `docs/business-rule/test-cases.md`) check that the 8 rules and scoring give correct business results.
 - B4 (2026-10-24): a rule raises at most 1 flag per claim; the evidence lists every related claim. Reason: the score sums the weights of the triggered rules, so 2 flags of one rule would count its weight twice. See `docs/business-rule/scoring.md`.
