@@ -68,6 +68,9 @@ Giai đoạn: New Task (theo Task_Lifecycle). Chưa chọn công nghệ.
 - Claim hợp lệ có đúng 1 mã procedure; amount = giá chuẩn x log-normal dao động 15%; upcoded = giá chuẩn x 1.6-2.5.
 - Unbundling flag khi claim chứa đủ tất cả thành phần của bundle.
 - Amount clustering dùng P-1003 (giá chuẩn 40,000, dao động 15%).
+- A3: rapid re-submission 15 cặp (30 claim), cả 2 claim mang nhãn fraud, cách nhau 1-7 ngày. Tổng hợp: `AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/business-rule/fraud-injection.md`.
+- A5: CSV RFC 4180 (phân cách `,`), `procedure_codes` phân cách `|`, ngày `YYYY-MM-DD`, amount số nguyên VNĐ, `is_weekend` 1/0, ground truth file riêng. Xem `AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/dataset-format.md`.
+- Mục A: đã chốt xong.
 - Duplicate: dữ liệu đã qua validate input, không có double-submit; hai claim trùng là hai claim độc lập và là fraud. Rule flag cả 2 claim trong cặp, cả 2 mang nhãn fraud.
 
 ## Câu hỏi mở (bàn khi đi vào chi tiết từng mục)
@@ -76,7 +79,6 @@ Giai đoạn: New Task (theo Task_Lifecycle). Chưa chọn công nghệ.
 |---|---|
 | B1 | Weekend anomaly: cách tính "historical weekend volume" (loại claim đang xét). |
 | B1 | Upcoding: mean/SD có loại claim upcoded ra không (masking); số claim tối thiểu mỗi mã. |
-| A3 | Rapid re-submission: 30 claim = 15 cặp? Có loại trừ cặp duplicate không. |
 | B1 | Duplicate claim cũng thỏa rapid re-submission: rule rapid có loại trừ không. |
 | B4 | Ví dụ output của đề (severity 4 + 2, score 78) không khớp chuẩn hóa tuyến tính; chọn cách chuẩn hóa. |
 | C2 | Định nghĩa "dự đoán fraud" (có >= 1 flag hay score > ngưỡng); FPR = FP/(FP+TN) hay 1 - precision. |

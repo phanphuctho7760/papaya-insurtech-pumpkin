@@ -2,6 +2,11 @@
 
 Dữ liệu tham chiếu dùng chung cho generator (mục A) và engine (mục B).
 
+## Vai trò của bảng giá
+
+- Đây là bài test: bảng giá là **ví dụ giả lập**. Trong thực tế, insurer / TPA đã có bảng giá chính thức.
+- Mục tiêu của bảng giá ở đây: mức giá **hợp lý** và **không làm dữ liệu phá rule** (vd claim hợp lệ không tự vượt ngưỡng upcoding, claim clustering không dính upcoding). Độ chính xác so với thị trường là thứ yếu.
+
 ## Quy ước chung
 
 - Đơn vị tiền: **VNĐ**, giữ nguyên các con số của đề (ngưỡng auto-approval 50,000 VNĐ).
@@ -19,6 +24,22 @@ Dữ liệu tham chiếu dùng chung cho generator (mục A) và engine (mục B
 | Bundle (gói) | Nhóm procedure luôn đi cùng nhau, tính bằng 1 mã gói, rẻ hơn tổng giá lẻ |
 | Giá chuẩn | Giá tham chiếu của procedure, tâm của phân phối amount claim hợp lệ |
 | Dao động | Mức amount claim hợp lệ lệch quanh giá chuẩn (15% => phần lớn trong khoảng giá chuẩn +-15%) |
+
+## Thuật ngữ đánh giá (metrics)
+
+So kết quả engine với ground truth (đáp án đúng: claim nào thực sự là fraud):
+
+| Thuật ngữ | Nghĩa | Ví dụ |
+|---|---|---|
+| TP (True Positive) | Engine flag, claim **là** fraud | Bắt đúng claim upcoded |
+| **FP (False Positive)** - báo nhầm | Engine flag, nhưng claim **không phải** fraud | Claim xét nghiệm nước tiểu hợp lệ giá 48,000 bị flag amount clustering |
+| FN (False Negative) - bỏ sót | Engine không flag, nhưng claim **là** fraud | Claim weekend fraud không bị bắt vì tỷ lệ cuối tuần của provider vượt 5% |
+| TN (True Negative) | Engine không flag, claim không phải fraud | Claim hợp lệ bình thường |
+| Precision | TP / (TP + FP): trong các claim bị flag, bao nhiêu % đúng là fraud | |
+| Recall | TP / (TP + FN): trong các claim fraud, bắt được bao nhiêu % | Đề yêu cầu >= 70% |
+| FPR (False Positive Rate) | FP / (FP + TN): trong các claim hợp lệ, bao nhiêu % bị báo nhầm | Đề yêu cầu <= 20% |
+
+FP tự nhiên: claim hợp lệ tự rơi vào điều kiện của rule (không do chèn fraud). Dataset cho phép FP tự nhiên có chủ đích để metrics trung thực; số lượng được đếm và báo trong metrics report.
 
 ## Procedure
 
