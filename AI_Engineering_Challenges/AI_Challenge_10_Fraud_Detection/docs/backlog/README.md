@@ -9,7 +9,7 @@
 
 | # | Ticket | Type | Status | Priority |
 |---|---|---|---|---|
-| 01 | [A - Sinh dataset](todo/01-dataset-generator.md) | feature | todo | 1 |
+| 01 | [A - Sinh dataset](todo/01-dataset-generator.md) | feature | doing | 1 |
 | 02 | [B - Engine 8 rule + scoring](todo/02-rule-engine.md) | feature | todo | 2 |
 | 03 | [C - Unit test, metrics, đo thời gian](todo/03-tests-and-metrics.md) | feature | todo | 3 |
 | 04 | [D - Writeup và bàn giao](todo/04-writeup-and-submission.md) | chore | todo | 4 |

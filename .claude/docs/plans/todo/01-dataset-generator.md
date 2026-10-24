@@ -23,6 +23,11 @@ Nguồn business: `docs/business-rule/fraud-injection.md`, `catalog.md`, `icd-10
 - `src/catalog.py`: load và kiểm `catalog.json` (mã trong cặp hợp lệ phải tồn tại, thành phần bundle phải tồn tại). Dùng chung cho A và B.
 - Tên provider viết không dấu (vd `Benh vien Da khoa An Phuc`), không chứa `,`: tránh lỗi NFC/NFD và lỗi CSV.
 
+**Tiến độ (2026-10-24): xong.**
+- Bundle có thêm trường `claim_type` (plan ban đầu không ghi), để Phase 5 kiểm "claim_type khớp mã" cả với mã bundle; `catalog.py` kiểm nó trùng với claim_type của mọi thành phần.
+- `catalog.py` kiểm thêm ràng buộc "diagnosis hợp lệ của bundle phải hợp lệ với mọi thành phần" (mục 1 ở trên); bỏ 2 cặp `J06.9 - P-1003`, `E11.9 - P-1002` thì validate báo đúng 2 lỗi.
+- Còn mở cho Phase 2: 2 cặp hợp lệ khác claim_type (`K80.2 - P-1005`, `J18.9 - P-1004`, diagnosis INPATIENT + procedure OUTPATIENT). claim_type của claim lấy theo mã; cần chốt claim_type của diagnosis chỉ để tham khảo hay generator phải tránh.
+
 ## Phase 2 - Provider và claim hợp lệ (1,800 claim)
 
 - **Provider (50):** 20 bệnh viện (OUTPATIENT + INPATIENT), 20 phòng khám (OUTPATIENT), 10 nha khoa (DENTAL). `PRV-001`..`PRV-050` gán sau khi xáo theo seed. 10 bệnh viện weekday-only chọn theo seed.

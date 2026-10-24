@@ -1,0 +1,55 @@
+{
+  "procedures": {
+    "P-1001": {"name": "General consultation", "claim_type": "OUTPATIENT", "standard_price": 200000, "surgical": false},
+    "P-1002": {"name": "Complete blood count", "claim_type": "OUTPATIENT", "standard_price": 100000, "surgical": false},
+    "P-1003": {"name": "Urinalysis", "claim_type": "OUTPATIENT", "standard_price": 40000, "surgical": false},
+    "P-1004": {"name": "Chest X-ray", "claim_type": "OUTPATIENT", "standard_price": 150000, "surgical": false},
+    "P-1005": {"name": "Abdominal ultrasound", "claim_type": "OUTPATIENT", "standard_price": 250000, "surgical": false},
+    "P-1006": {"name": "HbA1c test", "claim_type": "OUTPATIENT", "standard_price": 150000, "surgical": false},
+    "P-2001": {"name": "Inpatient pneumonia treatment", "claim_type": "INPATIENT", "standard_price": 10000000, "surgical": false},
+    "P-2002": {"name": "Normal vaginal delivery", "claim_type": "INPATIENT", "standard_price": 30000000, "surgical": false},
+    "P-3001": {"name": "Laparoscopic appendectomy", "claim_type": "INPATIENT", "standard_price": 18000000, "surgical": true},
+    "P-3002": {"name": "Laparoscopic cholecystectomy", "claim_type": "INPATIENT", "standard_price": 25000000, "surgical": true},
+    "P-3003": {"name": "Open reduction internal fixation", "claim_type": "INPATIENT", "standard_price": 22000000, "surgical": true},
+    "P-3010": {"name": "General anesthesia", "claim_type": "INPATIENT", "standard_price": 3000000, "surgical": false},
+    "P-4001": {"name": "Dental examination", "claim_type": "DENTAL", "standard_price": 100000, "surgical": false},
+    "P-4002": {"name": "Dental X-ray", "claim_type": "DENTAL", "standard_price": 80000, "surgical": false},
+    "P-4003": {"name": "Dental filling", "claim_type": "DENTAL", "standard_price": 400000, "surgical": false},
+    "P-4004": {"name": "Root canal treatment", "claim_type": "DENTAL", "standard_price": 2000000, "surgical": false}
+  },
+  "bundles": {
+    "B-1001": {"name": "General check-up package", "claim_type": "OUTPATIENT", "components": ["P-1001", "P-1002", "P-1003"], "standard_price": 305000, "surgical": false},
+    "B-1002": {"name": "Diabetes check-up package", "claim_type": "OUTPATIENT", "components": ["P-1001", "P-1002", "P-1006"], "standard_price": 405000, "surgical": false},
+    "B-3101": {"name": "Appendectomy package", "claim_type": "INPATIENT", "components": ["P-3001", "P-3010"], "standard_price": 19000000, "surgical": true},
+    "B-3102": {"name": "Cholecystectomy package", "claim_type": "INPATIENT", "components": ["P-3002", "P-3010"], "standard_price": 25500000, "surgical": true},
+    "B-4101": {"name": "Root canal package", "claim_type": "DENTAL", "components": ["P-4002", "P-4004"], "standard_price": 1900000, "surgical": false}
+  },
+  "diagnoses": {
+    "J06.9": {"name": "Acute upper respiratory infection", "claim_type": "OUTPATIENT"},
+    "I10": {"name": "Essential hypertension", "claim_type": "OUTPATIENT"},
+    "E11.9": {"name": "Type 2 diabetes without complications", "claim_type": "OUTPATIENT"},
+    "A09": {"name": "Infectious gastroenteritis", "claim_type": "OUTPATIENT"},
+    "N39.0": {"name": "Urinary tract infection", "claim_type": "OUTPATIENT"},
+    "J18.9": {"name": "Pneumonia", "claim_type": "INPATIENT"},
+    "K35.8": {"name": "Acute appendicitis", "claim_type": "INPATIENT"},
+    "K80.2": {"name": "Gallstones", "claim_type": "INPATIENT"},
+    "S52.5": {"name": "Fracture of lower end of radius", "claim_type": "INPATIENT"},
+    "O80": {"name": "Normal delivery", "claim_type": "INPATIENT"},
+    "K02.1": {"name": "Dental caries", "claim_type": "DENTAL"},
+    "K04.0": {"name": "Pulpitis", "claim_type": "DENTAL"}
+  },
+  "valid_pairs": {
+    "J06.9": ["P-1001", "P-1002", "P-1003", "B-1001"],
+    "I10": ["P-1001", "P-1002", "P-1003", "B-1001"],
+    "E11.9": ["P-1001", "P-1002", "P-1006", "B-1002"],
+    "A09": ["P-1001", "P-1002", "P-1005"],
+    "N39.0": ["P-1001", "P-1003"],
+    "J18.9": ["P-1004", "P-2001"],
+    "K35.8": ["P-3001", "P-3010", "B-3101"],
+    "K80.2": ["P-1005", "P-3002", "P-3010", "B-3102"],
+    "S52.5": ["P-3003", "P-3010"],
+    "O80": ["P-2002"],
+    "K02.1": ["P-4001", "P-4002", "P-4003"],
+    "K04.0": ["P-4002", "P-4004", "B-4101"]
+  }
+}

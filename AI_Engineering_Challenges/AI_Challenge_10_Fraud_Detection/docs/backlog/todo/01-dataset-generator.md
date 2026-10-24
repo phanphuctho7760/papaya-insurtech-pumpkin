@@ -1,6 +1,6 @@
 # 01 - A: Sinh dataset
 
-**Status:** todo
+**Status:** doing
 **Type:** feature
 **Priority:** 1
 **Effort:** M (kế hoạch 1.5h)
