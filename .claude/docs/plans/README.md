@@ -9,7 +9,9 @@
 ## DONE
 
 - [01 - A: Sinh dataset](done/01-dataset-generator.md) - ticket #01, xong 2026-10-24. Generator 2,000 claim + 200 fraud theo 8 pattern, CLI `generate`, kiểm cấu trúc tự động.
+- [02 - B: Engine 8 rule + scoring](done/02-rule-engine.md) - ticket #02, xong 2026-10-25. Load input + weights, 8 rule có evidence, scoring 0-100 + xếp hạng, CLI `score`, test hệ thống S1-S9.
 
 ## TODO
 
-- [02 - B: Engine 8 rule + scoring](todo/02-rule-engine.md) - ticket #02. Load input + weights, 8 rule, scoring 0-100, CLI `score`; 7 mục đã chốt trước khi code.
+
+Trống. Ticket chưa có plan: xem `docs/backlog/README.md`.

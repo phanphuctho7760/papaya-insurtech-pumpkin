@@ -58,6 +58,8 @@ Người dùng duyệt cả 7 mục theo đề xuất. Đã ghi vào: mục 1, 7
   - In: số claim có flag, số claim theo từng rule, top 10 claim. Ghi `output/scored_output.json`.
 - Docstring đầu `cli.py` thêm lệnh `score`; cập nhật hướng dẫn chạy ở `README.md` của project nếu đã có mục chạy lệnh.
 
+**Xong (2026-10-25).** Review 2 vòng; vòng 1 bắt lỗi ghi `--out` ra traceback (thêm `except OSError`), header lỗi đổi thành `Cannot score:` (dừng ở file lỗi đầu tiên, README ghi rõ), siết test để 3 mutation (bỏ sort flag, xếp theo tổng severity, CLI bỏ qua `--weights`) đều fail. 111 test pass; `score` trên data: 2,000 phần tử, 246 claim có flag, số theo rule khớp Verify, ~0.017 s.
+
 ## Phase 4 - Test hệ thống (pytest)
 
 Phân biệt 2 loại test (người dùng chốt 2026-10-24):
@@ -77,6 +79,8 @@ File `tests/test_system_*.py`, dữ liệu dựng trong test (không đọc `dat
 | S7 | Xếp hạng | Các claim bằng điểm, khác số flag / `claim_id` | Đúng thứ tự score -> số flag -> `claim_id`; flag trong claim sắp theo severity |
 | S8 | Evidence | Helper `vnd`, `code_label` | `48,500 VND`; `P-3001 (Laparoscopic appendectomy)`, `K02.1 (Dental caries)` |
 | S9 | Ranh giới | Quét source `src/claims.py`, `src/rules/`, `src/scoring/` | Không chứa `ground_truth`, không import `generator` |
+
+**Xong (2026-10-25).** S1-S9 đủ: S1, S2, S4, S6, S8, S9 làm ở Phase 1-2; S3, S5, S7 ở `tests/test_system_scoring.py` cùng Phase 3.
 
 Thời gian < 30 giây trên dataset thật thuộc test tích hợp của #03.
 

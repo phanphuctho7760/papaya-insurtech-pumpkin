@@ -31,5 +31,5 @@ The brief asks for "a configurable severity weight (1-5)" per rule. Each rule al
 
 ## References
 
-- Ticket #02, plan `.claude/docs/plans/todo/02-rule-engine.md` (decision 6)
+- Ticket #02, plan `.claude/docs/plans/done/02-rule-engine.md` (decision 6)
 - `../business-rule/scoring-weights.md`, `../business-rule/detection-rules.md`

@@ -3,6 +3,7 @@ name: coder
 description: Viết hoặc sửa code Python cho Challenge 10 (src/, tests/) theo một spec đã chốt mà main thread đưa vào. Dùng cho logic mới, sửa > ~30 dòng, hoặc việc cần đọc rộng. Không dùng cho sửa nhỏ main thread làm được trực tiếp.
 tools: Read, Grep, Glob, Edit, Write, Bash, Skill
 model: sonnet
+effort: medium
 ---
 
 Bạn là executor: nhận một spec đã chốt và thực hiện đúng spec đó, không thiết kế lại.

@@ -2,15 +2,22 @@
 
     uv run python src/cli.py generate [--seed 2024] [--out data]
     uv run python src/cli.py check [--data data]
+    uv run python src/cli.py score [--data data] [--weights src/config/weights.json] [--out output]
 """
 
 import argparse
 import sys
+import time
+from collections import Counter
 from pathlib import Path
 
-from catalog import load_catalog
+from catalog import CatalogError, load_catalog
+from claims import ClaimsError, load_claims
 from generator.checks import check_dataset
 from generator.dataset import DEFAULT_SEED, build_dataset, summary, write_dataset
+from rule_names import ALL_RULES
+from scoring.score import score_claims, write_scored
+from scoring.weights import DEFAULT_PATH as DEFAULT_WEIGHTS, WeightsError, load_weights
 
 PROJECT_ROOT = Path(__file__).parent.parent
 DATA_DIR = PROJECT_ROOT / "data"
@@ -43,6 +50,36 @@ def cmd_check(args: argparse.Namespace) -> None:
     print(f"  duplicate groups {stats['duplicate_groups']}, phantom day {stats['phantom_day']}")
 
 
+def cmd_score(args: argparse.Namespace) -> None:
+    start = time.perf_counter()
+    try:
+        catalog = load_catalog()
+        weights = load_weights(args.weights)
+        claims = load_claims(args.data / "claims.csv", catalog)
+    except (CatalogError, WeightsError, ClaimsError) as exc:
+        print("Cannot score:", file=sys.stderr)
+        print(f"  {exc}", file=sys.stderr)
+        sys.exit(1)
+    results = score_claims(claims, catalog, weights)
+    try:
+        path = write_scored(results, args.out)
+    except OSError as exc:
+        print(f"Cannot write {args.out}: {exc}", file=sys.stderr)
+        sys.exit(1)
+    elapsed = time.perf_counter() - start
+
+    flagged = [r for r in results if r["flags"]]
+    per_rule = Counter(f["rule"] for r in results for f in r["flags"])
+    print(f"Scored {len(results)} claims in {elapsed:.3f} s; wrote {path}")
+    print(f"Claims with at least one flag: {len(flagged)} of {len(results)}")
+    print("Claims per rule:")
+    for rule in ALL_RULES:
+        print(f"  {rule:<30} {per_rule[rule]:>4}")
+    print("Top 10 by risk score:")
+    for r in results[:10]:
+        print(f"  {r['claim_id']}  {r['risk_score']:>3}  {', '.join(f['rule'] for f in r['flags'])}")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Fraud detection scoring engine (Papaya AI Challenge 10)")
     commands = parser.add_subparsers(dest="command", required=True)
@@ -55,6 +92,12 @@ def main() -> None:
     check = commands.add_parser("check", help="run structural checks on an existing dataset")
     check.add_argument("--data", type=Path, default=DATA_DIR, help="dataset directory (default: data/)")
     check.set_defaults(func=cmd_check)
+
+    score = commands.add_parser("score", help="score claims.csv and write the ranked scored_output.json")
+    score.add_argument("--data", type=Path, default=DATA_DIR, help="directory holding claims.csv (default: data/)")
+    score.add_argument("--weights", type=Path, default=DEFAULT_WEIGHTS, help="severity weights JSON (default: src/config/weights.json)")
+    score.add_argument("--out", type=Path, default=PROJECT_ROOT / "output", help="output directory (default: output/)")
+    score.set_defaults(func=cmd_score)
 
     args = parser.parse_args()
     args.func(args)

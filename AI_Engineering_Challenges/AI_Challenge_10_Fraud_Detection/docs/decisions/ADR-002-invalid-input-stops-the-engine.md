@@ -23,6 +23,8 @@ The engine (ticket #02) reads `data/claims.csv`. Several rules depend on every v
 
 Any problem => the CLI prints the full list of problems to stderr and exits 1. No row is skipped.
 
+`score` loads its 3 inputs in order (catalog, weights, claims) and stops at the first invalid file, listing every problem in that file (Phase 3 review, 2026-10-25). Each loader already reports its whole file; the 3 files are fixed independently, so collecting across files would add code without saving a meaningful rerun.
+
 The checks on empty ids, `claim_type`, `is_weekend` vs `claim_date` and the empty file were added after the Phase 1 review (2026-10-24): the weekend rule reads `is_weekend` but names the weekday from `claim_date`, so a mismatch would yield a "Friday" weekend flag; empty member / provider ids would group unrelated claims into false duplicate / rapid flags; a header-only file would score as an empty success.
 
 ## Rationale
@@ -43,5 +45,5 @@ The checks on empty ids, `claim_type`, `is_weekend` vs `claim_date` and the empt
 
 ## References
 
-- Ticket #02, plan `.claude/docs/plans/todo/02-rule-engine.md` (decision 5)
+- Ticket #02, plan `.claude/docs/plans/done/02-rule-engine.md` (decision 5)
 - `dataset-format.md`, ADR-001

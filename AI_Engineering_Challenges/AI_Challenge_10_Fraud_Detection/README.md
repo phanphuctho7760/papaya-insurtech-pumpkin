@@ -2,7 +2,7 @@
 
 Rule-based fraud scoring engine for health insurance claims: it analyzes each claim and assigns a risk score (0-100) with itemized evidence for every rule that fires.
 
-**Status:** work in progress. The dataset generator (part A) and the tests of its `check` command are done; the rule engine, its tests and the metrics report are not built yet.
+**Status:** work in progress. The dataset generator (part A), the 8-rule engine with scoring and the `score` command (part B), and their system tests are done; the 19 business test cases and the metrics report are not built yet.
 
 ## Requirements
 
@@ -107,6 +107,41 @@ How each pattern is injected: [`docs/business-rule/fraud-injection.md`](docs/bus
 |---|---|
 | `src/config/catalog.json` | Procedures, bundles, standard prices, ICD-10 diagnoses, valid diagnosis-procedure pairs. Shared by the generator and the engine; validated on load by `src/catalog.py`. |
 | `src/config/providers.json` | The 50 providers (ID, name, type). Read by the generator only. |
+
+## Score the claims
+
+```bash
+uv run python src/cli.py score            # reads data/claims.csv, writes output/scored_output.json
+```
+
+`score` options:
+
+| Option | Default | Meaning |
+|---|---|---|
+| `--data` | `data/` | Directory holding `claims.csv`. Only that file is read. |
+| `--weights` | `src/config/weights.json` | Severity weight (integer 1-5) of each of the 8 rules. |
+| `--out` | `output/` | Output directory (created if missing). |
+
+The output is a JSON array of all claims, ranked by `risk_score` (then by number of flags, then `claim_id`). Each element has exactly `claim_id`, `risk_score` and `flags`; each flag has `rule`, `severity` and `evidence`. Scoring formula and ranking: [`docs/business-rule/scoring.md`](docs/business-rule/scoring.md). If `claims.csv` or the weights file is invalid, `score` prints every problem in the first invalid file to stderr and exits with code 1 (it also exits 1 if `--out` cannot be written).
+
+Output on the committed `data/` (seed 2024):
+
+```text
+Scored 2000 claims in 0.017 s; wrote .../output/scored_output.json
+Claims with at least one flag: 246 of 2000
+Claims per rule:
+  duplicate_claim                  30
+  rapid_resubmission               54
+  upcoding                         48
+  unbundling                       25
+  phantom_billing                  31
+  weekend_anomaly                  20
+  diagnosis_procedure_mismatch     20
+  amount_clustering                24
+Top 10 by risk score:
+  CLM-01940   86  phantom_billing, diagnosis_procedure_mismatch
+  ...
+```
 
 ## Timeline estimate
 

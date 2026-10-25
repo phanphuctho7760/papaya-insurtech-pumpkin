@@ -10,6 +10,6 @@
 | # | Ticket | Type | Status | Priority |
 |---|---|---|---|---|
 | 01 | [A - Generate the dataset](done/01-dataset-generator.md) | feature | done | 1 |
-| 02 | [B - 8-rule engine + scoring](todo/02-rule-engine.md) | feature | doing | 2 |
+| 02 | [B - 8-rule engine + scoring](done/02-rule-engine.md) | feature | done | 2 |
 | 03 | [C - Unit tests, metrics, runtime](todo/03-tests-and-metrics.md) | feature | todo | 3 |
 | 04 | [D - Writeup and submission](todo/04-writeup-and-submission.md) | chore | todo | 4 |

@@ -1,10 +1,10 @@
 # 02 - B: Engine 8 rule + scoring
 
-**Status:** doing
+**Status:** done
 **Type:** feature
 **Priority:** 2
 **Effort:** M (kế hoạch 1.75h)
-**Plan:** `.claude/docs/plans/todo/02-rule-engine.md` (repo root)
+**Plan:** `.claude/docs/plans/done/02-rule-engine.md` (repo root)
 **Related:** #01, #03
 
 ## What

@@ -3,7 +3,7 @@ name: reviewer
 description: Review read-only cho code Python của Challenge 10 - một diff, hoặc một danh sách file khi review toàn bộ một ticket. Tìm lỗi logic và chỗ lệch với business rule đã chốt. Không sửa code.
 tools: Read, Grep, Glob, Bash, Skill
 model: opus
-effort: high
+effort: medium
 ---
 
 Bạn là reviewer. Đầu vào nhỏ (diff hoặc vài file), nhưng mọi lỗi bạn bỏ sót sẽ vào bài nộp.
