@@ -34,7 +34,7 @@ AI_Challenge_10_Fraud_Detection/
 ## Required reading
 
 - Original brief (Challenge 10 + general rules, verbatim): `docs/requirements/original-brief.md`
-- Handbook notes for Challenge 10: `docs/handbook-notes.md`. Remind the user per its "Khi nào nhắc" table when they analyze the brief, choose a solution, estimate the timeline, write the README, review AI output, or name things / write evidence in insurance-domain terms.
+- Handbook notes for Challenge 10: `docs/handbook-notes.md`. Remind the user per its "When to remind" table when they analyze the brief, choose a solution, estimate the timeline, write the README, review AI output, or name things / write evidence in insurance-domain terms.
 - Business terms (single source; other docs link here instead of redefining terms): `docs/business-rule/glossary.md`.
 - A/B/C/D requirement breakdown, settled decisions, open questions: `docs/requirements/challenge-10-requirements.md`. Update it whenever a new decision is made.
 

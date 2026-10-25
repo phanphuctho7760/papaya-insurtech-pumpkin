@@ -1,98 +1,98 @@
-# Handbook notes cho Challenge 10 (Chat / Cowork)
+# Handbook notes for Challenge 10 (Chat / Cowork)
 
-Tóm tắt các phần trong Software_Artisan_Handbook (repo papaya-insurtech/pumpkin, không kèm trong project) dùng được khi làm AI Challenge 10 - Fraud Detection Scoring Engine.
-Phạm vi: chỉ phần áp dụng cho Claude Chat và Claude Cowork. Phần Claude Code xem mục "Để dành cho Claude Code" ở cuối.
+Summary of the parts of the Software_Artisan_Handbook (repo papaya-insurtech/pumpkin, not included in this project) that are useful for AI Challenge 10 - Fraud Detection Scoring Engine.
+Scope: only the parts that apply to Claude Chat and Claude Cowork. For Claude Code, see "Kept for Claude Code" at the end.
 
-> Cho agent: khi người dùng chạm tới chủ đề trong bảng "Khi nào nhắc" dưới đây, hãy nhắc ngắn gọn ý liên quan và dẫn đường file gốc.
+> For agents: when the user touches a topic in the "When to remind" table below, briefly remind them of the related point and give the path of the source file.
 
-## Khi nào nhắc
+## When to remind
 
-| Người dùng đang làm | Nhắc mục |
+| The user is | Remind section |
 |---|---|
-| Đọc đề, phân tích yêu cầu, liệt kê chỗ mơ hồ | 1, 2 |
-| Chọn hướng giải pháp, thiết kế, so sánh phương án | 1, 2 |
-| Ước lượng timeline | 2 |
-| Viết README, writeup, mô tả cách dùng AI | 3 |
-| Commit, đặt tên branch | 3 |
-| Review code / output do AI sinh ra | 4 |
-| Đặt tên field, viết evidence, giải thích trọng số rule | 5 |
-| Chọn ngôn ngữ / stack | 6 |
-| Soạn email nộp bài | 7 |
+| Reading the brief, analyzing requirements, listing ambiguities | 1, 2 |
+| Choosing a solution, designing, comparing options | 1, 2 |
+| Estimating the timeline | 2 |
+| Writing the README, the writeup, describing how AI was used | 3 |
+| Committing, naming a branch | 3 |
+| Reviewing AI-generated code / output | 4 |
+| Naming fields, writing evidence, explaining rule weights | 5 |
+| Choosing a language / stack | 6 |
+| Writing the submission email | 7 |
 
 ## 1. AI Agent Philosophy
 
-Nguồn Handbook: `Software_Artisan_Handbook/resources/AI_Agent_Workflow/AI_Agent_Philosophy.md`
+Handbook source: `Software_Artisan_Handbook/resources/AI_Agent_Workflow/AI_Agent_Philosophy.md`
 
-- Three-tool model: Chat = research, brainstorm, rubber-duck, nhờ tìm lỗi giải pháp. Cowork = phân tích yêu cầu, test plan, tài liệu. Code = viết code, git, test.
-- Ask What and Why before How: đưa context What/Why, để agent đề xuất How; nếu đã có hướng thì đưa như gợi ý, yêu cầu agent đánh giá rủi ro và so sánh phương án.
-- Review plans more than raw code: người review 100% plan/spec/assumption; agent review code trước, người tập trung vùng rủi ro (business logic, chỗ agent tự giả định).
-- Autonomous is not Automation: engine rule-based là automation; AI chỉ dùng để thiết kế và xây nó.
+- Three-tool model: Chat = research, brainstorming, rubber-ducking, finding flaws in a solution. Cowork = requirement analysis, test plans, documents. Code = writing code, git, tests.
+- Ask What and Why before How: give the What/Why context and let the agent propose the How; if you already have a direction, give it as a suggestion and ask the agent to assess risks and compare options.
+- Review plans more than raw code: the human reviews 100% of plans / specs / assumptions; the agent reviews code first, the human focuses on risky areas (business logic, places where the agent made its own assumptions).
+- Autonomous is not Automation: the rule-based engine is automation; AI is only used to design and build it.
 - Iterate, don't restart; Stay in control.
 
-Liên hệ đề: Papaya chấm "decompose the problem, direct the AI tool effectively" và bắt buộc nộp log hội thoại AI nguyên văn. Cách làm việc với AI cũng là đối tượng bị chấm.
+Link to the brief: Papaya grades "decompose the problem, direct the AI tool effectively" and requires the verbatim AI conversation log. How you work with AI is graded too.
 
 ## 2. Task Lifecycle
 
-Nguồn Handbook: `Software_Artisan_Handbook/resources/Development_Process/resources/Task_Lifecycle.md`
+Handbook source: `Software_Artisan_Handbook/resources/Development_Process/resources/Task_Lifecycle.md`
 
-- New Task: description phải rõ What + Why. Dán đề vào Chat để tìm ambiguity, thông tin thiếu.
-- Research: không nhảy vào code ngay; giải pháp phải end-to-end, bao hết use case.
-- Solution Review: luôn đưa ra >= 2 giải pháp kèm pros/cons; task phức tạp thì có diagram. Dùng Cowork soạn tài liệu so sánh, Chat để pressure-test.
-- Code priorities: [1] chạy đúng, [2] sạch, dễ đọc, đúng convention, [3] tối ưu.
-- Có thể dùng các phase này làm khung timeline mà đề yêu cầu ước lượng.
+- New Task: the description must state What + Why clearly. Paste the brief into Chat to find ambiguities and missing information.
+- Research: do not jump straight into code; the solution must be end-to-end and cover every use case.
+- Solution Review: always present >= 2 solutions with pros/cons; add a diagram for complex tasks. Use Cowork to draft the comparison document, Chat to pressure-test it.
+- Code priorities: [1] works correctly, [2] clean, readable, follows conventions, [3] optimized.
+- These phases can serve as the frame for the timeline estimate the brief asks for.
 
 ## 3. Reviewee Convention
 
-Nguồn Handbook: `Software_Artisan_Handbook/resources/Development_Process/resources/Code_Review/resources/Reviewee_Convention.md`
+Handbook source: `Software_Artisan_Handbook/resources/Development_Process/resources/Code_Review/resources/Reviewee_Convention.md`
 
-- Mục "Agent Workflow" trong mô tả: agent nào đã dùng, các prompt/chỉ đạo chính, đã tự kiểm tra gì, giới hạn còn lại. Nên đưa vào README nộp bài.
-- Commit theo Conventional Commits: `feat:`, `fix:`, `docs:`, `test:`, `refactor:`, `chore:` ...
-- Branch: `feat/`, `fix/`, `docs/`, `test/` ...
-- Mô tả có checklist việc đã làm + summary What/Why.
+- "Agent Workflow" section in the description: which agents were used, the key prompts / instructions, what was self-checked, remaining limitations. Should go into the submission README.
+- Commits follow Conventional Commits: `feat:`, `fix:`, `docs:`, `test:`, `refactor:`, `chore:` ...
+- Branches: `feat/`, `fix/`, `docs/`, `test/` ...
+- The description has a checklist of the work done + a What/Why summary.
 
 ## 4. Reviewing AI Generated Code + Code Review Checklist
 
-Nguồn Handbook: `Software_Artisan_Handbook/resources/Development_Process/resources/Code_Review/resources/Reviewing_AI_Generated_Code.md`, `.../Code_Review_Checklist.md`
+Handbook source: `Software_Artisan_Handbook/resources/Development_Process/resources/Code_Review/resources/Reviewing_AI_Generated_Code.md`, `.../Code_Review_Checklist.md`
 
-Checklist tự review output AI:
-- Hallucinated API: import, signature có thật không.
-- Scope creep: mọi thay đổi phải truy về yêu cầu của đề.
-- Wrong business logic: thuật ngữ, luồng claim đúng chưa; hỏi "có hợp lý với nghiệp vụ không", không chỉ "có chạy không".
-- Over-engineering: có phải giải pháp đơn giản nhất không.
-- Không để lại TODO, placeholder (lưu ý: dataset synthetic là yêu cầu của đề, không phải mock thừa).
-- Code sạch: không code thừa, không code comment-out, không print debug; comment chỉ để giải thích WHY / TODO / Warning.
-- Phải có test.
+Checklist for self-reviewing AI output:
+- Hallucinated API: do the imports and signatures really exist?
+- Scope creep: every change must trace back to a requirement of the brief.
+- Wrong business logic: are the terms and the claim flow right? Ask "does this make business sense", not only "does it run".
+- Over-engineering: is this the simplest solution?
+- No leftover TODOs or placeholders (note: the synthetic dataset is required by the brief, it is not a leftover mock).
+- Clean code: no dead code, no commented-out code, no debug prints; comments only explain WHY / TODO / Warning.
+- Tests are required.
 
 ## 5. Medical Insurance 101 (domain)
 
-Nguồn Handbook: `Software_Artisan_Handbook/resources/Medical_Insurance_101.md`
+Handbook source: `Software_Artisan_Handbook/resources/Medical_Insurance_101.md`
 
-- Thực thể: Policy Owner, Insured Person, Medical Provider (CSYT), Insurer, TPA.
-- Claim method: Reimbursement (theo chi phí thực tế, có trần Limit) và Lump Sum.
-- Health claim: Cashless / Direct Billing và Reimbursement Claim.
-- Tiền: Sum Insured / Limit, Balance, Deductible, Co-payment.
-- Dùng để đặt tên, viết evidence, giải thích trọng số rule đúng ngữ cảnh bảo hiểm (vd ngưỡng auto-approval 50,000 gắn với luồng thẩm định claim).
-- KHÔNG có: fraud pattern, ICD-10, procedure code, bundling. Phần này cần research riêng.
+- Entities: Policy Owner, Insured Person, Medical Provider, Insurer, TPA.
+- Claim method: Reimbursement (actual cost, capped by a Limit) and Lump Sum.
+- Health claims: Cashless / Direct Billing and Reimbursement Claim.
+- Money: Sum Insured / Limit, Balance, Deductible, Co-payment.
+- Use these to name things, write evidence and explain rule weights in the right insurance context (e.g. the 50,000 auto-approval threshold belongs to the claim assessment flow).
+- NOT covered: fraud patterns, ICD-10, procedure codes, bundling. These need separate research.
 
 ## 6. Tech Stack
 
-Nguồn Handbook: `Software_Artisan_Handbook/resources/Tech_Stack.md`
+Handbook source: `Software_Artisan_Handbook/resources/Tech_Stack.md`
 
-- AI/ML của team: Python (Pytorch, Keras, OpenAI, Vertex AI, Gemini). Backend: Node.js / TypeScript.
+- Team AI/ML: Python (Pytorch, Keras, OpenAI, Vertex AI, Gemini). Backend: Node.js / TypeScript.
 
-## 7. Communication Convention (chỉ cho email nộp bài)
+## 7. Communication Convention (submission email only)
 
-Nguồn Handbook: `Software_Artisan_Handbook/resources/Communication_Convention.md`
+Handbook source: `Software_Artisan_Handbook/resources/Communication_Convention.md`
 
-- Email trang trọng; subject dạng `[Project Name] Subject`; luôn có greeting, sign-off, signature; nhắc tới đính kèm / link trong thân email.
+- Formal email; subject in the form `[Project Name] Subject`; always a greeting, sign-off and signature; mention the attachment / link in the email body.
 
-## Bỏ qua
+## Skipped
 
-Git_Workflow (Gitflow nhiều nhánh môi trường), Release_Process, System_Environment, Monorepo, VS_Code_Recommended_Extensions, OS_Softwares_And_Tools.
+Git_Workflow (Gitflow with several environment branches), Release_Process, System_Environment, Monorepo, VS_Code_Recommended_Extensions, OS_Softwares_And_Tools.
 
-## Để dành cho Claude Code (đọc khi chuyển sang Claude Code)
+## Kept for Claude Code (read when moving to Claude Code)
 
 - `Software_Artisan_Handbook/resources/AI_Agent_Workflow/Claude_Code_Best_Practices.md`: prompting, Plan Mode, session management.
-- `Software_Artisan_Handbook/resources/AI_Agent_Workflow/Claude_Code_Workflow_Setup.md`: Superpowers flow, branch/worktree/PR, harness, reviewer agents.
-- `Software_Artisan_Handbook/resources/AI_Agent_Workflow/Agent_Troubleshooting.md`: loop, hallucination, context limit, scope creep, khi nào restart.
-- Các mục "With Claude Code" trong Git_Workflow và phase Coding / Testing / Code Review của Task_Lifecycle.
+- `Software_Artisan_Handbook/resources/AI_Agent_Workflow/Claude_Code_Workflow_Setup.md`: Superpowers flow, branch / worktree / PR, harness, reviewer agents.
+- `Software_Artisan_Handbook/resources/AI_Agent_Workflow/Agent_Troubleshooting.md`: loops, hallucination, context limits, scope creep, when to restart.
+- The "With Claude Code" sections of Git_Workflow and the Coding / Testing / Code Review phases of Task_Lifecycle.

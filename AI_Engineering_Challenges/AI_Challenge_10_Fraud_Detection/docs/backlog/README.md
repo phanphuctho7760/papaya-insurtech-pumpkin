@@ -12,4 +12,4 @@
 | 01 | [A - Generate the dataset](done/01-dataset-generator.md) | feature | done | 1 |
 | 02 | [B - 8-rule engine + scoring](done/02-rule-engine.md) | feature | done | 2 |
 | 03 | [C - Unit tests, metrics, runtime](done/03-tests-and-metrics.md) | feature | done | 3 |
-| 04 | [D - Writeup and submission](todo/04-writeup-and-submission.md) | chore | todo | 4 |
+| 04 | [D - Writeup and submission](done/04-writeup-and-submission.md) | chore | done | 4 |

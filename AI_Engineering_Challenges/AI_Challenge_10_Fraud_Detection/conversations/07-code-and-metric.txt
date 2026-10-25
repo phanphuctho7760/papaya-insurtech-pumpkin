@@ -1,0 +1,2929 @@
+ ▐▛███▛█   Claude Code v2.1.310
+▝▜██████▀  Opus 5.5
+ ▝▝   ▝▝   /Volumes/D/papaya-insurtech-pumpkin
+
+
+❯ /model                                                                        
+  ⎿  Set model to Opus 5.5 and saved as your default for new sessions
+
+❯ làm AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/backlog/to 
+  do/03-tests-and-metrics.md viết plan trước                                    
+
+⏺ Bash(C=AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection; cat
+      $C/docs/backlog/todo/03-tests-and-metrics.md; echo ----; ls
+      .claude/docs/plans/ $C/docs/backlog…)
+  ⎿  # 03 - C: Unit test, metrics, đo thời gian
+
+     **Status:** todo
+     … +134 lines (ctrl+o to expand)
+
+⏺ Bash(C=AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection; ls
+      .claude/docs/plans/*; cat .claude/docs/plans/README.md; echo ----; cat
+      .claude/docs/plans/done/0…)
+  ⎿  .claude/docs/plans/README.md
+
+     .claude/docs/plans/done:
+     … +207 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin/AI_Engineering_Challenges/AI_Chall
+      enge_10_Fraud_Detection; cat docs/business-rule/test-cases.md; echo -----;
+      cat docs/bus…)
+  ⎿  # Test cases (C1)
+
+     Đề yêu cầu: "At least 15 unit tests covering individual rules and edge
+     … +164 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin/AI_Engineering_Challenges/AI_Chall
+      enge_10_Fraud_Detection; grep -n -i -A8 "exception\|phantom day"
+      docs/business-rule/fra…)
+  ⎿  15:- Cross-check with the engine in C (integration test running the en
+     gine on the real dataset): each fraud claim triggers only the rule of
+     its own pattern. Known exceptions: the 6 claims on the phantom day (al
+     … +191 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin/AI_Engineering_Challenges/AI_Chall
+      enge_10_Fraud_Detection; sed -n 36,60p
+      docs/decisions/tech-and-structure.md; sed -n 112…)
+  ⎿  ## Structure of `src/`
+
+     ```
+     … +178 lines (ctrl+o to expand)
+
+⏺ Tôi đang đọc ticket, docs nghiệp vụ và code hiện có để viết plan. Đo nhanh
+  metrics trên data thật để plan có số làm gốc.
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin/AI_Engineering_Challenges/AI_Chall
+      enge_10_Fraud_Detection; grep -n "^def \|^# \|\"\"\""
+      tests/test_system_rules_contract.…)
+  ⎿  1:"""System test S6 + rule contract: every rule has the same signature
+      and returns {claim_id: evidence}."""
+     15:def catalog():
+     … +27 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin/AI_Engineering_Challenges/AI_Chall
+      enge_10_Fraud_Detection; cat src/config/weights.json; grep -n phantom
+      data/generation_s…)
+  ⎿  {
+       "duplicate_claim": 5,
+       "rapid_resubmission": 3,
+     … +44 lines (ctrl+o to expand)
+
+⏺ Đã có đủ bối cảnh và số đo sơ bộ. Giờ viết plan.
+
+⏺ Write(.claude/docs/plans/todo/03-tests-and-metrics.md)
+  ⎿  Wrote 79 lines to .claude/docs/plans/todo/03-tests-and-metrics.md
+      1 # Plan 03 - C: Unit test, metrics, đo thời gian
+      3 > **Ticket:** #03 - trạng thái và mục tiêu nằm ở ticket; file này
+         chỉ chứa chi tiết thực thi.
+      5 Nguồn business: `docs/business-rule/test-cases.md` (19 test + tes
+        ection.md` (ngoại lệ phantom day), `glossary.md` mục Evaluation. 
+        Kỹ thuật: `docs/decisions/tech-and-structure.md` (cây `src/metric
+        eneration-pitfalls.md`.
+      6 
+        s_report.md`, test tích hợp trên `data/` thật, cập nhật pitfalls 
+        ừ
+     … +154 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin && sed -i '' 's|^\*\*Plan:\*\*
+      none yet|**Plan:** `.claude/docs/plans/todo/03-tests-and-metrics.md` (repo
+      root)|' AI_Engi…)
+  ⎿  7:**Plan:** `.claude/docs/plans/todo/03-tests-and-metrics.md` (repo ro
+     ot)
+     ## TODO
+     … +3 lines (ctrl+o to expand)
+  ⎿  Updated .claude/docs/plans/README.md (+1 -2)
+      13  
+      14  ## TODO
+      15  
+      16 -                                                               
+      17 -Trống. Ticket chưa có plan: xem `docs/backlog/README.md`.      
+      16 +- [03 - C: Unit test, metrics, đo thời gian](todo/03-tests-and-
+         +metrics.md) - ticket #03, chờ duyệt 6 mục "Cần chốt".          
+  ⎿  Updated AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs
+     /backlog/todo/03-tests-and-metrics.md (+1 -1)
+       4  **Type:** feature
+       5  **Priority:** 3
+       6  **Effort:** M (kế hoạch 1.25h)
+       7 -**Plan:** none yet                                             
+       7 +**Plan:** `.claude/docs/plans/todo/03-tests-and-metrics.md` (re
+         +po root)                                                       
+       8  **Related:** #01, #02
+       9  
+      10  ## What
+
+⏺ Tôi đã viết xong plan ở .claude/docs/plans/todo/03-tests-and-metrics.md, đã
+  gắn link vào ticket #03 và vào mục TODO của .claude/docs/plans/README.md. Chưa
+  viết dòng code nào.
+
+  Số đo sơ bộ: tôi chạy một script nháp so scored_output.json hiện có với
+  ground_truth.csv:
+  - Recall 100%, FPR 2.6%, precision 81.3%, nên đạt cả hai mục tiêu của đề.
+  - Báo động nhầm trên claim hợp lệ: rapid 24, upcoding 18, clustering 4. Khớp
+    số đo thật ghi trong dataset-generation-pitfalls.md.
+  - Có đúng 6 claim fraud dính thêm rule ngoài pattern của mình, đều là
+    phantom_billing trên phantom day. Khớp ngoại lệ đã ghi.
+  - Các số này là kỳ vọng cho bước Verify: code thật phải ra đúng như vậy.
+
+  Plan có 3 phase:
+  1. 19 test business, giao coder rồi reviewer.
+  2. Module src/metrics/ và lệnh metrics, giao coder rồi reviewer.
+  3. Test tích hợp trên data/ thật và cập nhật docs, tôi tự làm.
+
+  6 mục bạn cần duyệt trước khi code:
+  1. Bảng ngưỡng có 3 dòng > 0, >= 40, >= 70. Trong metrics.md sẽ sửa chữ
+     "ngưỡng 0" thành > 0, vì >= 0 nghĩa là flag mọi claim.
+  2. Lệnh metrics chạy lại cả pipeline score, đo thời gian, rồi mới so với
+     ground truth. Không đọc lại scored_output.json vì file đó chỉ có 3 trường
+     theo đề, nên không chứa thời gian chạy.
+  3. Chỉ src/metrics/ được đọc ground truth, engine thì không. Nếu tập claim_id
+     của ground truth lệch với tập claim đã score thì dừng, exit 1.
+  4. Một claim báo nhầm dính 2 rule thì được đếm cho cả 2 rule. Bảng có thêm
+     dòng tổng 46 claim để người đọc không cộng cột ra số sai.
+  5. Ngoại lệ phantom day trong test tích hợp được suy từ
+     generation_summary.json, không viết cứng claim_id. Rule thừa nào khác thì
+     test fail và in rõ claim nào, dính rule gì.
+  6. metrics_report.md viết tiếng Anh. Đầu file ghi dataset, weight đang dùng và
+     thời gian chạy, sau đó là 4 bảng.
+
+  Lưu ý cho writeup #04: recall 100% là "quá đẹp", vì chính mình viết rule và
+  sinh data theo đúng định nghĩa rule. Writeup nên nói rõ hạn chế này thay vì
+  khoe số. Đây là điểm "Attention to detail" trong handbook-notes.md.
+
+  Việc để đến lúc commit: tôi đã sửa một dòng Plan: trong ticket #03, mà ticket
+  vẫn viết tiếng Việt. Theo quy ước của project, file đã sửa thì phải chuyển cả
+  file sang tiếng Anh, nên tôi sẽ làm việc đó trong bước pre-commit sweep.
+
+  Bạn duyệt 6 mục trên, hoặc sửa mục nào, thì tôi bắt đầu Phase 1.
+
+✻ Churned for 2m 18s · done 09:51
+
+❯ duyệt 6 mục. ghi Lưu ý cho writeup luôn                                       
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin/AI_Engineering_Challenges/AI_Chall
+      enge_10_Fraud_Detection; cat
+      docs/backlog/todo/04-writeup-and-submission.md; sed -n 53,…)
+  ⎿  # 04 - D: Writeup và bàn giao
+
+     **Status:** todo
+     … +34 lines (ctrl+o to expand)
+
+⏺ Ghi các quyết định và lưu ý writeup. Hai ticket #03, #04 vẫn tiếng Việt nên
+  chuyển cả file sang tiếng Anh luôn theo quy ước.
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin/AI_Engineering_Challenges/AI_Chall
+      enge_10_Fraud_Detection
+      cat > docs/backlog/todo/04-writeup-and-submission.md <<'EOF'…)
+  ⎿  15:- Also report recall and FPR at score thresholds `> 0`, `>= 40` and
+      `>= 70` to show the trade-off (`> 0` rather than "0": `>= 0` would fl
+     ag every claim).
+     … +5 lines (ctrl+o to expand)
+  ⎿  Updated AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs
+     /backlog/README.md (+1 -1)
+      11  |---|---|---|---|---|
+      12  | 01 | [A - Generate the dataset](done/01-dataset-generator.md)
+           | feature | done | 1 |
+      13  | 02 | [B - 8-rule engine + scoring](done/02-rule-engine.md) | 
+          feature | done | 2 |
+      14 -| 03 | [C - Unit tests, metrics, runtime](todo/03-tests-and-met
+         -rics.md) | feature | todo | 3 |                                
+      14 +| 03 | [C - Unit tests, metrics, runtime](todo/03-tests-and-met
+         +rics.md) | feature | doing | 3 |                               
+      15  | 04 | [D - Writeup and submission](todo/04-writeup-and-submiss
+          ion.md) | chore | todo | 4 |
+  ⎿  Updated AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs
+     /backlog/todo/03-tests-and-metrics.md (+9 -9)
+       1 -# 03 - C: Unit test, metrics, đo thời gian                     
+       1 +# 03 - C: Unit tests, metrics, runtime                         
+       2  
+       3 -**Status:** todo                                               
+       3 +**Status:** doing                                              
+       4  **Type:** feature
+       5  **Priority:** 3
+       6 -**Effort:** M (kế hoạch 1.25h)                                 
+       6 +**Effort:** M (planned 1.25h)                                  
+       7  **Plan:** `.claude/docs/plans/todo/03-tests-and-metrics.md` (re
+          po root)
+       8  **Related:** #01, #02
+       9  
+      10  ## What
+      11  
+      12 -19 unit test, test tích hợp trên dataset thật, metrics report 4
+         - phần, đo thời gian xử lý 2,000 claim.                         
+      12 +19 unit tests, an integration test on the real dataset, a 4-par
+         +t metrics report, and the runtime of scoring 2,000 claims.     
+      13  
+      14  ## Why / value
+      15  
+      16 -Đề chấm >= 15 unit test, recall >= 70% với FPR <= 20%, và < 30 
+         -giây.                                                          
+      16 +The brief grades >= 15 unit tests, recall >= 70% with FPR <= 20
+         +%, and < 30 seconds.                                           
+      17  
+      18  ## Acceptance criteria
+      19  
+      20 -- 19 test trong `docs/business-rule/test-cases.md` pass bằng py
+         -test.                                                          
+      21 -- Test tích hợp: mỗi claim fraud dính rule của pattern mình; dí
+         -nh thêm rule ngoài ngoại lệ đã ghi thì báo rõ.                 
+      22 -- `output/metrics_report.md` đủ 4 phần theo `metrics.md`, có th
+         -ời gian chạy.                                                  
+      23 -- Điền "Số đo thật" trong `docs/experiences/dataset-generation-
+         -pitfalls.md`.                                                  
+      20 +- The 19 tests in `docs/business-rule/test-cases.md` pass under
+         + pytest.                                                       
+      21 +- Integration test: every fraud claim triggers the rule of its 
+         +own pattern; any extra rule outside the recorded exception is r
+         +eported clearly.                                               
+      22 +- `output/metrics_report.md` has the 4 parts of `metrics.md` an
+         +d the runtime.                                                 
+      23 +- The engine re-check is recorded in `docs/experiences/dataset-
+         +generation-pitfalls.md` (items with a "Real measurement").     
+      24  
+      25  ## Notes
+  ⎿  Updated AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs
+     /backlog/todo/04-writeup-and-submission.md (+11 -6)
+      1 -# 04 - D: Writeup và bàn giao                                   
+      1 +# 04 - D: Writeup and submission                                
+      2  
+      3  **Status:** todo
+      4  **Type:** chore
+     ...
+       9  
+      10  ## What
+      11  
+      12 -README nộp bài (cách tiếp cận, quyết định, trọng số, metrics, t
+         -imeline thực tế, Agent Workflow), log hội thoại đủ trong `conve
+         -rsations/`, push repo.                                         
+      12 +Submission `README.md` (approach, decisions, weights, metrics, 
+         +real timeline, agent workflow), complete conversation logs in `
+         +conversations/`, push the repo.                                
+      13  
+      14  ## Why / value
+      15  
+      16 -Thiếu log hội thoại là tự động trượt; writeup là nơi Papaya đọc
+         - lý do của mọi quyết định.                                     
+      16 +Missing conversation logs is an automatic fail; the writeup is 
+         +where Papaya reads the reason behind every decision.           
+      17  
+      18  ## Acceptance criteria
+      19  
+      20 -- `README.md` có lệnh chạy, giải thích trọng số, metrics thật, 
+         -giới hạn còn lại.                                              
+      21 -- `conversations/README.md` liệt kê đủ các file log.           
+      22 -- Repo chứa dataset, scored output, metrics report.            
+      20 +- `README.md` has the run commands, the weight explanation, the
+         + real metrics and the remaining limitations.                   
+      21 +- `conversations/README.md` lists every log file.              
+      22 +- The repo holds the dataset, the scored output and the metrics
+         + report.                                                       
+      23  
+      24  ## Notes
+      25 +                                                               
+      26 +From #03 (2026-10-25, rough measurement on seed 2024; use the f
+         +inal numbers in `output/metrics_report.md`):                   
+      27 +                                                               
+      28 +- **Recall 100% / FPR 2.6% is "too good".** The same person wro
+         +te the rules and generated the data to fit the rule definitions
+         +, so the engine catches every injected pattern by construction.
+         + The writeup must state this limitation (real data would score 
+         +lower: fraud that does not match the textbook pattern, noisier 
+         +legit data) instead of presenting the numbers as an achievement
+         +.                                                              
+      29 +- **At threshold >= 70 recall drops to 18%.** If claim adjuster
+         +s only review high-score claims, they miss most of the fraud (w
+         +eak rules such as weekend and clustering give 39 points). This 
+         +is the reason the main metric predicts fraud at `score > 0`.   
+  ⎿  Updated AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs
+     /business-rule/metrics.md (+2 -2)
+      12  
+      13  ## Extra table by threshold
+      14  
+      15 -- Also report recall and FPR at score thresholds 0, 40 and 70 t
+         -o show the trade-off.                                          
+      15 +- Also report recall and FPR at score thresholds `> 0`, `>= 40`
+         + and `>= 70` to show the trade-off (`> 0` rather than "0": `>= 
+         +0` would flag every claim).                                    
+      16  - Practical meaning: if claim adjusters only review high-score 
+          claims, how much fraud is missed.
+      17  
+      18  ## Metrics report (C3)
+     ...
+      22  1. **Overall**: TP, FP, FN, TN, precision, recall, FPR; compare
+          d with the targets recall >= 70%, FPR <= 20%.
+      23  2. **By pattern**: for each pattern, how many fraudulent claims
+           and how many were caught (shows weak rules, e.g. upcoding hit 
+          by masking).
+      24  3. **Natural FP by rule**: false alarms counted per rule (shows
+           the data has real noise).
+      25 -4. **Threshold table**: recall / FPR at score thresholds 0, 40,
+         - 70.                                                           
+      25 +4. **Threshold table**: recall / FPR at score thresholds `> 0`,
+         + `>= 40`, `>= 70`.                                             
+  ⎿  Updated AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs
+     /requirements/challenge-10-requirements.md (+6 -0)
+      111  - B config (2026-10-24): only the weights are configurable (th
+           e brief only asks for weights); rule thresholds are constants 
+           at the top of each rule file. See `docs/decisions/ADR-003-only
+           -weights-are-configurable.md`.
+      112  - B4 output (2026-10-24): `output/scored_output.json` is a ran
+           ked JSON array; each element has exactly the brief's 3 fields;
+            flags inside a claim sorted by severity descending. See `docs
+           /business-rule/scoring.md`.
+      113  - A provider volume (2026-10-24, review of #01): 150 legit cla
+           ims moved from DENTAL to OUTPATIENT codes; all 20 hospitals ge
+           t the same pre-assigned 58-62 OUTPATIENT / INPATIENT claims, s
+           o the weekday-only group is not the 10 largest; fraud provider
+           s are drawn weighted by legit volume, so no provider type has 
+           an outlier fraud rate. Known limitation, accepted: the 20 clin
+           ics get only ~1-15 claims each. Making them larger needs a low
+           er weekday-only floor (< 60) or fewer dental providers; both r
+           ejected. See `docs/decisions/ADR-004-equal-volume-for-all-hosp
+           itals.md`.
+      114 +- C2 thresholds (2026-10-25): threshold table rows are `score 
+          +> 0` (main metric), `score >= 40`, `score >= 70`. With the cur
+          +rent weights scores are discrete (39, 53, 63, 71, ...), so `>`
+          + or `>=` at 40 / 70 gives the same result; `>=` reads more nat
+          +urally. See `docs/business-rule/metrics.md`.                  
+      115 +- C4 runtime (2026-10-25): the `metrics` command re-runs the w
+          +hole score pipeline (load -> rules -> score -> write `scored_o
+          +utput.json`), times it with `time.perf_counter()` (one in-proc
+          +ess run, Python startup excluded), then compares with the grou
+          +nd truth. Rejected: reading an existing `scored_output.json`, 
+          +because the output only has the brief's 3 fields and carries n
+          +o runtime.                                                    
+      116 +- C2 boundary (2026-10-25): only `src/metrics/` reads `ground_
+          +truth.csv`; the engine never imports `metrics`. If the ground-
+          +truth `claim_id` set differs from the scored claims, `metrics`
+          + stops with exit 1 (same stance as ADR-002).                  
+      117 +- C3 natural FP by rule (2026-10-25): an FP claim with 2 rules
+          + is counted under both; the table adds a total row of FP claim
+          +s so the columns are not summed into a wrong total.           
+      118 +- C1 integration test (2026-10-25): the allowed exception (fra
+          +ud claims on the phantom provider-day may also trigger `phanto
+          +m_billing`) is derived from `generation_summary.json`, not har
+          +d-coded claim IDs; any other extra rule fails the test with cl
+          +aim ID, pattern and extra rules.                              
+      119 +- C3 report format (2026-10-25): `output/metrics_report.md` in
+          + English; header with dataset, weights in use and runtime, the
+          +n the 4 parts of `metrics.md` as tables, percentages with 1 de
+          +cimal, 1-2 sentences reading each table. Deterministic except 
+          +the runtime line.                                             
+      120  
+      121  ## Open questions (discussed when each part is detailed)
+      122  
+
+⏺ Cập nhật plan: đổi "Cần chốt" thành "Đã chốt", bỏ việc sửa docs đã làm khỏi
+  Phase 3.
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin && python3 - <<'EOF'
+      p='.claude/docs/plans/todo/03-tests-and-metrics.md'…)
+  ⎿  19:## Đã chốt trước khi code (2026-10-25)
+     21:Người dùng duyệt cả 6 mục theo đề xuất. Đã ghi vào: mục 1 -> `metri
+     cs.md`; tất cả -> `challenge-10-requirements.md` (Settled decisions, C
+     … +2 lines (ctrl+o to expand)
+  ⎿  Updated .claude/docs/plans/README.md (+1 -1)
+      13  
+      14  ## TODO
+      15  
+      16 -- [03 - C: Unit test, metrics, đo thời gian](todo/03-tests-and-
+         -metrics.md) - ticket #03, chờ duyệt 6 mục "Cần chốt".          
+      16 +- [03 - C: Unit test, metrics, đo thời gian](todo/03-tests-and-
+         +metrics.md) - ticket #03, đã chốt 6 mục, đang làm Phase 1.     
+  ⎿  Updated .claude/docs/plans/todo/03-tests-and-metrics.md (+4 -3)
+      16  
+      17  Số này là kỳ vọng cho Verify; code thật phải ra đúng như vậy.
+      18  
+      19 -## Cần chốt trước khi code                                     
+      19 +## Đã chốt trước khi code (2026-10-25)                         
+      20  
+      21 -Đề xuất của tôi ở từng mục; người dùng duyệt / sửa rồi mới code
+         -.                                                              
+      21 +Người dùng duyệt cả 6 mục theo đề xuất. Đã ghi vào: mục 1 -> `m
+         +etrics.md`; tất cả -> `challenge-10-requirements.md` (Settled d
+         +ecisions, C1-C4).                                              
+      22  
+      23  1. **Ngưỡng trong bảng phần 4:** 3 dòng `score > 0` (>= 1 flag,
+           = metric chính), `score >= 40`, `score >= 70`. `metrics.md` gh
+          i "ngưỡng 0" => sửa câu chữ thành `> 0` cho khỏi hiểu nhầm `>= 
+          0` (flag mọi claim). Với weight hiện tại score chỉ nhận các giá
+           trị rời rạc (39, 53, 63, 71, ...) nên `>` hay `>=` ở 40 / 70 c
+          ho cùng kết quả; chọn `>=` vì đọc tự nhiên hơn ("từ 40 điểm trở
+           lên").
+      24  2. **Lệnh `metrics` chạy lại cả pipeline score rồi mới so groun
+          d truth.** `cli.py metrics [--data data] [--weights ...] [--out
+           output]`: load -> 8 rule -> score -> ghi `scored_output.json` 
+          (đo thời gian đoạn này, giống `score`) -> đọc `ground_truth.csv
+          ` -> ghi `metrics_report.md`. Tách phần chung của `cmd_score` t
+          hành 1 hàm `run_score(args) -> (results, elapsed)` để 2 lệnh dù
+          ng chung.
+     ...
+      58    - Recall >= 70%, FPR <= 20% (mục tiêu của đề).
+      59    - Pipeline load -> score trên 2,000 claim < 30 giây.
+      60  - `docs/experiences/dataset-generation-pitfalls.md` (đã là tiến
+          g Anh): dòng Status đổi thành "re-checked by the engine on 2026
+          -10-25", thêm "engine: ..." vào mục 1, 3, 8, 9 (khớp / lệch so 
+          với script nháp).
+      61 -- `metrics.md`: sửa "ngưỡng 0" theo mục 1. `challenge-10-requir
+         -ements.md`: ghi các quyết định mục 1-6 vào Settled decisions.  
+      61  - Main thread tự làm (test ngắn + docs); `reviewer` cho file te
+          st.
+      62  
+      63  ## Verify
+     ...
+      69  
+      70  ## Ghi chú cho #04
+      71  
+      72 +Đã ghi vào mục Notes của ticket #04 (2026-10-25).              
+      73 +                                                               
+      74  - Recall 100% / FPR 2.6% là "quá đẹp" vì cùng 1 người viết rule
+           và sinh dữ liệu theo đúng định nghĩa rule. Writeup cần nói rõ 
+          hạn chế này (dữ liệu thật sẽ thấp hơn) thay vì khoe số.
+      75  - Ngưỡng >= 70 chỉ còn recall 18%: nếu người thẩm định chỉ xem 
+          claim điểm cao sẽ bỏ sót phần lớn fraud => lý do chọn `> 0` làm
+           metric chính.
+      76  
+
+⏺ Docs đã ghi xong. Bắt đầu Phase 1: giao coder viết 19 test business.
+
+⏺ coder(Phase 1: 19 business tests)
+  ⎿  Backgrounded agent (↓ to manage · ctrl+o to expand)
+⏺ Tôi đã ghi xong 6 quyết định và lưu ý cho writeup. Phase 1 đã bắt đầu, coder
+  đang viết 19 test business và chưa có kết quả.
+
+  Lưu ý cho writeup, ghi ở mục Notes của ticket #04:
+  - Recall 100% / FPR 2.6% là "quá đẹp", vì chính mình viết rule và sinh data
+    theo đúng định nghĩa rule. Writeup phải nói rõ hạn chế này thay vì khoe số.
+  - Ở ngưỡng >= 70 recall chỉ còn 18%. Đây là lý do chọn score > 0 làm metric
+    chính.
+
+  6 quyết định:
+  - Ghi cả 6 vào "Settled decisions" của challenge-10-requirements.md.
+  - Trong metrics.md, đổi chữ "ngưỡng 0" thành > 0; ngưỡng 40 và 70 ghi thành >=
+    40, >= 70.
+
+  Thay đổi khác:
+  - Ticket #03 chuyển sang doing. Ticket #03 và #04 được chuyển nguyên file sang
+    tiếng Anh theo quy ước của project.
+  - Trong plan 03, mục "Cần chốt" đổi thành "Đã chốt", và bỏ phần sửa docs khỏi
+    Phase 3 vì đã làm xong.
+
+  Phase 1:
+  - Theo spec, coder không được sửa src/: nếu test lộ bug engine thì dừng lại và
+    báo.
+  - Sau khi test pass, coder sẽ chạy 2 mutation để chắc test bắt được lỗi: đổi
+    ngưỡng phantom phải làm TC11 fail, đổi cửa sổ rapid phải làm TC4 fail.
+  - Khi có báo cáo, tôi chạy lại pytest để kiểm, rồi chuyển cho reviewer.
+
+✻ Worked for 57s · done 09:56
+
+› Message from coder
+  Files changed: AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/tests
+  /test_business_rules.py:1-175 - new file, TC01-TC19, one function per table
+  row, docstring = expected result. A local `make_claim` helper is used (no
+  conftest.py, so the contract test is untouched). Nothing under src/ changed.
+  Tests: `uv run pytest -q` (project dir) -> pass, "132 passed" (111 old + 21
+  new: 19 functions, TC16 and TC17 each parametrized over 2 amounts).
+  Mutations (reverted with git checkout, `git status src` clean):
+  - phantom `len(group) <= MAX_CLAIMS_PER_DAY` -> `<` (i.e. `> 30` becomes `>=
+  30`): `test_tc11_phantom_exactly_30_claims_not_flagged` failed, 1 failed / 20
+  passed in the file.
+  - rapid `WINDOW_DAYS = 7` -> `8`: `test_tc04_rapid_eight_days_not_flagged`
+  failed, 1 failed / 20 passed in the file.
+  Not done: nothing.
+  Unsure:
+  - After the rapid mutation was reverted, the full run still showed 3 failures
+  (TC04 plus 2 in the contract test). The source line was back to `WINDOW_DAYS =
+  7`, so the cause was a stale `__pycache__` .pyc (same mtime and size after
+  revert). I deleted the project's `__pycache__` dirs (not .venv) and the suite
+  is green again. If you run mutations yourself, clear the caches after
+  reverting.
+  - TC03 and TC10 also assert "7 days" / "31 claims" appear in the evidence.
+  TC18 uses diagnosis K02.1 + P-3001 with amount 49,000 so that it hits exactly
+  mismatch and clustering and no other rule.
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin/AI_Engineering_Challenges/AI_Chall
+      enge_10_Fraud_Detection && git status --short . && uv run pytest -q 2>&1 |
+      tail -2 && g…)
+  ⎿   M docs/backlog/README.md
+      M docs/backlog/todo/03-tests-and-metrics.md
+      M docs/backlog/todo/04-writeup-and-submission.md
+     … +27 lines (ctrl+o to expand)
+
+⏺ Agent "Phase 1: 19 business tests" finished · 1m 10s
+
+❯ chỗ writeup nếu có thời gian ta sẽ viết lại việc random dataset thay vì viết  
+  cứng. lúc đó test sẽ minh bạch hơn. ghi chỗ này vào, chỉ ghi chứ ko làm       
+
+⏺ Ghi ý của bạn vào Notes của ticket #04, đồng thời giao Phase 1 cho reviewer.
+
+⏺ Bash(cat >> docs/backlog/todo/04-writeup-and-submission.md <<'EOF'…)
+  ⎿  Optional, only if time remains (noted 2026-10-25, not committed to):
+  ⎿  Updated AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs
+     /backlog/todo/04-writeup-and-submission.md (+4 -0)
+      27  
+      28  - **Recall 100% / FPR 2.6% is "too good".** The same person wro
+          te the rules and generated the data to fit the rule definitions
+          , so the engine catches every injected pattern by construction.
+           The writeup must state this limitation (real data would score 
+          lower: fraud that does not match the textbook pattern, noisier 
+          legit data) instead of presenting the numbers as an achievement
+          .
+      29  - **At threshold >= 70 recall drops to 18%.** If claim adjuster
+          s only review high-score claims, they miss most of the fraud (w
+          eak rules such as weekend and clustering give 39 points). This 
+          is the reason the main metric predicts fraud at `score > 0`.
+      30 +                                                               
+      31 +Optional, only if time remains (noted 2026-10-25, not committed
+         + to):                                                          
+      32 +                                                               
+      33 +- **Random dataset instead of a hard-coded one.** Today the gen
+         +erator places fraud on purpose (fixed seed 2024, constraints th
+         +at keep each fraud claim inside its own pattern) and the tests 
+         +read that one committed dataset. Rewriting generation to be ran
+         +dom (any seed, fraud not hand-placed) would make the tests more
+         + transparent: the engine would be shown to work on data it was 
+         +not tuned to. If done, the writeup explains the change; if not,
+         + the writeup lists it as a known limitation next to the "too go
+         +od" recall note above.                                         
+
+⏺ reviewer(Review Phase 1 business tests)
+  ⎿  Backgrounded agent (↓ to manage · ctrl+o to expand)
+
+⏺ Tôi đã ghi ý của bạn vào Notes của ticket #04, mục "Optional, only if time
+  remains", chỉ ghi chứ chưa làm. Nội dung:
+  - Hiện generator cố ý đặt fraud theo seed 2024 cố định, và test chỉ đọc một
+    dataset đã commit.
+  - Nếu còn thời gian thì chuyển sang sinh ngẫu nhiên, không đặt fraud bằng tay,
+    để test minh bạch hơn: chứng minh được engine chạy đúng cả trên data không
+    được chỉnh cho vừa rule.
+  - Nếu không kịp làm thì writeup ghi nó là một hạn chế, cạnh lưu ý "recall quá
+    đẹp".
+
+  Phase 1: coder đã viết xong tests/test_business_rules.py, đủ 19 hàm TC01-TC19,
+  và không sửa gì trong src/. Tôi chạy lại uv run pytest: 132 passed (111 test
+  cũ + 21 test mới, vì TC16 và TC17 mỗi cái chạy 2 amount). 2 mutation đều bị
+  bắt: đổi ngưỡng phantom thì TC11 fail, đổi cửa sổ rapid thì TC4 fail.
+
+  Lưu ý khi tự chạy mutation: sau khi hoàn tác một mutation, test vẫn có thể
+  fail vì Python dùng lại file .pyc cũ trong __pycache__. coder đã gặp đúng
+  chuyện này và phải xoá các thư mục __pycache__ của project thì test mới xanh
+  lại.
+
+  reviewer đang review Phase 1, chưa có kết quả. Tôi đã nhờ nó tìm thêm những
+  ranh giới mà 19 test chưa bắt được, ví dụ biên của dải clustering, > hay >= ở
+  upcoding, và ngưỡng 5% của weekend.
+
+✻ Churned for 31s · done 09:57
+
+› Message from reviewer
+  Review plan 03 Phase 1: `/Volumes/D/papaya-insurtech-pumpkin/AI_Engineering_Ch
+  allenges/AI_Challenge_10_Fraud_Detection/tests/test_business_rules.py`
+
+  **Kết luận:** 19 test khớp đúng 19 dòng của `test-cases.md`: đúng rule, đúng
+  biên, assert đúng tập ID. Không test nào sai so với dòng của nó. Có 1 lỗ
+  coverage mức medium ở rule weekend, 1 lỗ ở upcoding, và 3 assert evidence luôn
+  đúng nên không kiểm được gì.
+
+  Base gate: `uv run pytest` ra 132 passed (21 trong file mới, vì TC16/TC17 có
+  parametrize). Repo không cấu hình formatter/linter, ngoài phạm vi phase này.
+
+  **Đối chiếu từng dòng với catalog và hằng số thật:** tất cả đều khớp.
+  - **Fixture:** `make_claim` tự suy `is_weekend` từ ngày. TUE 2024-03-12 là thứ
+  Ba, SAT 2024-03-16 là thứ Bảy. Cặp mặc định J06.9 + P-1001 là cặp hợp lệ, nên
+  claim nền không dính mismatch.
+  - **TC06:** mean 110,000, SD tổng thể 30,000, ngưỡng 170,000. Claim 200,000 bị
+  flag.
+  - **TC07:** không bị đỗ một cách hiển nhiên. Nếu mã có 9 claim mà vẫn được xét
+  thì outlier lệch sqrt(8) = 2.83 SD và sẽ bị flag. Mutation `MIN_CLAIMS` 10 ->
+  9 và 10 -> 11 đều bị bắt.
+  - **TC08 / TC09:** B-1001 = P-1001 + P-1002 + P-1003. TC09 thiếu P-1003.
+  - **TC12:** 1/30 hiển thị "3.3%". P-3001 có `surgical: true`.
+  - **TC14 / TC15:** valid_pairs của K02.1 là P-4001..P-4003.
+  - **TC16 / TC17:** khớp `BAND_LOW = 47_500`, `BAND_HIGH = 49_999`. Cả 4 biên
+  đều bị mutation bắt.
+  - **TC18:** kiểm tay cả 8 rule trên claim K02.1 + P-3001, 49,000, thứ Ba, đứng
+  một mình. Chỉ mismatch (4) và clustering (2) bật. Duplicate, rapid, phantom
+  không bật vì chỉ có 1 claim. Upcoding không bật vì < 10 claim. Unbundling
+  không bật vì B-3101 cần thêm P-3010. Weekend không bật vì là thứ Ba. 100 x (1
+  - e^-1.5) = 77.69, làm tròn 78.
+  - **TC19:** sạch.
+
+  **Chạy mutation:** tôi chạy trên bản copy ở scratchpad, không đụng repo. Mỗi
+  mutation chạy file mới và toàn bộ suite.
+
+  | Mutation | File mới | Toàn suite |
+  |---|---|---|
+  | weekend `MAX_WEEKEND_RATIO = 1.0` (bỏ hẳn điều kiện tỷ lệ) | sống | **sống**
+  |
+  | weekend `>=` -> `>` ở 5% | sống | **sống** |
+  | weekend 0.05 -> 0.04 | sống | bị bắt |
+  | upcoding `>` -> `>=` | sống | **sống** |
+  | upcoding SD_MULTIPLIER 2 -> 1, 2 -> 2.5 | sống | **sống** |
+  | upcoding SD_MULTIPLIER 2 -> 3 | bị bắt | bị bắt |
+  | upcoding bỏ lọc "chỉ claim 1 mã" | sống | **sống** |
+  | upcoding `pstdev` -> `stdev` | sống | **sống** |
+  | upcoding bỏ guard `sd == 0` | sống | **sống** |
+  | unbundling "giao >= 3 mã" thay cho subset | sống | bị bắt |
+  | unbundling `<=` -> `<` | bị bắt | bị bắt |
+  | rapid bỏ điều kiện cùng provider khi skip | sống | bị bắt |
+  | rapid `>` -> `>=` ở 7 ngày | bị bắt | bị bắt |
+  | clustering cả 4 biên | bị bắt | bị bắt |
+  | phantom bỏ ngày khỏi key | bị bắt | bị bắt |
+
+  ## Findings
+
+  **[medium] `tests/test_business_rules.py:132-141` - Điều kiện tỷ lệ cuối tuần
+  < 5%, lõi của rule 6, không được test nào trong cả repo kiểm.**
+  - **Failure scenario:** TC12 dùng tỷ lệ 3.3%, TC13 thoát ở bước "không
+  surgical" trước khi tới phép so tỷ lệ. Đổi `MAX_WEEKEND_RATIO = 1.0` (provider
+  làm cuối tuần 50% vẫn bị flag) hoặc đổi `>=` -> `>` thì 132/132 vẫn pass.
+  - **Fix:** thêm test âm cạnh TC12, ví dụ `TC12b`. Provider có 20 claim, 1
+  claim cuối tuần surgical = đúng 5% -> không flag. Test này bắt được cả hai
+  mutation trên. Nếu muốn giữ đúng 19 hàm thì đặt nó trong test_system_*.
+  - **Source:** `docs/business-rule/weekday-only-providers.md` (ngưỡng < 5%);
+  brief "unit tests covering individual rules and edge cases".
+
+  **[medium-low] `tests/test_business_rules.py:37-41, 90-99` - Fixture upcoding
+  chỉ có các claim bằng nhau cộng 1 outlier lệch đúng 3.0 SD, nên không phân
+  biệt được hệ số SD, `>` / `>=`, `pstdev` / `stdev`, hay lọc claim 1 mã.**
+  - **Failure scenario:** đổi SD_MULTIPLIER thành 1 hoặc 2.5, đổi `stdev` thay
+  `pstdev`, hoặc bỏ lọc `len(procedure_codes) == 1` thì cả suite vẫn xanh. Riêng
+  `stdev` trái với quyết định "population SD" trong docstring
+  `src/rules/upcoding.py`.
+  - **Fix:** đưa vào fixture TC06 hai thứ.
+    - Một claim nằm giữa mean + 1 SD và mean + 2 SD, assert không bị flag. Cách
+  này bắt được hệ số 1.
+    - Một claim nhiều mã có amount lớn, cùng mã đầu, assert không bị flag và
+  không kéo mean. Cách này bắt được việc bỏ lọc.
+
+    Muốn bắt `pstdev` / `stdev` thì chọn outlier sao cho z nằm giữa hai cách
+  tính SD.
+  - **Source:** `docs/business-rule/upcoding.md`.
+
+  **[low] `tests/test_business_rules.py:74` - `assert "7 days" in result["B"]`
+  luôn đúng.**
+  - **Failure scenario:** evidence luôn kết thúc bằng "window: 7 days", nên nếu
+  gap trong evidence bị tính sai (ví dụ in "6 days after A") assert vẫn pass.
+  - **Fix:** `assert "7 days after A" in result["B"]`.
+
+  **[low] `tests/test_business_rules.py:163` - `assert f"{amount:,}" in
+  result["A"]` luôn đúng với cả 47,500 và 49,999.**
+  - **Failure scenario:** cả hai số đều nằm sẵn trong chuỗi cố định "band
+  47,500-49,999". Nếu evidence in sai amount của claim, assert vẫn pass.
+  - **Fix:** `assert f"Amount {amount:,} VND" in result["A"]`.
+
+  **[low] `tests/test_business_rules.py:60` - `"A" in result["B"]` luôn đúng vì
+  evidence chứa "Acute upper respiratory infection".**
+  - **Failure scenario:** nếu evidence của B trỏ sai claim, hoặc không nhắc A,
+  assert vẫn pass.
+  - **Fix:** `assert "Duplicate of B" in result["A"] and "Duplicate of A" in
+  result["B"]`.
+
+  ## Không phải lỗi, chỉ ghi nhận
+  - TC18 lấy severity 4 / 2 từ `weights.json` thật. Đổi weight là TC18 đỏ. Đây
+  là điều dòng 18 muốn, nên đúng ý đồ.
+  - TC09 chỉ dùng 2 mã nên không bắt được kiểu khớp "đủ N mã giao nhau". Test
+  system đã bắt, không cần sửa.
+
+  Không có lộ nhãn: file không đọc `data/`, không import `generator`. Không có
+  random. Không có `.get()` che lỗi.
+
+  **File đã đọc:**
+  - `/Volumes/D/papaya-insurtech-pumpkin/.claude/docs/plans/todo/03-tests-and-me
+  trics.md` (Phase 1)
+  - `docs/business-rule/test-cases.md`
+  - `src/rules/*.py`
+  - `src/scoring/score.py`
+  - `src/catalog.py`, `src/claims.py`
+  - `src/config/catalog.json`, `src/config/weights.json`
+
+  Bản copy để chạy mutation nằm ở `/private/tmp/claude-501/-Volumes-D-papaya-ins
+  urtech-pumpkin/2deccb81-0b64-4dd3-8404-f6a59cdddddc/scratchpad/mut`. Repo
+  không bị sửa.
+
+⏺ Kiểm các dòng reviewer trích trước khi chuyển cho coder.
+
+⏺ Bash(sed -n 30,45p tests/test_business_rules.py; sed -n 55,100p
+      tests/test_business_rules.py; sed -n 130,170p
+      tests/test_business_rules.py; cat src/rules/weekend_ano…)
+  ⎿      )
+     … +129 lines (ctrl+o to expand)
+
+⏺ Agent "Review Phase 1 business tests" finished · 3m 44s
+
+⏺ Đã kiểm tra các nhận xét của reviewer và xác nhận cả 5 finding đều đúng. Tôi
+  sẽ sửa bằng cách bổ sung vào fixture của các test case hiện có, giữ nguyên 19
+  test như trong test-cases.md mà không thêm dòng mới vào tài liệu.
+  ⎿  Resuming agent aec0582
+
+⏺ Phase 1 chưa xong: reviewer thấy 19 test khớp đúng 19 dòng của test-cases.md
+  và không test nào sai so với dòng của nó, nhưng còn vài lỗ coverage. Tôi đã mở
+  từng dòng trích dẫn, cả 5 finding đều đúng, và đã giao vòng sửa thứ nhất cho
+  coder, chưa có kết quả.
+
+  Để tìm lỗ, reviewer đã chạy thử nhiều mutation trên một bản copy, không đụng
+  repo. Những lỗ tìm được:
+
+  - [medium] Weekend: chưa test nào kiểm điều kiện tỷ lệ cuối tuần < 5%. Bỏ hẳn
+    điều kiện này hoặc đổi >= thành > thì cả 132 test vẫn pass.
+  - [medium-low] Upcoding: fixture hiện tại không phân biệt được các thay đổi
+    sau, đổi kiểu nào cả suite vẫn xanh:
+    - hệ số SD 1 hay 2.5 thay cho 2;
+    - > hay >=;
+    - pstdev hay stdev;
+    - bỏ bộ lọc "chỉ xét claim 1 mã".
+  - [low] 3 assert về evidence lúc nào cũng đúng (TC01, TC03, TC16): các số hoặc
+    chữ được kiểm đã nằm sẵn trong phần cố định của câu evidence. Ví dụ TC03
+    kiểm "7 days", mà evidence của rapid luôn kết thúc bằng "window: 7 days".
+
+  Cách sửa: không thêm test mới, mà bổ sung vào fixture của các test có sẵn.
+  - TC12 thêm một provider có đúng 5% claim cuối tuần, và test đòi claim của
+    provider này không bị flag.
+  - TC06 thêm một claim nằm giữa 1 SD và 2 SD, cùng một claim nhiều mã, cả hai
+    đều không được flag.
+  - 3 assert evidence được siết lại để kiểm đúng phần câu thay đổi theo claim.
+
+  Nhờ vậy vẫn giữ đúng 19 test như test-cases.md, không phải sửa doc. Sau khi
+  sửa, coder phải chạy lại các mutation đã lọt để chứng minh lần này chúng bị
+  bắt.
+
+  Riêng chuyện phân biệt pstdev với stdev, tôi đã dặn coder báo lại nếu không
+  dựng được fixture. Nếu không được thì tôi đề xuất chấp nhận bỏ qua, vì với một
+  mã có từ 44 claim trở lên hai cách tính chỉ chênh dưới 1.2%.
+
+✻ Cooked for 34s · done 10:02
+
+› Message from coder
+  Files changed: AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/tests
+  /test_business_rules.py - fix round 1 applied. The file still has 19 test
+  functions. Nothing under src/ changed.
+  - Finding 1 (TC12):
+  `test_tc12_weekend_surgical_at_low_weekend_provider_flagged` now has a second
+  provider (PRV-002) with 20 claims, 1 of them a weekend P-3001 claim (exactly
+  5%). The test asserts the flagged set is exactly {"WEEKEND"} (the 3.3%
+  provider), so the 5% claim "FIVE" is not flagged. The docstring is updated.
+  - Finding 2 (TC06/TC07): `upcoding_claims(total)` now builds total-2 claims at
+  100,000, a MID claim at 150,000, an OUTLIER at 152,000, and a MULTI claim
+  with codes P-1001 + P-1002 at 5,000,000. For total=10: mean 110,200, pstdev
+  20,404.9, stdev 21,508.7, threshold 151,009.8 with pstdev and 153,217.3 with
+  stdev. These numbers are in the helper docstring. TC06 asserts only OUTLIER is
+  flagged, so MID and MULTI are not. TC07 (9 single-code claims) still skips.
+  - Findings 3-5: the evidence assertions are now `"Re-submitted 7 days after
+  A"` (TC03), `"Duplicate of B:"` / `"Duplicate of A:"` (TC01), and `f"Amount
+  {amount:,} VND"` (TC16). I also changed the TC06 assertion to "152,000".
+  Tests: `uv run pytest -q` -> 132 passed (111 old + 21 new).
+  Mutations (each run against tests/test_business_rules.py, then reverted; `git
+  status --short src` is clean, `__pycache__` cleared, full suite green again at
+  132 passed):
+  - MAX_WEEKEND_RATIO = 1.0 -> TC12 fails.
+  - weekend `>=` -> `>` at the 5% comparison -> TC12 fails.
+  - upcoding SD_MULTIPLIER 2 -> 1 -> TC06 fails.
+  - upcoding single-code filter replaced with `if True` -> TC06 and TC07 fail.
+  - upcoding pstdev -> stdev -> TC06 fails.
+  Not done: nothing.
+  Unsure: I ran the mutations with a script that restores the original file
+  contents and sets PYTHONDONTWRITEBYTECODE=1 (the stale .pyc trap from the
+  first round). I did not test `>` vs `>=` in the upcoding threshold, because it
+  needs an amount exactly equal to the threshold and you did not list it.
+
+⏺ Bash(git status --short src tests && uv run pytest -q 2>&1 | tail -1 && grep
+      -c "^def test_" tests/test_business_rules.py && python3 -c "
+      from statistics import mean…)
+  ⎿  ?? tests/test_business_rules.py
+     132 passed in 2.90s
+     19
+     110200 151009.80274394868 153217.30917768902
+
+⏺ Agent "Phase 1: 19 business tests" finished · 39s
+
+⏺ Tôi đã xác nhận báo cáo vòng sửa đạt chuẩn: 132 test pass, đủ 19 hàm, src/
+  không bị động, và ngưỡng upcoding (151.010 với pstdev, 153.217 với stdev) bao
+  quanh claim 152.000 nên test sẽ bắt được nếu đổi công thức. Giờ tôi gửi lại
+  cho reviewer duyệt vòng 2.
+  ⎿  Resuming agent a856953
+
+⏺ coder đã sửa xong cả 5 finding và tôi đã kiểm lại: 132 test pass, vẫn đúng 19
+  hàm, src/ không bị sửa.
+
+  Đã sửa:
+  - Weekend: TC12 có thêm một provider với đúng 5% claim cuối tuần, và test đòi
+    claim của provider này không bị flag. Nhờ vậy điều kiện tỷ lệ < 5% giờ đã có
+    test kiểm.
+  - Upcoding: fixture TC06 thêm một claim nằm giữa 1 SD và 2 SD, cùng một claim
+    nhiều mã, cả hai đều không được flag. Outlier là 152,000, nằm giữa ngưỡng
+    tính bằng pstdev (151,010) và ngưỡng tính bằng stdev (153,217). Tôi đã tự
+    tính lại số này, nên test bắt được cả trường hợp đổi sang stdev.
+  - 3 assert evidence giờ kiểm đúng phần câu thay đổi theo claim, ví dụ
+    "Re-submitted 7 days after A".
+
+  Mutation: theo coder, 5 mutation lọt ở vòng trước giờ đều làm test fail:
+  - bỏ điều kiện tỷ lệ cuối tuần;
+  - đổi >= thành > ở ngưỡng 5%;
+  - đổi hệ số SD 2 thành 1;
+  - bỏ bộ lọc "chỉ xét claim 1 mã";
+  - đổi pstdev thành stdev.
+
+  Tôi chưa tự chạy lại 5 mutation này, reviewer sẽ chạy lại.
+
+  Chưa kiểm: > hay >= ở ngưỡng upcoding. Muốn kiểm phải có một amount bằng đúng
+  ngưỡng, mà ngưỡng tính từ SD thường là số lẻ nên khó dựng. Tôi đề xuất chấp
+  nhận bỏ qua; quyết định dùng > đã ghi trong upcoding.md.
+
+  reviewer đang duyệt vòng 2, chưa có kết quả. Tôi nhờ nó kiểm lại 5 finding và
+  xem TC07 có bị rỗng nghĩa sau khi đổi helper không. Nếu sạch thì Phase 1 xong,
+  sang Phase 2 (metrics).
+
+✻ Baked for 26s · done 10:02
+
+› Message from reviewer
+  Re-review fix round 1: `/Volumes/D/papaya-insurtech-pumpkin/AI_Engineering_Cha
+  llenges/AI_Challenge_10_Fraud_Detection/tests/test_business_rules.py`
+
+  **Kết quả: chưa clean.** Cả 5 finding cũ đã được sửa, nhưng bản sửa helper
+  upcoding làm TC07 hết tác dụng: test vẫn pass ngay cả khi engine xét mã có 9
+  claim. Bản trước thì TC07 bắt được lỗi này.
+
+  `uv run pytest` trên repo: 132 passed. `src/` không đổi so với bản copy
+  mutation (đã kiểm bằng `diff -rq`).
+
+  ## 5 finding cũ: đã sửa hết
+
+  | # | Finding | Mutation chạy lại | Kết quả |
+  |---|---|---|---|
+  | 1 | Weekend: điều kiện tỷ lệ 5% chưa được test | `MAX_WEEKEND_RATIO = 1.0`,
+  `>=` -> `>` | Cả hai bị bắt (TC12) |
+  | 2 | Upcoding: fixture không phân biệt được biến thể tính ngưỡng | SD 2 -> 1,
+  SD 2 -> 2.5, bỏ lọc claim 1 mã, `pstdev` -> `stdev` | Cả bốn bị bắt |
+  | 3 | TC03 assert evidence luôn đúng | evidence ghi sai số ngày | Bị bắt |
+  | 4 | TC16 assert evidence luôn đúng | evidence ghi sai amount | Bị bắt (2
+  param) |
+  | 5 | TC01 assert evidence luôn đúng | evidence ghi sai claim | Bị bắt |
+
+  Chi tiết cần nói thêm:
+  - **TC12:** PRV-002 có 1 claim cuối tuần trên 20 claim. Phép so `1/20 >= 0.05`
+  ra True, nên claim FIVE bị bỏ qua đúng như mong đợi, và đây đúng là biên 5%.
+  - **TC06:** tôi tính lại và khớp với số coder báo: mean 110,200, ngưỡng theo
+  pstdev 151,009.8, theo stdev 153,217.3, mean + 1 SD là 130,604.9. MID =
+  150,000 nằm giữa mean + 1 SD và mean + 2 SD. OUTLIER = 152,000 chỉ bị flag khi
+  tính bằng SD tổng thể (pstdev).
+
+  ## Finding mới
+
+  **[medium] `tests/test_business_rules.py:37-50, 97-99` - TC07 giờ pass bất kể
+  giá trị `MIN_CLAIMS`.**
+  - **Nguyên nhân:** `upcoding_claims(9)` giờ dựng 7 x 100,000 + MID 150,000 +
+  OUTLIER 152,000 + MULTI. Với 9 claim 1 mã này: mean 111,333.3, ngưỡng mean + 2
+  SD (pstdev) là 153,749.3. OUTLIER 152,000 nằm dưới ngưỡng, nên kể cả khi mã
+  được xét thì cũng không claim nào bị flag.
+  - **Failure scenario:** đổi `MIN_CLAIMS = 10` thành `9`, tức engine xét luôn
+  mã có 9 claim, thì file mới 21 passed và cả suite 132 passed, không test nào
+  đỏ.
+  - **Fix:** cho TC07 một fixture mà nếu được xét thì chắc chắn có flag, ví dụ 8
+  x 100,000 + 1 x 200,000. Outlier khi đó cách mean sqrt(8) = 2.83 SD, vượt
+  ngưỡng 2. Có thể thêm tham số `outlier` cho `upcoding_claims`, hoặc viết
+  builder riêng. Nên ghi số z vào docstring của TC07, và chạy lại mutation
+  `MIN_CLAIMS` 10 -> 9 để xác nhận test đỏ.
+
+  ## Còn lại, chấp nhận được
+  - Upcoding `>` -> `>=` vẫn không bị test nào bắt. Muốn bắt thì phải có một
+  claim nằm đúng bằng ngưỡng, mà ngưỡng là số thực nên khó dựng. Không có dòng
+  nào trong `test-cases.md` đòi điều này.
+  - `MIN_CLAIMS` 10 -> 11 vẫn bị TC06 bắt.
+
+  Bản copy để chạy mutation: `/private/tmp/claude-501/-Volumes-D-papaya-insurtec
+  h-pumpkin/2deccb81-0b64-4dd3-8404-f6a59cdddddc/scratchpad/mut`. Repo không bị
+  sửa.
+
+⏺ Bash(sed -n 37,52p tests/test_business_rules.py; sed -n 95,110p
+      tests/test_business_rules.py; python3 -c "
+      from statistics import mean,pstdev…)
+  ⎿  def upcoding_claims(total):
+         """`total` single-code P-1001 claims plus one multi-code claim tha
+     t must be ignored.
+     … +31 lines (ctrl+o to expand)
+⏺ Agent "Review Phase 1 business tests" finished · 1m 19s
+
+⏺ Finding đúng: với 9 claim thì ngưỡng là 153,749, cao hơn outlier 152,000, nên
+  TC07 pass kể cả khi engine có xét mã. Sửa nhỏ, tôi tự làm trên main thread.
+
+⏺ Update(AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/tests/test_bu
+        siness_rules.py)
+  ⎿  Added 8 lines, removed 2 lines
+      104  
+      105  
+      106  def test_tc07_upcoding_code_with_fewer_than_ten_claims_skipped
+           (catalog):
+      107 -    """A code with only 9 claims is not evaluated, so nothing 
+          -is flagged."""                                                
+      108 -    assert flagged_ids("upcoding", upcoding_claims(9), catalog
+          -) == set()                                                    
+      107 +    """A code with only 9 claims is not evaluated, so nothing 
+          +is flagged.                                                   
+      108  
+      109 +    8 x 100,000 + 1 x 200,000: mean 111,111.1, pstdev 31,427.0
+          +, the outlier sits 2.83 SD above the mean,                    
+      110 +    so it would be flagged if the code were evaluated.        
+      111 +    """                                                       
+      112 +    claims = [make_claim(f"C{i}", member=f"MEM-{i:04d}", amoun
+          +t=100_000) for i in range(8)]                                 
+      113 +    claims.append(make_claim("OUTLIER", member="MEM-9999", amo
+          +unt=200_000))                                                 
+      114 +    assert flagged_ids("upcoding", claims, catalog) == set()  
+      115  
+      116 +                                                              
+      117  def test_tc08_unbundling_all_components_flagged(catalog):
+      118      """A claim billing every component of bundle B-1001 is fla
+           gged; a claim with one code is not."""
+      119      claims = [
+
+⏺ Bash(export PYTHONDONTWRITEBYTECODE=1 && uv run pytest -q -p no:cacheprovider
+      2>&1 | tail -1 && cp src/rules/upcoding.py
+      /private/tmp/claude-501/-Volumes-D-papaya-in…)
+  ⎿  132 passed in 2.91s
+     15:MIN_CLAIMS = 9
+     FAILED tests/test_business_rules.py::test_tc07_upcoding_code_with_fewe
+     … +3 lines (ctrl+o to expand)
+  ⎿  Found 1 new diagnostic issue in 1 file (ctrl+o to expand)
+
+⏺ Phase 1 hoàn tất: mutation MIN_CLAIMS 10→9 khiến TC07 fail như mong đợi, đã
+  hoàn tác để src/ sạch; cảnh báo Pyright về pytest chỉ do chưa trỏ .venv, không
+  ảnh hưởng uv run pytest. Tôi sẽ ghi kết quả vào plan rồi chuyển sang Phase 2.
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin && python3 - <<'EOF'
+      p='.claude/docs/plans/todo/03-tests-and-metrics.md'…)
+  ⎿  57:  "phantom_provider_day": {
+     58-    "provider_id": "PRV-049",
+     59-    "provider_name": "Benh vien Da khoa Dong Do",
+     … +18 lines (ctrl+o to expand)
+  ⎿  Updated .claude/docs/plans/README.md (+1 -1)
+      13  
+      14  ## TODO
+      15  
+      16 -- [03 - C: Unit test, metrics, đo thời gian](todo/03-tests-and-
+         -metrics.md) - ticket #03, đã chốt 6 mục, đang làm Phase 1.     
+      16 +- [03 - C: Unit test, metrics, đo thời gian](todo/03-tests-and-
+         +metrics.md) - ticket #03, đã chốt 6 mục, Phase 1 xong, đang làm
+         + Phase 2.                                                      
+  ⎿  Updated .claude/docs/plans/todo/03-tests-and-metrics.md (+3 -0)
+      43    - TC19: claim sạch qua `score_claims` => score 0, `flags == [
+          ]`.
+      44  - Spec giao cho `coder`; sau đó `reviewer` (diff + phase này).
+      45  
+      46 +**Xong (2026-10-25).** Review 2 vòng. Vòng 1 bổ sung fixture, v
+         +ẫn giữ đúng 19 hàm: TC12 thêm provider đúng 5% (trước đó điều k
+         +iện < 5% chưa có test nào kiểm); TC06 thêm claim giữa 1-2 SD, c
+         +laim nhiều mã, outlier nằm giữa ngưỡng `pstdev` / `stdev`; 3 as
+         +sert evidence luôn đúng được siết lại. Vòng 2: TC07 dùng fixtur
+         +e riêng (outlier lệch 2.83 SD), vì helper mới làm TC07 pass kể 
+         +cả khi `MIN_CLAIMS` = 9. 132 test pass. Mutation đều bị bắt: ph
+         +antom `>=`, rapid 8 ngày, weekend tỷ lệ 1.0 / `>`, SD 1 / 2.5, 
+         +`stdev`, bỏ lọc 1 mã, `MIN_CLAIMS` 9 / 11, 4 biên clustering. C
+         +hấp nhận còn lọt: upcoding `>` -> `>=` (cần amount bằng đúng ng
+         +ưỡng số thực).                                                 
+      47 +- Bẫy khi chạy mutation: sau khi hoàn tác, `.pyc` cũ trong `__p
+         +ycache__` vẫn được dùng => chạy với `PYTHONDONTWRITEBYTECODE=1`
+         + hoặc xoá `__pycache__`.                                       
+      48 +                                                               
+      49  ## Phase 2 - Metrics + CLI `metrics`
+      50  
+      51  - `src/metrics/evaluate.py`, `src/metrics/report.py` theo mục 3
+          -4, 6.
+
+⏺ coder(Phase 2: metrics module and CLI)
+  ⎿  Backgrounded agent (↓ to manage · ctrl+o to expand)
+
+⏺ Phase 1 đã xong sau 2 vòng review, 132 test pass. Phase 2 đã giao cho coder,
+  chưa có kết quả.
+
+  Vòng 2 bắt được lỗi do chính vòng sửa 1 gây ra. Ở vòng 1, fixture upcoding
+  dùng chung được đổi để kiểm pstdev / stdev. Với 9 claim, fixture mới có ngưỡng
+  153,749, cao hơn outlier 152,000. Vì vậy TC07 pass kể cả khi engine xét mã
+  chỉ có 9 claim, tức test không còn bắt được gì.
+
+  Tôi đã tự sửa (vài dòng): TC07 giờ dùng fixture riêng, có outlier lệch 2.83
+  SD. Tôi tự chạy mutation MIN_CLAIMS 10 -> 9: TC07 fail, sau đó hoàn tác và
+  src/ sạch.
+
+  Mutation đã kiểm, đều làm test fail:
+  - phantom >=;
+  - rapid cửa sổ 8 ngày;
+  - weekend bỏ điều kiện tỷ lệ, hoặc đổi >= thành > ở 5%;
+  - hệ số SD 1 và 2.5;
+  - stdev thay pstdev;
+  - bỏ lọc "chỉ xét claim 1 mã";
+  - MIN_CLAIMS 9 và 11;
+  - 4 biên clustering.
+
+  Chấp nhận còn lọt: upcoding > hay >=. Muốn bắt phải có amount bằng đúng
+  ngưỡng, mà ngưỡng là số lẻ nên khó dựng.
+
+  Kết quả Phase 1 và cách tránh lỗi __pycache__ cũ khi chạy mutation đã ghi vào
+  plan.
+
+  Phase 2 gồm module src/metrics/, lệnh metrics, test cho phần metrics, và sinh
+  output/metrics_report.md. Tôi dặn coder phải ra đúng các số đo sơ bộ (TP 200,
+  FP 46, recall 100%, FPR 2.6%...). Lệch thì dừng lại và báo, không tự sửa
+  engine.
+
+✻ Brewed for 1m 10s · done 10:05
+
+› Message from coder
+  Files changed (all under /Volumes/D/papaya-insurtech-pumpkin/AI_Engineering_Ch
+  allenges/AI_Challenge_10_Fraud_Detection/):
+  - src/metrics/__init__.py: 0 lines, empty.
+  - src/metrics/evaluate.py: 163 lines (new). `GroundTruthError`,
+  `load_ground_truth`, `check_same_claims`, `ratio` (guards division by zero),
+  `confusion`, `threshold_table`, `by_pattern`, `natural_fp_by_rule`,
+  `extra_rule_claims`, and `evaluate()`, which bundles all of them and runs the
+  claim-set check first.
+  - src/metrics/report.py: 115 lines (new). `build_report(evaluation, weights,
+  elapsed, data_dir=None)`, `write_report(text, out_dir)`, and the seed read
+  from generation_summary.json (omitted if the file or key is missing).
+  - src/cli.py: 107 -> 136 lines.
+    - `run_score(args)` is extracted from `cmd_score`. It prints the "Scored
+  ..." line itself, so `score` output order is unchanged.
+    - New `cmd_metrics` and `metrics` subparser, plus the docstring line.
+    - `GroundTruthError` or OSError -> stderr "Cannot evaluate:" and exit 1.
+  - tests/test_system_metrics.py: 117 lines, 9 tests, using hand-made data only.
+  They cover the confusion counts, the 2-rule FP claim counted under both rules
+  plus the total row, the `>= 40` boundary (score 40 in, 39 out) and `> 0` (0
+  out), missing/extra claim_id, bad header plus is_fraud=2 (both listed), a
+  valid load, zero predictions (also through `build_report`), and the report
+  structure.
+  - output/metrics_report.md: generated, untracked (`??` in git status).
+
+  Tests: `uv run pytest -q` -> 141 passed (132 old + 9 new). `git diff --stat
+  output/scored_output.json` is empty, so `score` output is unchanged. The
+  engine files are untouched, and none of them import `metrics`.
+
+  Printed by `uv run python src/cli.py metrics`:
+  ```
+  Scored 2000 claims in 0.018 s; wrote .../output/scored_output.json
+  Precision 81.3%, recall 100.0%, FPR 2.6%
+  Wrote .../output/metrics_report.md
+  ```
+  Every expected number reproduced, so I made no engine changes:
+  - TP 200, FP 46, FN 0, TN 1754.
+  - FP by rule: rapid_resubmission 24, upcoding 18, amount_clustering 4. No FP
+  claim has 2 rules, so the rule column sums to 46.
+  - 8/8 patterns are fully caught, each by its own rule.
+  - 6 extra-rule claims, all phantom_billing: CLM-01940, 01944, 01947, 01949,
+  01955 and 01956. The three upcoding ones are 01944, 01947 and 01955; the three
+  diagnosis_procedure_mismatch ones are 01940, 01949 and 01956.
+  - Thresholds: `> 0` gives 100.0% recall / 2.6% FPR, `>= 40` gives 80.0% /
+  2.3%, and `>= 70` gives 18.0% / 0.0%.
+
+  Not done: nothing from the spec. I did not edit docs, the integration test or
+  the engine, and I did not commit.
+
+  Unsure:
+  - `THRESHOLDS` and `MAIN_PREDICATE` are score predicates (`> 0`, `>= 40`, `>=
+  70`), as the spec said.
+  - `load_ground_truth` also reports a wrong field count and a duplicate
+  claim_id as problems, which the spec did not list.
+  - The pattern value is not validated in `load_ground_truth`, only the header
+  and is_fraud. A fraud row with an unknown or empty pattern is simply not
+  counted in any `by_pattern` row.
+  - The "Total FP claims (distinct)" row puts its number in the "On legit claims
+  (FP)" column.
+  - The report's runtime line comes from `run_score`'s elapsed time, which
+  includes the scored_output.json write, as the plan says.
+  - The report header says "2000 claims" with no thousands separator.
+
+⏺ Bash(git status --short . && uv run pytest -q 2>&1 | tail -1 && cat
+      output/metrics_report.md)
+  ⎿  A  conversations/06-code-rule-engine.txt
+     M  docs/backlog/README.md
+     M  docs/backlog/todo/03-tests-and-metrics.md
+     … +77 lines (ctrl+o to expand)
+
+⏺ Agent "Phase 2: metrics module and CLI" finished · 1m 19s
+
+⏺ Số trong report khớp hết kỳ vọng. Tôi tự đọc report và thấy vài điểm nhỏ, sẽ
+  gửi kèm cho reviewer cùng diff.
+
+⏺ reviewer(Review Phase 2 metrics)
+  ⎿  Backgrounded agent (↓ to manage · ctrl+o to expand)
+
+⏺ coder đã làm xong Phase 2. Tôi chạy lại test: 141 pass (132 cũ + 9 test
+  metrics mới), và scored_output.json không đổi.
+
+  Lệnh uv run python src/cli.py metrics sinh ra output/metrics_report.md, đủ 4
+  phần và có thời gian chạy. Mọi số khớp với số đo sơ bộ:
+
+  ┌─────────────────────────────┬───────────────────────────────────────────┐
+  │           Chỉ số            │                  Kết quả                  │
+  ├─────────────────────────────┼───────────────────────────────────────────┤
+  │ Precision / Recall / FPR    │ 81.3% / 100% / 2.6%                       │
+  ├─────────────────────────────┼───────────────────────────────────────────┤
+  │ Báo động nhầm theo rule     │ rapid 24, upcoding 18, clustering 4       │
+  ├─────────────────────────────┼───────────────────────────────────────────┤
+  │ Bảng ngưỡng (recall / FPR)  │ > 0: 100% / 2.6%; >= 40: 80% / 2.3%; >=   │
+  │                             │ 70: 18% / 0%                              │
+  ├─────────────────────────────┼───────────────────────────────────────────┤
+  │ Fraud dính thêm rule ngoài  │ 6 claim, đều là phantom_billing           │
+  │ pattern                     │                                           │
+  ├─────────────────────────────┼───────────────────────────────────────────┤
+  │ Thời gian xử lý 2,000 claim │ 0.018 s (đề đòi < 30 s)                   │
+  └─────────────────────────────┴───────────────────────────────────────────┘
+
+  Đọc report tôi thấy 4 điểm cần sửa. Tôi đã gửi cả 4 cho reviewer xác nhận cùng
+  lúc với review code, reviewer đang chạy, chưa có kết quả:
+  - Ground truth có fraud_pattern lạ hoặc rỗng thì không báo lỗi, claim đó cứ
+    thế biến khỏi bảng theo pattern. Như vậy là trái quy tắc "input lỗi thì
+    dừng" đã chốt ở #02.
+  - Report ghi "2000 claims", trong khi cả project ghi 2,000.
+  - Mục 6 claim dính thêm rule không nói rằng đây là ngoại lệ phantom day đã
+    biết trước, nên người đọc không phân biệt được ngoại lệ dự kiến với bug.
+  - Dòng tổng số claim báo nhầm nằm dưới cột "On legit claims (FP)", có thể khó
+    đọc.
+
+  Một việc bạn nên biết: git status cho thấy vài file đã được stage sẵn, trong
+  đó có log conversations/06-code-rule-engine.txt và một số docs. Tôi không chạy
+  git add nên đoán là bạn stage. Tôi để nguyên, không đụng vào.
+
+✻ Brewed for 30s · done 10:06
+
+› Message from reviewer
+  Tôi đã review plan 03 Phase 2. Không có lỗi tính toán. Có 1 lỗi Medium là
+  ground truth không được validate (a), và 1 lỗi Medium nữa là test vẫn pass khi
+  đổi mẫu số FPR thành FP+TP. Còn lại là Low.
+
+  Base gates: `uv run pytest` 141 passed (tôi chạy lại). Repo không có lệnh
+  fmt/lint nào được cấu hình.
+
+  Những gì đã kiểm (trên bản copy ở /private/tmp/claude-501/-Volumes-D-papaya-in
+  surtech-pumpkin/2deccb81-0b64-4dd3-8404-f6a59cdddddc/scratchpad/rv, có
+  `PYTHONDONTWRITEBYTECODE=1`):
+  - **Công thức:** precision = TP/(TP+FP), recall = TP/(TP+FN), FPR =
+  FP/(FP+TN), đều đúng.
+  - **Ngưỡng:** 3 predicate là `> 0`, `>= 40`, `>= 70`, đúng plan mục 1.
+  - **Chia cho 0:** `ratio()` trả 0.0 khi mẫu số bằng 0. Bảng by-pattern cũng có
+  guard riêng.
+  - **`score` không đổi:** tôi chạy `cli.py` ở HEAD và `cli.py` mới trên cùng
+  data. stdout giống nhau (sau khi che thời gian và path), `scored_output.json`
+  giống từng byte.
+  - **Engine không đọc ground truth:** ngoài `src/metrics/` và generator, chỉ có
+  `cli.py` import `metrics`.
+  - **Tất định:** chạy 2 lần, report giống nhau và giống file
+  `output/metrics_report.md` đã sinh, trừ dòng Runtime. Số trong report đều suy
+  từ `evaluation`, không viết cứng.
+  - **Lỗi ở CLI:** đều exit 1, không traceback, trong các trường hợp thiếu
+  `ground_truth.csv`, ground truth thiếu 1 dòng, file chỉ có 2 cột, file có BOM,
+  và `--out` không ghi được.
+
+  ## Medium
+
+  [Medium] `src/metrics/evaluate.py:48-55` - `fraud_pattern` không được
+  validate: không kiểm pattern có thuộc `ALL_RULES` không, cũng không kiểm
+  `is_fraud` có khớp với pattern rỗng / không rỗng không. Xác nhận điểm (a), và
+  cả phần "legit row có pattern".
+  Failure scenario: tôi sửa `CLM-00001,1,unbundling` thành `unbundlng` và cho 7
+  dòng legit mang `upcoding`. Kết quả `metrics` vẫn exit 0:
+  - Header ghi "200 fraudulent" nhưng các dòng by-pattern cộng lại chỉ 199,
+  unbundling còn 24/24.
+  - Report vẫn ghi "Every pattern is fully caught."
+  - Chỉ bảng extra-rule để lộ claim này (`CLM-00001 | unbundlng | unbundling`),
+  và đọc như một "rule thừa".
+  - 7 dòng legit mang pattern lọt qua hoàn toàn im lặng.
+
+  Một fraud row có pattern rỗng cũng bị rơi khỏi mọi dòng by-pattern như vậy.
+  Lệnh `check` đã có đúng kiểm tra này (`src/generator/checks.py:95`), còn
+  loader của metrics thì không.
+  Fix: thêm vào vòng lặp của `load_ground_truth` 2 problem: `is_fraud == "1"` mà
+  pattern không thuộc `ALL_RULES`; `is_fraud == "0"` mà pattern khác rỗng. Thêm
+  1 test cho mỗi trường hợp.
+  Source: ADR-002 "No row is skipped" / invalid input stops; plan 03 mục 3.
+
+  [Medium] `tests/test_system_metrics.py:45` - Test FPR vẫn pass khi đổi mẫu số
+  FP+TN thành FP+TP.
+  Failure scenario: fixture có TP=2, FP=2, TN=2, nên FP/(FP+TN) = FP/(FP+TP) =
+  0.5. Đột biến `ratio(fp, fp + tn)` -> `ratio(fp, fp + tp)` cho kết quả "9
+  passed". `test_zero_predictions` cũng không bắt được, vì FP=0 thì FPR = 0 với
+  cả 2 mẫu số. Một lỗi ở metric đề bài chấm (FPR <= 20%) sẽ không có test nào
+  báo.
+  Fix: đổi fixture cho TP != TN, ví dụ thêm 1 claim legit sạch `L5` (TN=3 -> FPR
+  = 2/5 = 0.4, còn FP/(FP+TP) = 0.5).
+
+  ## Low
+
+  [Low] `tests/test_system_metrics.py:60-65` - Biên `>= 70` không có test. Đột
+  biến `>= 70` -> `> 70` cho "9 passed", vì fixture không có score đúng bằng 70.
+  Biên 40 thì bị bắt (F2 = 40).
+  Fix: thêm 1 claim score 70, hoặc đổi F1 thành 70, rồi assert ở dòng `>= 70`.
+
+  [Low] `src/metrics/evaluate.py:45-54` - Các nhánh "sai số cột" và "trùng
+  claim_id" không có test: đột biến `if False:` ở cả 2 chỗ đều "9 passed".
+  Failure scenario: nếu bỏ nhánh trùng claim_id, một claim xuất hiện 2 lần sẽ bị
+  dòng sau ghi đè mà không báo gì.
+  Fix: thêm 1 test có 1 dòng thiếu cột và 1 claim_id trùng, assert đủ cả 2
+  problem.
+
+  [Low] `src/metrics/report.py:84-103` - Xác nhận điểm (c).
+  Failure scenario: report ghi "6 fraud claim(s) also carry a rule outside their
+  own pattern." mà không nói 6 claim này là ngoại lệ phantom day đã biết trước.
+  Người đọc không phân biệt được đâu là ngoại lệ, đâu là bug. Chữ "claim(s)"
+  đọc như log máy.
+  Fix: tách các claim nằm trên `phantom_provider_day` với rule thừa là
+  `phantom_billing` thành "expected (phantom-day exception, see
+  fraud-injection.md)". Dữ liệu này đọc được từ `generation_summary.json`, giống
+  cách `read_seed` đang đọc, và cùng logic ngoại lệ plan mục 5 đặt cho test
+  tích hợp. Phần còn lại ghi "unexpected". Viết số nhiều thật, ví dụ "6 fraud
+  claims".
+  Source: `docs/business-rule/fraud-injection.md:15`.
+
+  [Low] `src/metrics/report.py:38,41` và `output/metrics_report.md:3,5,12,52-53`
+  - Xác nhận điểm (b). Report viết "2000 claims", "Scored 2000 claims",
+  "1754"/"1758"/"1800", trong khi README và docs viết "2,000".
+  Fix: dùng `f"{n:,}"` cho các số đếm, cả trong ô bảng.
+
+  [Low] `src/metrics/report.py:76` - Điểm (d): xác nhận một phần. Dòng "Total FP
+  claims (distinct)" nằm dưới cột "On legit claims (FP)" vẫn đọc được, và câu
+  bên dưới có giải thích. Nhưng người đọc dễ hiểu 46 là tổng của cột đó, trong
+  khi cột cộng ra 46 chỉ là trùng hợp: không có claim FP nào dính 2 rule (24 +
+  18 + 4 = 46).
+  Fix: bỏ dòng tổng khỏi bảng, ghi 46 trong câu ("46 distinct legit claims were
+  flagged"), hoặc in đậm nhãn kèm "(not a column sum)".
+
+  [Low] `src/metrics/report.py:63,66-68` - Một pattern có 0 claim fraud hiện
+  "Recall 0.0%", nhưng câu bên dưới vẫn ghi "Every pattern is fully caught."
+  (biến `weak` bỏ qua `fraud == 0`). Hai chỗ mâu thuẫn nhau.
+  Fix: ghi "n/a" khi `fraud == 0` và nêu tên pattern đó trong câu.
+
+  [Low] `src/metrics/report.py:93-97` - Vế "reviewers who only read high-score
+  claims miss the fraud caught by weaker rules" là cố định, không phụ thuộc số
+  liệu.
+  Failure scenario: với bộ weight khác mà recall ở `>= 70` không giảm, câu này
+  thành sai.
+  Fix: chỉ in vế này khi `last['recall'] < first['recall']`.
+
+  [Low] `src/metrics/report.py:54-57` - Plan mục 6 yêu cầu mỗi bảng có 1-2 câu
+  đọc số, ví dụ "recall 100% because the dataset is generated from the rule
+  definitions, see limitations in README". Phần Overall chỉ ghi met / NOT met,
+  chưa giải thích vì sao số "quá đẹp".
+  Fix: thêm 1 câu như vậy, ghi nhận khi recall hoặc precision cao bất thường.
+
+  [Low] `src/metrics/report.py:23-28` - `read_seed` lặng lẽ trả None khi
+  `generation_summary.json` thiếu hoặc hỏng. Khi đó dòng seed biến mất khỏi
+  header, trong khi plan mục 6 yêu cầu có seed.
+  Fix: ghi "seed unknown (generation_summary.json missing)" thay vì bỏ trống.
+
+  [Low] `src/metrics/evaluate.py:12` - `GROUND_TRUTH_COLUMNS` bị định nghĩa lại,
+  đã có ở `src/generator/dataset.py:20`. Không nên cho metrics import
+  generator, nên chuyển hằng số này sang module dùng chung, giống
+  `rule_names.py`.
+
+  Ghi chú, không phải lỗi:
+  - Khi ground truth hỏng, `scored_output.json` vẫn được ghi trước rồi mới exit
+  1. Chấp nhận được, vì đó là cách plan mục 2 mô tả lệnh `metrics` (score xong
+  rồi mới so ground truth).
+  - File 2 cột in ra 2003 dòng lỗi ở stderr. Điều này đúng tinh thần ADR-002
+  (liệt kê mọi problem).
+  - Khi bắt lỗi ở `cli.py:99-101`, chỉ dòng đầu của message được thụt lề; các
+  dòng "- ..." phía sau không thụt. Chỉ là hình thức.
+
+  Kết luận cho 4 điểm bạn nêu: (a) xác nhận, nặng hơn mức bạn mô tả vì report
+  còn khẳng định "fully caught" mà sai. (b) xác nhận. (c) xác nhận. (d) xác nhận
+  một phần: đọc được, nhưng nên tách khỏi cột.
+
+⏺ Bash(sed -n 10,14p src/metrics/evaluate.py; sed -n 40,58p
+      src/metrics/evaluate.py; sed -n 25,50p tests/test_system_metrics.py; sed
+      -n 18,30p src/metrics/report.py; s…)
+  ⎿  from rule_names import ALL_RULES
+
+     GROUND_TRUTH_COLUMNS = ["claim_id", "is_fraud", "fraud_pattern"]
+     … +93 lines (ctrl+o to expand)
+
+⏺ Agent "Review Phase 2 metrics" finished · 2m 23s
+
+⏺ Đã kiểm các dòng reviewer trích, tất cả đều đúng. Chuyển vòng sửa 1 cho coder.
+  ⎿  Resuming agent a44d414
+
+⏺ Review Phase 2 không thấy lỗi tính toán nào: các công thức precision, recall,
+  FPR và 3 ngưỡng đều đúng. Lệnh score vẫn giữ nguyên hành vi: reviewer chạy bản
+  cũ và bản mới trên cùng data, scored_output.json giống từng byte. Tôi đã mở
+  từng dòng reviewer trích, tất cả đều đúng, và đã giao vòng sửa 1 cho coder,
+  chưa có kết quả.
+
+  2 lỗi Medium:
+  - Ground truth không được kiểm pattern. Một claim fraud có pattern gõ sai sẽ
+    lặng lẽ biến khỏi bảng theo pattern. Khi reviewer thử với unbundlng, report
+    vẫn ghi "Every pattern is fully caught" trong khi các pattern chỉ cộng
+    ra 199. Claim hợp lệ mà lại có pattern cũng không bị báo.
+  - Test FPR không bắt được khi viết sai mẫu số. Fixture có số claim fraud bắt
+    đúng (TP) bằng số claim hợp lệ không bị flag (TN), nên mẫu số đúng FP+TN và
+    mẫu số sai FP+TP cho cùng kết quả. Lỗi ở đúng metric đề chấm sẽ không bị
+    test nào bắt.
+
+  Low, đã giao sửa hết:
+  - Thêm test cho biên >= 70, cho dòng sai số cột và cho claim_id trùng.
+  - 6 claim dính thêm rule được tách thành "expected (ngoại lệ phantom day)"
+    hoặc "unexpected", nên đọc report là biết đâu là ngoại lệ dự kiến, đâu là
+    bug.
+  - Số đếm ghi 2,000 thay cho 2000.
+  - Bỏ dòng tổng claim báo nhầm khỏi bảng, ghi số 46 vào câu bên dưới.
+  - Câu nhận xét chỉ in khi số liệu đúng là như vậy, không viết cố định.
+  - Phần Overall thêm một câu: dataset tổng hợp sinh từ chính định nghĩa rule,
+    nên đây là cận trên so với dữ liệu thật.
+  - Thiếu file generation_summary.json thì header ghi "seed unknown" thay vì bỏ
+    trống.
+  - Hằng số tên cột ground truth đang bị định nghĩa lại: lấy từ
+    generator.dataset thay vì viết lại.
+  - Thông báo lỗi nhiều dòng của lệnh metrics được thụt lề cho đều.
+
+  Sửa xong, coder phải chạy lại 3 mutation để chứng minh test giờ bắt được: mẫu
+  số FPR, >= 70 đổi thành > 70, bỏ nhánh claim_id trùng. Đây là vòng sửa 1 trên
+  tối đa 2.
+
+✻ Sautéed for 39s · done 10:09
+
+› Message from coder
+  Fix round 1 is done: all 13 items applied, 145 tests pass, and the three
+  mutations are now caught. Pytest is `uv run pytest -q` (the 141 earlier tests
+  plus 4 new). I did not touch the engine, docs or the integration test.
+
+  Per item:
+  1. `load_ground_truth` now flags a fraud row whose pattern is not in
+  `ALL_RULES` (an empty pattern included) and a legit row with a non-empty
+  pattern. All problems are listed together. Test:
+  `test_unknown_or_missing_pattern_and_legit_with_pattern_list_all`, which uses
+  `unbundlng` as the repro.
+  2. Added a clean legit claim L5, so the fixture is now TP 2, FP 2, FN 1, TN 3
+  and FPR is 2/5. A `fp+tp` denominator would give 0.5 and fail. L4 became L5 in
+  the missing-claim test, and the report test now expects "Scored 8 claims".
+  3. F1 now scores exactly 70, and the `>= 70` row asserts it is included.
+  4. `test_wrong_field_count_and_duplicate_claim_id_list_both` asserts both
+  problems appear.
+  5. The extra-rule section is split into "Expected (phantom-day exception, see
+  docs/business-rule/fraud-injection.md)" and "Unexpected".
+     - I did not change `run_score`'s return. New
+  `load_phantom_day_claims(data_dir)` in evaluate.py reads
+  `phantom_provider_day` from `generation_summary.json` and matches provider_id
+  and claim_date against `claims.csv`. It returns None if either file is
+  unreadable.
+     - New `split_extra_rules` treats a claim as expected when it is on the
+  phantom day and its only extra rule is `phantom_billing`. `evaluate(results,
+  truth, phantom_ids=None)` takes the id set, and `cmd_metrics` passes it.
+     - If the check cannot run, everything goes under unexpected and the report
+  says so. Plural now reads "6 fraud claims" / "1 fraud claim".
+  6. Counts use `:,` in the header, runtime line and table cells. The
+  `score`/`metrics` stdout line is a different string ("Scored 2000 claims in X
+  s; wrote ..."), so I left it alone.
+  7. The "Total FP claims" row is gone. The sentence is now "46 distinct legit
+  claims were flagged (a claim flagged by 2 rules counts once here and under
+  each rule in the table); ...".
+  8. A pattern with no fraud claims shows "n/a" recall and is named in the
+  sentence. Test: `test_report_pattern_without_fraud_is_n_a_and_extra_sections`.
+  9. The "reviewers who only read high-score claims..." clause appears only when
+  the last recall is below the first.
+  10. The synthetic-data upper-bound sentence is added after the Overall targets
+  sentence.
+  11. A missing seed now prints "seed unknown (generation_summary.json missing
+  or unreadable)", also when `data_dir` is None.
+  12. `GROUND_TRUTH_COLUMNS` is now imported from `generator.dataset`. That
+  module only pulls in stdlib, so there was no side-effect problem and no
+  duplicate kept.
+  13. `cmd_metrics` prints every line of the error message with a two-space
+  indent. I did not change `run_score`'s error printing, so `score` is
+  unchanged.
+
+  Run results:
+  - `uv run python src/cli.py metrics` regenerated `output/metrics_report.md`.
+  The numbers are unchanged: TP 200, FP 46, FN 0, TN 1,754, precision 81.3%,
+  recall 100.0%, FPR 2.6%.
+  - `git diff --stat output/scored_output.json` is empty, so
+  `scored_output.json` is unchanged.
+  - The report's expected list holds the 6 phantom-day claims (CLM-01940, 01944,
+  01947, 01949, 01955, 01956) and the unexpected list is None.
+
+  Mutations (run with `PYTHONDONTWRITEBYTECODE=1`, restored from a backup after
+  each; the final run is 145 passed):
+  - FPR denominator `fp+tp`: 1 failed, 144 passed (caught).
+  - `>= 70` changed to `> 70`: 1 failed, 144 passed (caught).
+  - Duplicate-claim_id branch dropped: 1 failed, 144 passed (caught).
+
+  Unsure:
+  - `load_phantom_day_claims` re-reads `claims.csv` with `csv.DictReader` in the
+  metrics package instead of using the loaded claims, which keeps `run_score`
+  unchanged. It trusts the CSV columns `provider_id` and `claim_date`.
+  - "Expected" requires the only extra rule to be `phantom_billing`; any other
+  combination on the phantom day is listed as unexpected.
+
+⏺ Bash(git status --short src tests output && uv run pytest -q 2>&1 | tail -1 &&
+      git diff --stat output/scored_output.json && sed -n 1,20p
+      output/metrics_report.md &&…)
+  ⎿   M src/cli.py
+     ?? output/metrics_report.md
+     ?? src/metrics/
+     … +45 lines (ctrl+o to expand)
+
+⏺ Agent "Phase 2: metrics module and CLI" finished · 1m 18s
+
+⏺ Đã kiểm: 145 test pass, scored_output.json không đổi, report mới đúng như yêu
+  cầu. Gửi lại cho reviewer duyệt vòng 2.  ⎿  Resuming agent a9570dd
+
+⏺ coder đã sửa xong vòng 1 của Phase 2, cả 13 mục. Tôi đã kiểm lại: 145 test
+  pass, scored_output.json không đổi. Report mới sinh lại vẫn ra đúng các số cũ
+  (TP 200, FP 46, recall 100%, FPR 2.6%) và giờ đọc dễ hơn:
+  - Số đếm có dấu phân cách: 2,000, 1,754.
+  - Phần Overall có câu nói dataset tổng hợp sinh từ chính định nghĩa rule, nên
+    đây là cận trên so với dữ liệu thật.
+  - 6 claim dính thêm rule nằm ở mục "Expected (phantom-day exception)". Mục
+    "Unexpected" là None.
+
+  Theo báo cáo của coder, 3 mutation giờ đều bị test bắt: mẫu số FPR, >= 70,
+  nhánh claim_id trùng. Tôi chưa tự chạy lại, sẽ để reviewer chạy lại trên bản
+  copy.
+
+  reviewer đang duyệt vòng 2, chưa có kết quả. Tôi nhờ nó soi kỹ phần code mới
+  thêm để tách expected / unexpected:
+  - load_phantom_day_claims xử lý lỗi ra sao, nhất là khi có
+    generation_summary.json mà không đọc được claims.csv.
+  - Điều kiện "rule thừa duy nhất là phantom_billing" có được test cả hai chiều
+    không.
+  - Có test nào có claim thực sự rơi vào mục Unexpected không.
+
+  Đây là vòng review thứ 2. Nếu vẫn còn lỗi, tôi dừng và đưa các finding cho bạn
+  quyết, theo luật tối đa 2 vòng sửa.
+
+✻ Worked for 23s · done 10:11
+
+› Message from reviewer
+  Vòng sửa 1 của Phase 2 chưa sạch: các item của vòng trước đều đã sửa, nhưng
+  phần code mới cho ngoại lệ phantom day có 2 lỗi Medium và vài lỗi Low.
+
+  Base gates: tôi chạy lại `uv run pytest` trên bản copy sạch ở
+  `/private/tmp/claude-501/-Volumes-D-papaya-insurtech-pumpkin/2deccb81-0b64-4dd
+  3-8404-f6a59cdddddc/scratchpad/rv2`, được 145 passed.
+
+  **3 mutation bạn yêu cầu:** cả 3 đều làm test fail (1 failed mỗi lần).
+  - FPR đổi thành fp+tp.
+  - `>= 70` đổi thành `> 70`.
+  - Bỏ nhánh duplicate.
+
+  **Các item vòng trước, đã đọc lại diff:**
+  - Validate pattern (fraud phải thuộc `ALL_RULES`, legit phải để trống): đã
+  sửa, có test.
+  - Test số cột sai và trùng claim_id: đã thêm.
+  - Dấu `,` cho số đếm: đã sửa.
+  - Dòng tổng FP đã chuyển thành câu: đã sửa.
+  - Pattern 0 fraud hiện "n/a" và câu mô tả không còn mâu thuẫn: đã sửa.
+  - Vế câu về reviewer chỉ in khi recall thật sự giảm: đã sửa.
+  - Câu "upper bound": đã thêm.
+  - "seed unknown": đã sửa.
+  - Dòng lỗi thụt lề trong `cmd_metrics`: đã sửa.
+  - Tách expected / unexpected: đã có, nhưng còn lỗi, xem bên dưới.
+
+  ## Medium
+
+  [Medium] `src/metrics/evaluate.py:176` - Điều kiện "rule thừa duy nhất là
+  `phantom_billing`" chỉ có test cho chiều đúng, không có test nào bắt khi nó bị
+  nới.
+  Failure scenario: tôi thử 2 mutation trên dòng này, cả 2 đều cho 13 passed.
+  - `e[0] in ids and e[2] == [PHANTOM_BILLING]` thành `e[0] in ids`.
+  - Thành `e[0] in ids and PHANTOM_BILLING in e[2]`.
+
+  Nếu điều kiện bị nới như vậy, một claim fraud trên phantom day dính thêm
+  `rapid_resubmission` (hoặc `[phantom_billing, rapid_resubmission]`) sẽ bị xếp
+  vào "Expected" và bug bị che. Fixture duy nhất là F2 với `[PHANTOM_BILLING]`,
+  nên không có trường hợp claim nằm trong `ids` mà rule thừa khác.
+  Fix: thêm 2 claim vào `test_by_pattern_and_extra_rules`, cùng nằm trong `ids`
+  và đều phải ra "unexpected":
+  - 1 claim chỉ có rule thừa khác, ví dụ `[RAPID_RESUBMISSION]`.
+  - 1 claim có `[PHANTOM_BILLING, RAPID_RESUBMISSION]`.
+
+  [Medium] `src/metrics/evaluate.py:161-170` - `load_phantom_day_claims` không
+  có test nào. Ngoài ra, khi không khớp được claim nào, nó trả về set rỗng mà
+  không báo gì.
+  Failure scenario 1: bỏ điều kiện ngày (chỉ lọc theo `provider_id`) cho 13
+  passed.
+  Failure scenario 2: tôi đổi `claim_date` trong `generation_summary.json` thành
+  `26/12/2024`, các file khác giữ nguyên. Kết quả:
+  - `metrics` exit 0.
+  - Hàm trả về `set()` nên `checked=True`.
+  - Cả 6 claim phantom day rơi vào "Unexpected".
+  - Report không có câu "could not be checked", nên người đọc tưởng engine có
+  bug.
+
+  Đây đúng là bẫy "bộ lọc khớp 0 dòng" (pyfriend mục 10). Summary có sẵn
+  `"claims": 31` để đối chiếu nhưng code không dùng.
+  Fix:
+  - Nếu `len(ids) != day["claims"]` thì trả về `None`, hoặc thêm 1 câu cảnh báo
+  có kèm 2 con số.
+  - Thêm 1 test trên `tmp_path`: summary và claims.csv nhỏ, có 1 claim cùng
+  provider nhưng khác ngày, kiểm đúng tập id.
+  - Thêm 1 test cho trường hợp lệch số đếm.
+
+  ## Low
+
+  [Low] `src/metrics/evaluate.py:169` - Khối `except` không bắt `csv.Error`. Lỗi
+  này không kế thừa `ValueError`, nên một claims.csv hỏng ở mức CSV sẽ văng
+  traceback thay vì trả `None`. Rủi ro thấp, vì `run_score` đã đọc file này
+  thành công trước đó. Fix: thêm `csv.Error` vào tuple `except`.
+
+  [Low] `src/metrics/report.py:128-129` - Câu số ít bị sai ngữ pháp: "1 fraud
+  claim carry ...". Test ở `tests/test_system_metrics.py:155` lại assert đúng
+  câu sai này. Fix: chọn động từ theo số lượng ("carries" / "carry"), rồi sửa
+  assert.
+
+  [Low] Chưa có test render report trong trường hợp `checked=True` và phần
+  Unexpected có dòng. Test hiện có chỉ cover trường hợp `None`
+  (`tests/test_system_metrics.py:154`), và `split_extra_rules(extras, set())`
+  thì chỉ test ở mức hàm. Fix: dựng report với `phantom_ids={"X"}` cho một claim
+  có rule thừa khác `X`, rồi assert bảng Unexpected có claim đó và không có câu
+  "could not be checked".
+
+  [Low] `src/metrics/report.py:61` - Câu "see Limitations in README.md" trỏ tới
+  một mục chưa tồn tại: grep "limitation" trong README.md không ra gì. Tôi không
+  coi là lỗi của phase này, nhưng cần ghi vào #04, hoặc đổi câu cho tới khi
+  README có mục đó.
+
+  [Low] `src/metrics/evaluate.py:11` - `metrics` giờ import `generator.dataset`,
+  tức là kéo cả module generator vào lúc chạy `metrics`, chỉ để lấy 1 hằng số.
+  Vòng trước tôi đề xuất chuyển hằng số sang module dùng chung, giống
+  `rule_names.py`. Không lộ nhãn, vì `metrics` vốn được phép đọc ground truth.
+  Fix: chuyển `GROUND_TRUTH_COLUMNS` sang `rule_names.py` hoặc một module chung
+  nhỏ, rồi để cả `generator` và `metrics` cùng import từ đó.
+
+  Đã đọc: `git diff src/cli.py`, toàn bộ `src/metrics/evaluate.py`,
+  `src/metrics/report.py`, `tests/test_system_metrics.py`, phần cuối của
+  `output/metrics_report.md` (6 claim Expected, Unexpected: None), và
+  `phantom_provider_day` trong `data/generation_summary.json` (ngày dạng
+  `2024-12-26`, khớp với claims.csv).
+
+⏺ Bash(sed -n 1,14p src/metrics/evaluate.py; sed -n 155,180p
+      src/metrics/evaluate.py; sed -n 124,131p src/metrics/report.py; grep -n -i
+      "limitation" README.md | head)
+  ⎿  """Compare scored claims with the ground truth. Pure functions on list
+     s. Spec: docs/business-rule/metrics.md.
+     … +43 lines (ctrl+o to expand)
+
+⏺ Agent "Review Phase 2 metrics" finished · 1m 13s
+
+⏺ Tất cả nhận xét của reviewer đều hợp lệ; tôi sẽ sửa 2 lỗi Medium và 3 lỗi Low
+  về code/test trong vòng 2, ghi chú bổ sung mục Limitations vào #04, còn đề
+  xuất tách hằng số cột ground truth sang module chung thì tôi bỏ qua vì nằm
+  ngoài phạm vi Phase 2.
+  ⎿  Resuming agent a44d414
+
+⏺ Bash(cat >> docs/backlog/todo/04-writeup-and-submission.md <<'EOF'…)
+  ⎿  From #03 Phase 2 review (2026-10-25):
+
+     - `output/metrics_report.md` (Overall section) says "see Limitations i
+     … +2 lines (ctrl+o to expand)
+  ⎿  Updated AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs
+     /backlog/todo/04-writeup-and-submission.md (+4 -0)
+      31  Optional, only if time remains (noted 2026-10-25, not committed
+           to):
+      32  
+      33  - **Random dataset instead of a hard-coded one.** Today the gen
+          erator places fraud on purpose (fixed seed 2024, constraints th
+          at keep each fraud claim inside its own pattern) and the tests 
+          read that one committed dataset. Rewriting generation to be ran
+          dom (any seed, fraud not hand-placed) would make the tests more
+           transparent: the engine would be shown to work on data it was 
+          not tuned to. If done, the writeup explains the change; if not,
+           the writeup lists it as a known limitation next to the "too go
+          od" recall note above.
+      34 +                                                               
+      35 +From #03 Phase 2 review (2026-10-25):                          
+      36 +                                                               
+      37 +- `output/metrics_report.md` (Overall section) says "see Limita
+         +tions in README.md". The README must get a **Limitations** sect
+         +ion with that exact heading, or the report sentence must change
+         +.                                                              
+
+⏺ Review vòng 2 của Phase 2 chưa sạch: các mục của vòng 1 đều đã sửa và 3
+  mutation cũ đã bị test bắt. Phần code mới thêm để tách claim dính thêm rule
+  thành "Expected" (ngoại lệ phantom day) và "Unexpected" lại có lỗi. Tôi đã
+  kiểm từng dòng reviewer trích và giao vòng sửa 2 cho coder, chưa có kết quả.
+
+  2 lỗi Medium:
+  - Điều kiện "rule thừa duy nhất là phantom_billing" chỉ được test chiều đúng.
+    Nếu ai đó nới điều kiện này, một claim trên phantom day dính thêm rapid cũng
+    bị xếp vào "Expected", tức là bug bị che mà test vẫn xanh.
+  - Hàm tìm các claim của phantom day lặng lẽ trả về tập rỗng khi không khớp 
+    được claim nào. Ví dụ ngày trong summary ghi dạng 26/12/2024: cả 6 claim rơi
+    vào "Unexpected" mà report không cảnh báo gì, người đọc sẽ tưởng engine có
+    bug. Cách sửa: đối chiếu với con số 31 claim có sẵn trong summary; lệch thì
+    report ghi là không kiểm được.
+
+  3 lỗi Low:
+  - Câu số ít sai ngữ pháp: "1 fraud claim carry".
+  - Chưa có test nào dựng report khi mục "Unexpected" thật sự có claim.
+  - Lỗi CSV khi đọc lại claims.csv chưa được bắt.
+
+  Không làm:
+  - Câu "see Limitations in README.md" trong report trỏ tới một mục README chưa
+    có. Tôi giữ câu và ghi vào #04 để writeup thêm mục Limitations.
+  - Đề xuất chuyển hằng số tên cột ground truth sang module dùng chung: tôi bỏ
+    qua, vì phải sửa cả generator, vượt phạm vi Phase 2.
+
+  Đây là vòng sửa cuối của Phase 2. Nếu review sau vòng này vẫn còn finding, tôi
+  dừng lại và đưa cho bạn quyết.
+
+✻ Cogitated for 30s · done 10:12
+
+› Message from coder
+  Fix round 2 is done: all four items applied, `uv run pytest -q` gives 149
+  passed (145 plus 4 new), and all three mutations now fail the suite. I only
+  touched `src/metrics/evaluate.py`, `src/metrics/report.py` and
+  `tests/test_system_metrics.py`.
+
+  Per item:
+  1. New test
+  `test_split_extra_rules_requires_phantom_billing_only_on_phantom_day`. Inside
+  the phantom-day id set it has one claim that stays expected
+  (`[PHANTOM_BILLING]`), plus `[RAPID_RESUBMISSION]` and `[PHANTOM_BILLING,
+  RAPID_RESUBMISSION]`, which must be unexpected. A fourth claim has the right
+  rule but is not on the phantom day, and must also be unexpected.
+  2. `load_phantom_day_claims` now returns None when the matched id count
+  differs from `day["claims"]`, and `csv.Error` is in the except tuple. Two new
+  tmp_path tests:
+     - A small summary plus `claims.csv` with a same-provider claim on another
+  date and a different-provider claim on the same date gives exactly
+  `{"C1","C2"}`.
+     - A summary date of "26/12/2024" with `claims: 2` gives None (0 matched),
+  and a missing directory also gives None.
+  3. The verb now agrees: "1 fraud claim carries" and "N fraud claims carry".
+  The assert in `test_report_pattern_without_fraud_is_n_a_and_extra_sections` is
+  updated to match.
+  4. New test `test_report_lists_unexpected_extra_rule_claim_when_checked`, with
+  `phantom_ids={"X"}`. It asserts that A (upcoding, extra `rapid_resubmission`)
+  appears in the Unexpected table and that "could not be checked" is absent.
+
+  Regenerated `output/metrics_report.md` with `metrics`. The numbers are
+  unchanged (precision 81.3%, recall 100.0%, FPR 2.6%). The Expected table has
+  the 6 claims, the line reads "6 fraud claims carry ...", and Unexpected is
+  "None.". `git diff --stat output/scored_output.json` is empty, so
+  `scored_output.json` is unchanged.
+
+  Mutations (run with `PYTHONDONTWRITEBYTECODE=1`, restored after each; the
+  final run is 149 passed):
+  - Dropped `e[0] in ids`: 2 failed, 147 passed (caught).
+  - Replaced `e[2] == [PHANTOM_BILLING]` with `PHANTOM_BILLING in e[2]`: 1
+  failed, 148 passed (caught).
+  - Dropped the `claim_date` filter in `load_phantom_day_claims`: 1 failed, 148
+  passed (caught).
+
+  Unsure: nothing new.
+
+⏺ Kiểm lại, đồng thời tự chạy đúng 2 mutation reviewer đã nêu (coder chạy một
+  biến thể khác cho mutation đầu tiên).
+
+⏺ Bash(export PYTHONDONTWRITEBYTECODE=1 && uv run pytest -q -p no:cacheprovider
+      2>&1 | tail -1; git diff --stat output/scored_output.json;
+      F=src/metrics/evaluate.py; B…)
+  ⎿  149 passed in 2.80s
+     177:    expected = [e for e in extras if e[0] in ids and e[2] == [PHAN
+     TOM_BILLING]]
+     … +4 lines (ctrl+o to expand)
+
+⏺ Agent "Phase 2: metrics module and CLI" finished · 33s
+
+⏺ Cả 2 mutation của reviewer giờ đều làm test fail, file đã hoàn tác và 149 test
+  pass. Gửi reviewer duyệt lần cuối.
+  ⎿  Resuming agent a9570dd
+
+⏺ coder đã sửa xong vòng 2 của Phase 2. Kết quả tôi kiểm lại:
+  - 149 test pass, scored_output.json không đổi.
+  - Tôi tự chạy đúng 2 mutation reviewer nêu, tức là nới điều kiện "rule thừa
+    duy nhất là phantom_billing" theo 2 cách: cả 2 giờ đều làm test fail, file
+    đã hoàn tác.
+  - Hàm tìm claim của phantom day giờ đối chiếu với con số 31 claim trong
+    summary. Lệch thì report ghi là không kiểm được, không còn lặng lẽ đẩy 6
+    claim sang "Unexpected".
+  - Report sinh lại vẫn ra đúng các số cũ: 6 claim nằm ở mục Expected, mục
+    Unexpected là None.
+
+  reviewer đang duyệt lần cuối, chưa có kết quả. Đây là vòng sửa cuối của phase:
+  nếu review vẫn ra lỗi Medium trở lên, tôi dừng và đưa finding cho bạn quyết.
+  Nếu sạch thì sang Phase 3, gồm test tích hợp trên dataset thật và cập nhật
+  pitfalls doc.
+
+✻ Cogitated for 29s · done 10:13
+
+› Message from reviewer
+  Vòng sửa 2 của Phase 2: sạch, không còn finding Medium+. Còn đúng 1 Low không
+  bắt buộc, ở cuối.
+
+  Kết quả tôi chạy lại trên bản copy sạch `/private/tmp/claude-501/-Volumes-D-pa
+  paya-insurtech-pumpkin/2deccb81-0b64-4dd3-8404-f6a59cdddddc/scratchpad/rv3`:
+  - **`uv run pytest`:** 149 passed.
+  - **Mutation:** cả 4 mutation dưới đây đều bị test bắt (mỗi cái 1 failed, 16
+  passed):
+    - Bỏ kiểm số lượng ở `evaluate.py:169` (`return ids`).
+    - Chỉ lọc theo `provider_id`.
+    - Chỉ lọc theo `claim_date`.
+    - Đổi `split_extra_rules` thành `e[0] in ids`.
+  - **Chạy `metrics` trên data thật:** exit 0. Report khớp
+  `output/metrics_report.md` đã commit, trừ dòng Runtime. 6 claim phantom day
+  nằm ở Expected, Unexpected ghi "None."
+
+  Đã xác nhận các phần đã sửa:
+  - **`load_phantom_day_claims` (`src/metrics/evaluate.py:161-171`):**
+    - Trả về `None` khi số claim khớp được khác `day["claims"]`.
+    - Đã bắt `csv.Error`.
+    - Có test cho tập id chính xác: loại cả claim cùng provider khác ngày và
+  claim khác provider cùng ngày.
+    - Có test cho date format sai (trả về `None`) và thư mục không tồn tại (trả
+  về `None`).
+  - **`split_extra_rules`:** test mới cover đủ 4 trường hợp:
+    - Có `phantom_billing` và nằm trên phantom day: expected.
+    - Rule thừa khác: unexpected.
+    - `phantom_billing` kèm rule khác: unexpected.
+    - Đúng rule nhưng không nằm trên phantom day: unexpected.
+  - **`report.py`:** chia số ít / số nhiều đúng ("carries" / "carry"), và test
+  đã assert theo câu mới. Có test render report với `checked=True` và bảng
+  Unexpected khác rỗng.
+
+  Low, không bắt buộc: `src/metrics/report.py:130`, câu số ít đọc thành "1 fraud
+  claim carries a rule outside their own pattern". Có thể đổi "their" thành
+  "its" khi chỉ có 1 claim.
+
+⏺ Phase 2 sạch. Tôi tự sửa nốt lỗi Low "their" -> "its" (1 dòng), ghi kết quả
+  vào plan, rồi làm Phase 3 trên main thread.
+
+⏺ Bash(sed -n 126,132p src/metrics/report.py; grep -n "outside their
+      own\|outside its own" tests/test_system_metrics.py)
+  ⎿          return lines + ["None."]
+         lines.append(table(["Claim", "Pattern", "Extra rules"], [[c, p, ",
+      ".join(e)] for c, p, e in rows]))
+     … +4 lines (ctrl+o to expand)
+
+⏺ Agent "Review Phase 2 metrics" finished · 30s
+
+⏺ Update(AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/src/metrics/r
+        eport.py)
+  ⎿  Added 3 lines, removed 3 lines
+      125      if not rows:
+      126          return lines + ["None."]
+      127      lines.append(table(["Claim", "Pattern", "Extra rules"], [[
+           c, p, ", ".join(e)] for c, p, e in rows]))
+      128 -    noun = "fraud claim" if len(rows) == 1 else "fraud claims"
+      129 -    verb = "carries" if len(rows) == 1 else "carry"           
+      130 -    return lines + ["", f"{len(rows):,} {noun} {verb} a rule o
+          -utside their own pattern."]                                   
+      128 +    if len(rows) == 1:                                        
+      129 +        return lines + ["", "1 fraud claim carries a rule outs
+          +ide its own pattern."]                                        
+      130 +    return lines + ["", f"{len(rows):,} fraud claims carry a r
+          +ule outside their own pattern."]                              
+      131  
+      132  
+      133  def write_report(text: str, out_dir: Path) -> Path:
+
+⏺ Bash(grep -n "fraud claim carries" tests/test_system_metrics.py; sed -n 1,40p
+      tests/test_dataset_check.py | grep -n "DATA\|Path" ; grep -n "^def
+      \|^[A-Z_]* = " src/m…)
+  ⎿  157:    assert "1 fraud claim carries" in text and "could not be check
+     ed" in text
+     8:from pathlib import Path
+     … +38 lines (ctrl+o to expand)
+
+⏺ Viết test tích hợp (Phase 3), dùng thẳng các hàm thư viện, không qua CLI.
+
+⏺ Write(AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/tests/test_int
+       egration_dataset.py)
+  ⎿  Wrote 68 lines to AI_Engineering_Challenges/AI_Challenge_10_Fraud_Dete
+     ction/tests/test_integration_dataset.py
+       1 """Integration test on the committed dataset: the engine against
+          ground_truth.csv. Spec: test-cases.md, metrics.md."""
+       2 
+       3 import time
+       4 from pathlib import Path
+       6 import pytest
+       7 
+       8 from catalog import load_catalog
+       9 from claims import load_claims
+      10 from metrics.evaluate import (
+     … +70 lines (ctrl+o to expand)
+⏺ Bash(grep -n "def load_weights" src/scoring/weights.py && export
+      PYTHONDONTWRITEBYTECODE=1 && uv run pytest -q -p no:cacheprovider 2>&1 |
+      tail -1 && uv run python sr…)
+  ⎿  35:def load_weights(path: Path = DEFAULT_PATH) -> dict[str, int]:
+     153 passed in 2.81s
+     Scored 2000 claims in 0.018 s; wrote /Volumes/D/papaya-insurtech-pumpk
+     … +12 lines (ctrl+o to expand)
+  ⎿  Found 2 new diagnostic issues in 1 file (ctrl+o to expand)
+
+⏺ 153 test pass, và khi bỏ ngoại lệ phantom day, test fail đúng như kỳ vọng với
+  6 claim. Cảnh báo Pyright chỉ do cấu hình IDE, không ảnh hưởng uv run pytest;
+  giờ tôi sẽ ghi số đo của engine vào pitfalls doc.
+
+⏺ Bash(python3 - <<'EOF'
+      p='docs/experiences/dataset-generation-pitfalls.md'…)
+  ⎿   .../docs/experiences/dataset-generation-pitfalls.md                 |
+      6 +++++-
+      1 file changed, 5 insertions(+), 1 deletion(-)
+  ⎿  Updated AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs
+     /experiences/dataset-generation-pitfalls.md (+5 -1)
+      3  **Found:** 2026-10-24 (estimated before coding, then measured)
+      4  **Scope:** generator (A) and how metrics are read (C): amount di
+         stribution, code choice for fraud, `claim_id` assignment, provid
+         er volume, natural FPs.
+      5  **Artifact at time of discovery:** `src/generator/`; cross-check
+         ed against the rules in #03
+      6 -**Status:** measured on the full 2,000-claim dataset (seed 2024)
+        - with a rough script following each rule's definition. Last re-m
+        -easured 2026-10-24 after the #01 review fixes (amount truncation
+        -, provider volume). Re-checked by the engine in #03.            
+      6 +**Status:** measured on the full 2,000-claim dataset (seed 2024)
+        + with a rough script following each rule's definition. Last re-m
+        +easured 2026-10-24 after the #01 review fixes (amount truncation
+        +, provider volume). Re-checked by the engine on 2026-10-25 (#03,
+        + `output/metrics_report.md`): every number below matches.       
+      7  
+      8  Each item: prediction -> how generation handles it -> real measu
+         rement.
+      9  
+     ...
+      14  - **Handling:** accepted (the "natural FPs are allowed" decisio
+          n); reported in section 3 of the metrics report and in the writ
+          eup.
+      15  - **Lesson:** the first rough measurement on clean data gave 57
+           claims (3.2%), above the prediction. The log-normal is right-s
+          kewed, so its upper tail is heavier than a normal one and more 
+          than 2.5% exceed mean + 2 SD.
+      16  - **Real measurement (2,000 claims):** 18 legit claims exceed m
+          ean + 2 SD (1.0% of 1,800), because the 30 upcoded claims push 
+          each code's SD up. No fraud claim of another pattern exceeds th
+          e threshold (their amount factor stays within +-15%).
+      17 +- **Engine (2026-10-25):** upcoding raises 48 flags, 30 on frau
+         +d and 18 on legit claims. Matches.                             
+      18  - **Further lesson:** the natural FPs of a statistical rule mus
+          t be measured on the dataset with fraud already in it; clean da
+          ta gives a number that is off in the wrong direction.
+      19  
+      20  ## 2. Masking lowers upcoding recall
+     ...
+      29  - **Prediction:** 500 members with about 3-4 claims each => som
+          e random pairs share a diagnosis within <= 7 days, about 10-20 
+          legit claims flagged.
+      30  - **Handling:** accepted and reported. If the count is far abov
+          e the estimate, revisit how one member's visit dates are spread
+          .
+      31  - **Real measurement (2,000 claims):** 24 legit claims sit in a
+           pair with the same member + diagnosis <= 7 days apart (excludi
+          ng the duplicate key), next to the 30 injected rapid claims. No
+           fraud claim of another pattern is caught (the generator blocks
+           it when placing fraud). Every re-generation changes the random
+           sequence, so this number moves (20-32 seen so far).
+      32 +- **Engine (2026-10-25):** rapid re-submission raises 54 flags,
+         + 30 on fraud and 24 on legit claims. Matches.                  
+      33  
+      34  ## 4. Label leak through `claim_id` order
+      35  
+     ...
+      67  
+      68  - **Prediction (`../business-rule/amount-clustering.md`):** abo
+          ut 6% of legit P-1003 claims fall into 47,500-49,999 on their o
+          wn.
+      69  - **Real measurement (2,000 claims):** 4/90 legit P-1003 claims
+           (4.4%) are in the band, next to the 20 injected clustering cla
+          ims. Small sample (90 claims): earlier generations gave 2/90 an
+          d 6/90.
+      70 +- **Engine (2026-10-25):** amount clustering raises 24 flags, 2
+         +0 on fraud and 4 on legit claims. Matches.                     
+      71  
+      72  ## 9. Fraud claims accidentally caught by another rule
+      73  
+      74  - **Risk:** a randomly placed fraud claim can form a rapid pair
+           with another claim, repeat a unique key, fall on a weekend at 
+          a weekday-only hospital, or have an amount above the upcoding t
+          hreshold / inside the clustering band => the #03 cross-check se
+          es 1 claim caught by 2 rules.
+      75  - **Handling:** when placing each fraud claim the generator che
+          cks the unique key, the member + diagnosis 7-day window, and we
+          ekdays at weekday-only hospitals; non-amount patterns keep thei
+          r amount factor within +-15%; phantom is generated last so no o
+          ther claim lands on the 31-claim provider-day.
+      76  - **Real measurement (2,000 claims):** `check` passes: only 1 p
+          rovider-day > 30 (31 claims), exactly 15 duplicate groups, the 
+          only weekend claims at weekday-only hospitals are the 20 weeken
+          d claims, multi-code claims are only the 25 unbundling claims, 
+          and no fraud claim is caught by rapid / upcoding / clustering o
+          utside its own pattern. Known exception (the 6 claims on the ph
+          antom day): see `../business-rule/fraud-injection.md`.
+      77 +- **Engine (2026-10-25):** every fraud claim is flagged by its 
+         +own pattern's rule; the only fraud claims with an extra rule ar
+         +e the 6 phantom-day claims (3 upcoding, 3 diagnosis-procedure m
+         +ismatch), each with `phantom_billing` only. Natural FPs come on
+         +ly from rapid (24), upcoding (18) and clustering (4): 46 legit 
+         +claims, FPR 2.6%. Guarded by `tests/test_integration_dataset.py
+         +`.                                                             
+      78  
+      79  ## Rule derived
+      80  
+
+⏺ Ghi kết quả Phase 2 vào plan, rồi gửi file test tích hợp cho reviewer.
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin && python3 - <<'EOF'
+      p='.claude/docs/plans/todo/03-tests-and-metrics.md'…)
+  ⎿  ok
+  ⎿  Updated .claude/docs/plans/todo/03-tests-and-metrics.md (+15 -0)
+      54  - Chạy `metrics` trên data thật => sinh `output/metrics_report.
+          md` (commit file này).
+      55  - Spec giao cho `coder`; sau đó `reviewer`.
+      56  
+      57 +**Xong (2026-10-25).** Review 3 lượt (2 vòng sửa). Vòng 1:     
+      58 +- Ground truth kiểm thêm pattern: fraud phải thuộc `ALL_RULES`,
+         + legit phải rỗng. Trước đó pattern gõ sai làm report vẫn ghi "E
+         +very pattern is fully caught".                                 
+      59 +- Fixture FPR có TP != TN, vì mẫu số sai FP+TP trước đó vẫn pas
+         +s.                                                             
+      60 +- Thêm test biên `>= 70`, test sai số cột, test `claim_id` trùn
+         +g.                                                             
+      61 +- Report: số có dấu phân cách; bỏ dòng tổng FP khỏi bảng; câu n
+         +hận xét suy từ số; câu "upper bound" cho dữ liệu tổng hợp; "see
+         +d unknown".                                                    
+      62 +- Claim dính thêm rule tách Expected (phantom day) / Unexpected
+         +.                                                              
+      63 +                                                               
+      64 +Vòng 2:                                                        
+      65 +- Test đủ 4 chiều của điều kiện "rule thừa duy nhất là `phantom
+         +_billing`".                                                    
+      66 +- `load_phantom_day_claims` trả `None` khi số claim khớp khác `
+         +claims` trong summary (trước đó trả tập rỗng, lặng lẽ đẩy 6 cla
+         +im sang Unexpected).                                           
+      67 +                                                               
+      68 +Main thread sửa nốt câu số ít "its own pattern". 149 test pass,
+         + số trên data thật khớp "Số đo sơ bộ". Không làm, có lý do:    
+      69 +- Chuyển `GROUND_TRUTH_COLUMNS` sang module chung: phải sửa gen
+         +erator, metrics import thẳng từ `generator.dataset` là đủ.     
+      70 +- Câu "see Limitations in README.md" trỏ tới mục chưa có: giao 
+         +cho #04, đã ghi Notes.                                         
+      71 +                                                               
+      72  ## Phase 3 - Test tích hợp + số đo thật
+      73  
+      74  - `tests/test_integration_dataset.py`, đọc `data/` đã commit:
+
+⏺ reviewer(Review Phase 3 integration test)
+  ⎿  Backgrounded agent (↓ to manage · ctrl+o to expand)
+
+⏺ Phase 2 đã xong, review sạch sau 2 vòng sửa. Phase 3 tôi đã làm xong phần code
+  và docs, đang chờ reviewer duyệt, chưa có kết quả.
+
+  Phase 2:
+  - Sau vòng sửa 2, review chỉ còn đúng 1 lỗi Low. Đó là câu số ít "1 fraud
+    claim carries a rule outside their own pattern", tôi đã tự sửa "their" thành
+    "its".
+  - reviewer chạy lại 4 mutation cho phần tách "Expected" (ngoại lệ phantom day)
+    / "Unexpected", cả 4 đều làm test fail.
+  - Kết quả cùng 2 đề xuất không làm (kèm lý do) đã ghi vào plan.
+
+  Phase 3, tôi tự làm:
+  - tests/test_integration_dataset.py: 4 test chạy trên dataset thật đã commit.
+    - Mỗi claim fraud phải bị rule của chính pattern mình bắt.
+    - Rule dính thêm chỉ được là ngoại lệ phantom day, suy từ
+      generation_summary.json chứ không viết cứng claim_id.
+    - Recall >= 70% và FPR <= 20%.
+    - Chạy 2,000 claim < 30 giây.
+  - Kết quả: 153 test pass. Tôi thử bỏ ngoại lệ phantom day: test fail và in
+    đúng 6 claim kèm pattern và rule thừa, sau đó đã hoàn tác.
+  - dataset-generation-pitfalls.md: thêm số đo của engine vào các mục 1, 3,
+    8, 9. Số đo cũ của script nháp và số của engine khớp nhau: rapid 24,
+    upcoding 18, clustering 4 báo nhầm, và chỉ 6 claim phantom day dính thêm
+    rule.
+  - output/metrics_report.md: đã sinh lại, scored_output.json không đổi.
+
+  Tôi đã nhờ reviewer xem các test tích hợp có test nào pass mà không thật sự
+  kiểm gì không, khoảng đo thời gian có đúng không, và số trong doc có khớp
+  report không. Nếu sạch thì ticket #03 xong và tôi báo bạn để commit.
+
+✻ Worked for 1m 16s · done 10:15
+
+› Message from reviewer
+  Kết luận: không có lỗi nặng nào. Không test nào rỗng (vacuous). Phép đo thời
+  gian đo đúng đoạn. Các con số trong doc khớp `output/metrics_report.md`. Còn 3
+  điểm nhỏ, đều mức low.
+
+  Đã chạy trên một bản copy tạm (`PYTHONDONTWRITEBYTECODE=1`, venv của repo):
+  4/4 test tích hợp pass. Sau đó đã xoá bản copy; diff với `src/` và `tests/`
+  gốc là sạch, repo không bị sửa gì. Đã đọc `tests/test_integration_dataset.py`,
+  các hàm dùng trong `src/metrics/evaluate.py`, `score_claims`, các rule bị
+  mutate, git diff của `docs/experiences/dataset-generation-pitfalls.md`, và
+  plan 03 (item 5 + Phase 3).
+
+  **Kết quả mutation**
+
+  | Mutation | Kết quả |
+  |---|---|
+  | upcoding trả `{}` | Bị bắt: test own-rule fail, liệt kê đủ 30 claim kèm
+  pattern |
+  | rapid flag mọi claim | Bị bắt: test extra-rule và test FPR (100%) fail |
+  | rapid window 7 -> 30 | Bị bắt: test extra-rule fail |
+  | upcoding SD 2 -> 1 | Bị bắt: test extra-rule fail |
+  | clustering `BAND_LOW` 47,500 -> 30,000 | Bị bắt: test extra-rule fail |
+  | phantom ngưỡng 30 -> 31 | Bị bắt: test own-rule fail |
+  | `MAX_SECONDS` = 0.0001 | Bị bắt: test thời gian fail |
+  | `score_claims` bỏ 1 claim / bỏ 10 claim | Bị bắt, nhưng chỉ ở test thời gian
+  (`assert 1999 == 2000`) |
+  | phantom ngưỡng 30 -> 20 | Lọt, nhưng tương đương trên dataset này: ngoài
+  ngày phantom, provider-day lớn nhất chỉ có 5 claim. Biên này TC10/TC11 đã kiểm
+  |
+
+  **Trả lời các câu bạn hỏi**
+
+  - **Test own-rule có rỗng không?** Không. Rule trả `{}` thì nó fail. Rule flag
+  mọi claim thì bản thân test này vẫn pass, nhưng test extra-rule và test FPR
+  bắt được. Ba test này phải đi cùng nhau mới đủ chặt.
+  - **Phép đo thời gian:** `start` đặt trước `load_catalog()`, nên đoạn đo gồm
+  catalog, `load_weights()` (được gọi trong biểu thức trước `score_claims`),
+  `load_claims` và `score_claims`. `ground_truth` nằm ở fixture riêng nên không
+  bị tính. Fixture module-scope chỉ đo một lần, test nào chạy trước cũng vậy.
+  Đoạn đo khớp "load -> rules -> score" của đề. Report thì có tính thêm bước
+  write, và đã ghi rõ phạm vi đo.
+  - **Phantom ids:** suy từ `generation_summary.json` + `claims.csv`, không viết
+  cứng ID. `split_extra_rules` đòi rule thừa phải đúng là `[phantom_billing]`,
+  nên không rộng hơn ý định.
+
+  **Findings**
+
+  ```
+  [low] tests/test_integration_dataset.py:26-31 (lỗi lộ ra ở :67) - fixture
+  không đối chiếu tập claim_id đã score với ground truth; nếu claim bị rơi mất
+  thì 3 test chính vẫn pass, chỉ test thời gian bắt được.
+  Failure scenario: loader hoặc scorer làm rơi lặng lẽ 1 claim fraud -> test
+  own-rule, extra-rule và recall/FPR không thấy claim đó nên vẫn pass. Lỗi duy
+  nhất là "assert 1999 == 2000" trong
+  test_scoring_2000_claims_takes_under_30_seconds: tên test chỉ về hiệu năng,
+  message không nêu claim nào bị thiếu.
+  Fix: gọi check_same_claims(truth, results) (đã có trong metrics/evaluate.py) ở
+  đầu test own-rule hoặc trong một test riêng; hoặc assert set(truth) ==
+  {r["claim_id"] for r in results} kèm message liệt kê ID thiếu/thừa.
+  Source: plan 03 "Đã chốt" mục 3 (tập claim_id phải khớp; lệch thì dừng).
+  ```
+
+  ```
+  [low] docs/experiences/dataset-generation-pitfalls.md:6 - dòng Status ghi
+  "every number below matches", nhưng engine chỉ đối chiếu lại số của mục 1, 2,
+  3, 8, 9.
+  Failure scenario: người đọc tin rằng cả số của mục 4-7 cũng đã được engine
+  kiểm lại, trong khi engine không đo chúng: phân bố claim_id theo decile, 0
+  fraud / 3 legit ở biên +-15%, khối lượng theo provider, 494 member.
+  Fix: viết "the engine numbers in items 1, 3, 8, 9 (and 30/30 upcoding recall
+  in item 2) match".
+  ```
+
+  ```
+  [low] docs/experiences/dataset-generation-pitfalls.md:77 (bullet "Engine" của
+  mục 9) - "Guarded by tests/test_integration_dataset.py" đặt ngay sau các số
+  natural FP (24/18/4, 46, FPR 2.6%), nhưng test không ghim các số đó, chỉ kiểm
+  FPR <= 20%.
+  Failure scenario: một thay đổi chỉ làm tăng flag trên claim legit mà không
+  đụng claim fraud vẫn pass (FPR được nới tới khoảng 314 FP nữa). Trong thực tế
+  hầu hết mutation đều chạm fraud nên test extra-rule bắt được, nhưng câu trong
+  doc vẫn hứa nhiều hơn những gì test làm.
+  Fix: chuyển "Guarded by ..." lên ngay sau câu own-rule + phantom exception;
+  hoặc thêm vào test một assert ghim số FP theo rule, có message.
+  ```
+
+  Message lỗi đều rõ: liệt kê (claim, pattern), hoặc (claim, pattern, rules
+  thừa), hoặc tỉ lệ so với target. Có một chi tiết nhỏ không tính là finding:
+  message ở dòng 68 không ghi giới hạn (vd. "took 31.2 s (limit 30 s)").
+
+  Đối chiếu số trong doc với report: upcoding 48 = 30 + 18, rapid 54 = 30 + 24,
+  clustering 24 = 20 + 4 (đã kiểm: cả 4 claim legit đều là P-1003, khớp "4/90"
+  của mục 8), phantom 31 = 25 + 6, có 3 upcoding + 3 mismatch trên ngày phantom,
+  46 FP, FPR 2.6%. Tất cả khớp.
+
+  File liên quan:
+  - /Volumes/D/papaya-insurtech-pumpkin/AI_Engineering_Challenges/AI_Challenge_1
+  0_Fraud_Detection/tests/test_integration_dataset.py
+  - /Volumes/D/papaya-insurtech-pumpkin/AI_Engineering_Challenges/AI_Challenge_1
+  0_Fraud_Detection/docs/experiences/dataset-generation-pitfalls.md
+  - /Volumes/D/papaya-insurtech-pumpkin/AI_Engineering_Challenges/AI_Challenge_1
+  0_Fraud_Detection/src/metrics/evaluate.py
+  - /Volumes/D/papaya-insurtech-pumpkin/AI_Engineering_Challenges/AI_Challenge_1
+  0_Fraud_Detection/output/metrics_report.md
+
+⏺ 3 lỗi Low đều đúng và sửa nhỏ, tôi tự làm luôn.
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin/AI_Engineering_Challenges/AI_Chall
+      enge_10_Fraud_Detection && python3 - <<'EOF'
+      p='tests/test_integration_dataset.py'…)
+  ⎿  154 passed in 2.92s
+     69:def check_same_claims(truth: dict[str, tuple[bool, str]], results:
+     list[dict]) -> None:
+     … +5 lines (ctrl+o to expand)
+  ⎿  Updated AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs
+     /experiences/dataset-generation-pitfalls.md (+2 -2)
+      3  **Found:** 2026-10-24 (estimated before coding, then measured)
+      4  **Scope:** generator (A) and how metrics are read (C): amount di
+         stribution, code choice for fraud, `claim_id` assignment, provid
+         er volume, natural FPs.
+      5  **Artifact at time of discovery:** `src/generator/`; cross-check
+         ed against the rules in #03
+      6 -**Status:** measured on the full 2,000-claim dataset (seed 2024)
+        - with a rough script following each rule's definition. Last re-m
+        -easured 2026-10-24 after the #01 review fixes (amount truncation
+        -, provider volume). Re-checked by the engine on 2026-10-25 (#03,
+        - `output/metrics_report.md`): every number below matches.       
+      6 +**Status:** measured on the full 2,000-claim dataset (seed 2024)
+        + with a rough script following each rule's definition. Last re-m
+        +easured 2026-10-24 after the #01 review fixes (amount truncation
+        +, provider volume). Re-checked by the engine on 2026-10-25 (#03,
+        + `output/metrics_report.md`): the engine numbers in items 1, 3, 
+        +8, 9 (and 30/30 upcoding recall in item 2) match; items 4-7 are 
+        +generator properties the engine does not measure.               
+      7  
+      8  Each item: prediction -> how generation handles it -> real measu
+         rement.
+      9  
+     ...
+      74  - **Risk:** a randomly placed fraud claim can form a rapid pair
+           with another claim, repeat a unique key, fall on a weekend at 
+          a weekday-only hospital, or have an amount above the upcoding t
+          hreshold / inside the clustering band => the #03 cross-check se
+          es 1 claim caught by 2 rules.
+      75  - **Handling:** when placing each fraud claim the generator che
+          cks the unique key, the member + diagnosis 7-day window, and we
+          ekdays at weekday-only hospitals; non-amount patterns keep thei
+          r amount factor within +-15%; phantom is generated last so no o
+          ther claim lands on the 31-claim provider-day.
+      76  - **Real measurement (2,000 claims):** `check` passes: only 1 p
+          rovider-day > 30 (31 claims), exactly 15 duplicate groups, the 
+          only weekend claims at weekday-only hospitals are the 20 weeken
+          d claims, multi-code claims are only the 25 unbundling claims, 
+          and no fraud claim is caught by rapid / upcoding / clustering o
+          utside its own pattern. Known exception (the 6 claims on the ph
+          antom day): see `../business-rule/fraud-injection.md`.
+      77 -- **Engine (2026-10-25):** every fraud claim is flagged by its 
+         -own pattern's rule; the only fraud claims with an extra rule ar
+         -e the 6 phantom-day claims (3 upcoding, 3 diagnosis-procedure m
+         -ismatch), each with `phantom_billing` only. Natural FPs come on
+         -ly from rapid (24), upcoding (18) and clustering (4): 46 legit 
+         -claims, FPR 2.6%. Guarded by `tests/test_integration_dataset.py
+         -`.                                                             
+      77 +- **Engine (2026-10-25):** every fraud claim is flagged by its 
+         +own pattern's rule; the only fraud claims with an extra rule ar
+         +e the 6 phantom-day claims (3 upcoding, 3 diagnosis-procedure m
+         +ismatch), each with `phantom_billing` only; both facts are guar
+         +ded by `tests/test_integration_dataset.py`. Natural FPs come on
+         +ly from rapid (24), upcoding (18) and clustering (4): 46 legit 
+         +claims, FPR 2.6% (the test only checks FPR <= 20%).            
+      78  
+      79  ## Rule derived
+      80  
+  ⎿  Updated AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/test
+     s/test_integration_dataset.py (+8 -1)
+       8  from catalog import load_catalog
+       9  from claims import load_claims
+      10  from metrics.evaluate import (
+      11 +    check_same_claims,                                         
+      12      confusion,
+      13      extra_rule_claims,
+      14      load_ground_truth,
+     ...
+      37      return load_ground_truth(DATA_DIR / "ground_truth.csv")
+      38  
+      39  
+      40 +def test_every_ground_truth_claim_is_scored(scored, truth):    
+      41 +    """A claim dropped by the loader or scorer would hide from 
+         +every other test here."""                                      
+      42 +    results, _ = scored                                        
+      43 +    check_same_claims(truth, results)  # raises GroundTruthErro
+         +r naming the missing / extra claim_ids                         
+      44 +                                                               
+      45 +                                                               
+      46  def test_every_fraud_claim_triggers_its_own_rule(scored, truth)
+          :
+      47      results, _ = scored
+      48      missed = [
+     ...
+      72  def test_scoring_2000_claims_takes_under_30_seconds(scored):
+      73      results, elapsed = scored
+      74      assert len(results) == 2000
+      68 -    assert elapsed < MAX_SECONDS, f"load -> rules -> score took
+         - {elapsed:.1f} s"                                              
+      75 +    assert elapsed < MAX_SECONDS, f"load -> rules -> score took
+         + {elapsed:.1f} s (limit {MAX_SECONDS} s)"                      
+
+⏺ Agent "Review Phase 3 integration test" finished · 2m 8s
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin && python3 - <<'EOF'
+      p='.claude/docs/plans/todo/03-tests-and-metrics.md'…)
+  ⎿  MM ../../.claude/docs/plans/README.md
+     A  conversations/06-code-rule-engine.txt
+     M  docs/backlog/README.md
+     … +12 lines (ctrl+o to expand)
+  ⎿  Updated .claude/docs/plans/README.md (+1 -1)
+      13  
+      14  ## TODO
+      15  
+      16 -- [03 - C: Unit test, metrics, đo thời gian](todo/03-tests-and-
+         -metrics.md) - ticket #03, đã chốt 6 mục, Phase 1 xong, đang làm
+         - Phase 2.                                                      
+      16 +- [03 - C: Unit test, metrics, đo thời gian](todo/03-tests-and-
+         +metrics.md) - ticket #03, đã chốt 6 mục, 3 phase xong, chờ comm
+         +it.                                                            
+  ⎿  Updated .claude/docs/plans/todo/03-tests-and-metrics.md (+7 -0)
+      78  - `docs/experiences/dataset-generation-pitfalls.md` (đã là tiến
+          g Anh): dòng Status đổi thành "re-checked by the engine on 2026
+          -10-25", thêm "engine: ..." vào mục 1, 3, 8, 9 (khớp / lệch so 
+          với script nháp).
+      79  - Main thread tự làm (test ngắn + docs); `reviewer` cho file te
+          st.
+      80  
+      81 +**Xong (2026-10-25).** Main thread viết test + docs, review 1 l
+         +ượt. 4 test tích hợp ban đầu không rỗng: mutation rule trả `{}`
+         +, rapid flag mọi claim, rapid 30 ngày, SD 1, band 30,000, phant
+         +om 31, `MAX_SECONDS` nhỏ đều bị bắt. Sửa theo 3 lỗi Low:       
+      82 +- Thêm test `check_same_claims`, vì trước đó claim bị rơi chỉ l
+         +ộ ở test thời gian (`1999 == 2000`).                           
+      83 +- Status của pitfalls doc nói rõ engine chỉ đo lại mục 1, 2, 3,
+         + 8, 9.                                                         
+      84 +- "Guarded by" chỉ gắn với điều test thật sự kiểm.             
+      85 +                                                               
+      86 +154 test pass.                                                 
+      87 +                                                               
+      88  ## Verify
+      89  
+      90  - `uv run pytest`: 111 test cũ + 19 test business + test metric
+          s + test tích hợp đều pass.
+
+⏺ Ticket #03 đã làm xong cả 3 phase, 154 test pass, chưa commit.
+
+  Kết quả trên dataset thật:
+
+  ┌───────────────────────┬────────────┬──────────────────┐
+  │                       │ Đề yêu cầu │     Đạt được     │
+  ├───────────────────────┼────────────┼──────────────────┤
+  │ Unit test             │ >= 15      │ 19 test business │
+  ├───────────────────────┼────────────┼──────────────────┤
+  │ Recall                │ >= 70%     │ 100%             │
+  ├───────────────────────┼────────────┼──────────────────┤
+  │ FPR                   │ <= 20%     │ 2.6%             │
+  ├───────────────────────┼────────────┼──────────────────┤
+  │ Thời gian 2,000 claim │ < 30 s     │ 0.018 s          │
+  └───────────────────────┴────────────┴──────────────────┘
+
+  Precision là 81.3%. Báo động nhầm có 46 claim: rapid 24, upcoding 18,
+  clustering 4.
+
+  Đã làm:
+  - Phase 1: tests/test_business_rules.py, đủ 19 test theo test-cases.md. Review
+    2 vòng đã lấp các lỗ coverage, nhất là điều kiện tỷ lệ cuối tuần < 5% trước
+    đó chưa test nào kiểm.
+  - Phase 2: module src/metrics/, lệnh uv run python src/cli.py metrics, và
+    output/metrics_report.md đủ 4 phần cộng thời gian chạy. Review 2 vòng; lỗi
+    đáng kể nhất được sửa là ground truth có pattern gõ sai thì trước đó bị bỏ
+    qua lặng lẽ. Lệnh score giữ nguyên hành vi, scored_output.json không đổi.
+  - Phase 3: tests/test_integration_dataset.py gồm 5 test trên dataset thật:
+    - mọi claim trong ground truth đều được score;
+    - mỗi claim fraud bị rule của chính pattern mình bắt;
+    - rule dính thêm chỉ được là ngoại lệ phantom day;
+    - recall và FPR đạt mục tiêu của đề;
+    - chạy dưới 30 giây.
+
+    Số đo của engine đã ghi vào dataset-generation-pitfalls.md; số đo cũ và số
+    của engine khớp nhau. Review 1 lượt chỉ ra 3 lỗi nhỏ, tôi đã sửa.
+
+  Còn mở: upcoding > hay >= vẫn chưa có test bắt, vì cần một amount bằng đúng
+  ngưỡng (số lẻ) nên khó dựng.
+
+  Ghi cho #04, chưa làm:
+  - recall "quá đẹp" là do dataset sinh từ chính định nghĩa rule;
+  - ở ngưỡng >= 70 recall chỉ còn 18%;
+  - tuỳ chọn sinh dataset ngẫu nhiên nếu còn thời gian;
+  - README phải có mục Limitations, vì report đang trỏ tới mục này.
+
+  Trước khi commit:
+  - Bạn đã stage sẵn một phần file (log 06-code-rule-engine.txt và vài docs),
+    tôi để nguyên.
+  - Khi bạn nói "commit", tôi chạy /pjdoc-mgmt-claco-bunhy pre-commit. Bước này
+    sẽ chuyển ticket và plan #03 sang done/ bằng git mv, rồi commit.
+  - Nên lưu log hội thoại của phiên này vào conversations/.
+
+✻ Sautéed for 22m 48s · done 10:18
+
+❯ ghi vấn đề upcoding vào.                                                      
+  sau đó commit                                                                 
+
+⏺ Bash(cat >> docs/backlog/todo/03-tests-and-metrics.md <<'EOF'…)
+  ⎿  Known test gap, accepted (2026-10-25): no test catches upcoding's `>`
+     (amount >
+  ⎿  Updated AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs
+     /backlog/todo/03-tests-and-metrics.md (+2 -0)
+      23  - The engine re-check is recorded in `docs/experiences/dataset-
+          generation-pitfalls.md` (items with a "Real measurement").
+      24  
+      25  ## Notes
+      26 +                                                               
+      27 +Known test gap, accepted (2026-10-25): no test catches upcoding
+         +'s `>` (amount > mean + 2 SD, `src/rules/upcoding.py`) being ch
+         +anged to `>=`. Catching it needs a claim whose amount equals th
+         +e threshold exactly, and the threshold is a float computed from
+         + the SD, so such a fixture is hard to build and fragile. The `>
+         +` choice follows the brief ("> 2 standard deviations") and is r
+         +ecorded in `docs/business-rule/upcoding.md`. Every other bounda
+         +ry of the 8 rules is pinned by a test (mutation-checked in plan
+         + 03).                                                          
+
+⏺ Skill(pjdoc-mgmt-claco-bunhy)
+  ⎿  Successfully loaded skill · claude-sonnet-5-5
+
+⏺ Chạy pre-commit sweep. Kiểm diff và các chỗ có thể còn thiếu: ADR, việc chuyển
+  ticket/plan sang done/, checklist trong AGENTS.md, mục lục log hội thoại.
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin && git status --short && git diff
+      HEAD --stat &&
+      C=AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection; ls $C/docs/…)
+  ⎿  M  .claude/docs/plans/README.md
+     A  .claude/docs/plans/todo/03-tests-and-metrics.md
+     A  AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/conversat
+     … +69 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin/AI_Engineering_Challenges/AI_Chall
+      enge_10_Fraud_Detection && cat conversations/README.md | sed -n 8,30p; sed
+      -n 1,12p REA…)
+  ⎿  | # | File | Công cụ | Nội dung chính |
+     |---|---|---|---|
+     | 01 | `01-chat-research-domain.md` (dự kiến) | Claude Chat | Research
+     … +80 lines (ctrl+o to expand)
+
+⏺ Bash(ls conversations/; git log --oneline -12 -- conversations/; sed -n
+      108,160p README.md)
+  ⎿  02-code-setup-project.txt
+     03-code-phase1-generator.txt
+     04-plan-phase-2-rule-engine-setup-agent.txt
+     … +57 lines (ctrl+o to expand)
+
+⏺ Mình đã rà soát xong, còn 6 việc cần làm: viết ADR-005 về quyết định đo thời
+  gian, chuyển ticket/plan #03 vào done/, tick checklist trong AGENTS.md, cập
+  nhật README.md (Status và lệnh metrics), thêm link ADR-005 vào requirements,
+  và cập nhật mục lục plans. Mình sẽ giữ đúng ngôn ngữ từng file:
+  ADR/README/AGENTS/backlog bằng tiếng Anh, còn README của plans bằng tiếng
+  Việt.
+
+⏺ Write(AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/decisions
+       /ADR-005-metrics-command-reruns-the-score-pipeline.md)
+  ⎿  Wrote 42 lines to
+     AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/decisio
+     ns/ADR-005-metrics-command-reruns-the-score-pipeline.md
+      1 # ADR-005: The metrics command re-runs the score pipeline instead
+      2 
+      3 ## Status
+      5 Accepted (2026-10-25)
+      7 ## Context
+      8 
+        d for scoring 2,000 claims in under 30 seconds; the metrics repor
+        t must carry both (ticket #03, C2-C4). `output/scored_output.json
+        _score`, `flags`, see `docs/business-rule/scoring.md`), so it car
+        real runtime to report.
+     … +66 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin &&
+      C=AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection && \
+      git mv $C/docs/backlog/todo/03-tests-and-metrics.md $…)  ⎿  Traceback (most recent call last):
+       File "<stdin>", line 10, in <module>
+       File "<stdin>", line 5, in edit
+     … +26 lines (ctrl+o to expand)
+  ⎿  Created .claude/docs/plans/done/03-tests-and-metrics.md (+105 -0)
+        1 +# Plan 03 - C: Unit test, metrics, đo thời gian               
+        2 +                                                              
+        3 +> **Ticket:** #03 - trạng thái và mục tiêu nằm ở ticket; file 
+          +này chỉ chứa chi tiết thực thi.                               
+        4 +                                                              
+        5 +Nguồn business: `docs/business-rule/test-cases.md` (19 test + 
+          +test tích hợp), `metrics.md` (định nghĩa, 4 phần report), `fra
+          +ud-injection.md` (ngoại lệ phantom day), `glossary.md` mục Eva
+          +luation. Kỹ thuật: `docs/decisions/tech-and-structure.md` (cây
+          + `src/metrics/`, C4 timing). Số đo cần đối chiếu: `docs/experi
+          +ences/dataset-generation-pitfalls.md`.                        
+        6 +                                                              
+        7 +Phạm vi: 19 test business, module + CLI `metrics`, `output/met
+          +rics_report.md`, test tích hợp trên `data/` thật, cập nhật pit
+          +falls doc. Không đụng logic rule / scoring (nếu test lộ bug en
+          +gine => dừng, báo người dùng, không tự sửa trong ticket này). 
+          +Writeup README thuộc #04.                                     
+        8 +                                                              
+        9 +## Số đo sơ bộ (2026-10-25, script nháp đọc `output/scored_out
+          +put.json` + `ground_truth.csv`)                               
+       10 +                                                              
+       11 +- TP 200, FP 46, FN 0, TN 1,754 => precision 81.3%, recall 100
+          +%, FPR 2.6%. Đạt cả 2 mục tiêu.                               
+       12 +- Theo pattern: 8/8 pattern bắt đủ (vd upcoding 30/30).       
+       13 +- Natural FP theo rule: rapid 24, upcoding 18, clustering 4 =>
+          + khớp mục 1, 3, 8 của pitfalls doc.                           
+       14 +- Fraud dính thêm rule ngoài pattern: đúng 6 claim, đều là `ph
+          +antom_billing` trên phantom day (3 upcoding + 3 mismatch) => k
+          +hớp ngoại lệ đã ghi.                                          
+       15 +- Bảng ngưỡng: > 0 -> recall 100% / FPR 2.6%; >= 40 -> 80% / 2
+          +.3%; >= 70 -> 18% / 0%.                                       
+       16 +                                                              
+       17 +Số này là kỳ vọng cho Verify; code thật phải ra đúng như vậy. 
+       18 +                                                              
+       19 +## Đã chốt trước khi code (2026-10-25)                        
+       20 +                                                              
+       21 +Người dùng duyệt cả 6 mục theo đề xuất. Đã ghi vào: mục 1 -> `
+          +metrics.md`; tất cả -> `challenge-10-requirements.md` (Settled
+          + decisions, C1-C4).                                           
+       22 +                                                              
+       23 +1. **Ngưỡng trong bảng phần 4:** 3 dòng `score > 0` (>= 1 flag
+          +, = metric chính), `score >= 40`, `score >= 70`. `metrics.md` 
+          +ghi "ngưỡng 0" => sửa câu chữ thành `> 0` cho khỏi hiểu nhầm `
+          +>= 0` (flag mọi claim). Với weight hiện tại score chỉ nhận các
+          + giá trị rời rạc (39, 53, 63, 71, ...) nên `>` hay `>=` ở 40 /
+          + 70 cho cùng kết quả; chọn `>=` vì đọc tự nhiên hơn ("từ 40 đi
+          +ểm trở lên").                                                 
+       24 +2. **Lệnh `metrics` chạy lại cả pipeline score rồi mới so grou
+          +nd truth.** `cli.py metrics [--data data] [--weights ...] [--o
+          +ut output]`: load -> 8 rule -> score -> ghi `scored_output.jso
+          +n` (đo thời gian đoạn này, giống `score`) -> đọc `ground_truth
+          +.csv` -> ghi `metrics_report.md`. Tách phần chung của `cmd_sco
+          +re` thành 1 hàm `run_score(args) -> (results, elapsed)` để 2 l
+          +ệnh dùng chung.                                               
+       25 +   - Phương án bị loại: `metrics` chỉ đọc `scored_output.json`
+          + có sẵn. Lý do loại: thời gian chạy không nằm trong output (ou
+          +tput chỉ 3 trường của đề) => report không có số đo thật, hoặc 
+          +phải ghi thời gian ra file phụ.                               
+       26 +   - Thời gian = 1 lần chạy, `time.perf_counter()` trong proce
+          +ss (không tính khởi động Python); report ghi rõ phạm vi đo.   
+       27 +3. **`src/metrics/` được đọc ground truth, engine thì không.**
+          + `src/metrics/evaluate.py` (đếm TP/FP/FN/TN, theo pattern, FP 
+          +theo rule, bảng ngưỡng: hàm thuần trên list) + `src/metrics/re
+          +port.py` (dựng markdown). Engine không import `metrics`; S9 hi
+          +ện quét `claims.py`, `rules/`, `scoring/` nên không cần sửa. G
+          +round truth đọc bằng hàm riêng trong `metrics/`, kiểm tối thiể
+          +u: header `claim_id,is_fraud,fraud_pattern`, tập `claim_id` kh
+          +ớp đúng tập claim đã score (lệch => dừng, exit 1, giống ADR-00
+          +2).                                                           
+       28 +4. **Natural FP theo rule:** 1 claim FP dính 2 rule thì đếm ch
+          +o cả 2 rule; bảng có thêm dòng tổng số claim FP (46) để người 
+          +đọc không cộng cột ra 46 sai. Mỗi rule ghi: số flag, số flag t
+          +rên claim fraud, số flag trên claim legit (FP).               
+       29 +5. **Ngoại lệ trong test tích hợp suy từ dữ liệu, không viết c
+          +ứng claim_id:** claim fraud nằm trên `phantom_provider_day` (đ
+          +ọc từ `generation_summary.json`) được phép dính thêm `phantom_
+          +billing`. Mọi rule thừa khác => test fail, message liệt kê `cl
+          +aim_id`, pattern, các rule thừa. Test được đọc ground truth (t
+          +est không phải engine).                                       
+       30 +6. **Format `output/metrics_report.md`:** tiếng Anh (như mọi f
+          +ile output). Đầu file: dataset (số claim, số fraud, seed), wei
+          +ght đang dùng, thời gian chạy. Sau đó 4 phần theo `metrics.md`
+          +, mỗi phần là 1 bảng markdown, % lấy 1 chữ số thập phân, mỗi b
+          +ảng có 1-2 câu đọc số (vd "recall 100% vì dataset sinh ra theo
+          + đúng định nghĩa rule, xem phần hạn chế ở README"). Nội dung t
+          +ất định trừ dòng thời gian.                                   
+       31 +                                                              
+       32 +## Phase 1 - 19 test business                                 
+       33 +                                                              
+       34 +- File `tests/test_business_rules.py`, mỗi dòng của `test-case
+          +s.md` = 1 hàm `test_tcNN_<mô tả>` (NN = số trong bảng), docstr
+          +ing ghi lại kết quả mong đợi của bảng.                        
+       35 +- Unit level: gọi thẳng `RULES[rule](claims, catalog)` với cla
+          +im dựng trong test (giống `make_claim` ở `test_system_rules_co
+          +ntract.py`; có thể chuyển helper này sang `tests/conftest.py` 
+          +nếu dùng chung, không đổi hành vi test cũ). Không đọc `data/`.
+       36 +- Kiểm cả claim nào bị flag lẫn claim nào không (vd TC1: đúng 
+          +2 claim trong cặp, không dư claim khác); evidence chỉ kiểm có 
+          +số / mã then chốt, không so nguyên câu (câu đã có test ở #02).
+       37 +- Dữ liệu cụ thể:                                             
+       38 +  - TC6 / TC7 upcoding: 1 mã có 10 claim (9 claim cùng amount 
+          ++ 1 claim vượt mean + 2 SD) => flag; cùng bố cục với 9 claim =
+          +> không flag.                                                 
+       39 +  - TC10 / TC11 phantom: 31 / 30 claim cùng provider + ngày.  
+       40 +  - TC12 weekend: provider có 30 claim, 1 claim cuối tuần (3.3
+          +%), claim đó có mã surgical (vd P-3001). TC13: cùng tỷ lệ, cla
+          +im cuối tuần không surgical.                                  
+     … 65 more lines (ctrl+o to expand)
+  ⎿  Deleted .claude/docs/plans/todo/03-tests-and-metrics.md (+0 -105)
+        1 -# Plan 03 - C: Unit test, metrics, đo thời gian               
+        2 -                                                              
+        3 -> **Ticket:** #03 - trạng thái và mục tiêu nằm ở ticket; file 
+          -này chỉ chứa chi tiết thực thi.                               
+        4 -                                                              
+        5 -Nguồn business: `docs/business-rule/test-cases.md` (19 test + 
+          -test tích hợp), `metrics.md` (định nghĩa, 4 phần report), `fra
+          -ud-injection.md` (ngoại lệ phantom day), `glossary.md` mục Eva
+          -luation. Kỹ thuật: `docs/decisions/tech-and-structure.md` (cây
+          - `src/metrics/`, C4 timing). Số đo cần đối chiếu: `docs/experi
+          -ences/dataset-generation-pitfalls.md`.                        
+        6 -                                                              
+        7 -Phạm vi: 19 test business, module + CLI `metrics`, `output/met
+          -rics_report.md`, test tích hợp trên `data/` thật, cập nhật pit
+          -falls doc. Không đụng logic rule / scoring (nếu test lộ bug en
+          -gine => dừng, báo người dùng, không tự sửa trong ticket này). 
+          -Writeup README thuộc #04.                                     
+        8 -                                                              
+        9 -## Số đo sơ bộ (2026-10-25, script nháp đọc `output/scored_out
+          -put.json` + `ground_truth.csv`)                               
+       10 -                                                              
+       11 -- TP 200, FP 46, FN 0, TN 1,754 => precision 81.3%, recall 100
+          -%, FPR 2.6%. Đạt cả 2 mục tiêu.                               
+       12 -- Theo pattern: 8/8 pattern bắt đủ (vd upcoding 30/30).       
+       13 -- Natural FP theo rule: rapid 24, upcoding 18, clustering 4 =>
+          - khớp mục 1, 3, 8 của pitfalls doc.                           
+       14 -- Fraud dính thêm rule ngoài pattern: đúng 6 claim, đều là `ph
+          -antom_billing` trên phantom day (3 upcoding + 3 mismatch) => k
+          -hớp ngoại lệ đã ghi.                                          
+       15 -- Bảng ngưỡng: > 0 -> recall 100% / FPR 2.6%; >= 40 -> 80% / 2
+          -.3%; >= 70 -> 18% / 0%.                                       
+       16 -                                                              
+       17 -Số này là kỳ vọng cho Verify; code thật phải ra đúng như vậy. 
+       18 -                                                              
+       19 -## Đã chốt trước khi code (2026-10-25)                        
+       20 -                                                              
+       21 -Người dùng duyệt cả 6 mục theo đề xuất. Đã ghi vào: mục 1 -> `
+          -metrics.md`; tất cả -> `challenge-10-requirements.md` (Settled
+          - decisions, C1-C4).                                           
+       22 -                                                              
+       23 -1. **Ngưỡng trong bảng phần 4:** 3 dòng `score > 0` (>= 1 flag
+          -, = metric chính), `score >= 40`, `score >= 70`. `metrics.md` 
+          -ghi "ngưỡng 0" => sửa câu chữ thành `> 0` cho khỏi hiểu nhầm `
+          ->= 0` (flag mọi claim). Với weight hiện tại score chỉ nhận các
+          - giá trị rời rạc (39, 53, 63, 71, ...) nên `>` hay `>=` ở 40 /
+          - 70 cho cùng kết quả; chọn `>=` vì đọc tự nhiên hơn ("từ 40 đi
+          -ểm trở lên").                                                 
+       24 -2. **Lệnh `metrics` chạy lại cả pipeline score rồi mới so grou
+          -nd truth.** `cli.py metrics [--data data] [--weights ...] [--o
+          -ut output]`: load -> 8 rule -> score -> ghi `scored_output.jso
+          -n` (đo thời gian đoạn này, giống `score`) -> đọc `ground_truth
+          -.csv` -> ghi `metrics_report.md`. Tách phần chung của `cmd_sco
+          -re` thành 1 hàm `run_score(args) -> (results, elapsed)` để 2 l
+          -ệnh dùng chung.                                               
+       25 -   - Phương án bị loại: `metrics` chỉ đọc `scored_output.json`
+          - có sẵn. Lý do loại: thời gian chạy không nằm trong output (ou
+          -tput chỉ 3 trường của đề) => report không có số đo thật, hoặc 
+          -phải ghi thời gian ra file phụ.                               
+       26 -   - Thời gian = 1 lần chạy, `time.perf_counter()` trong proce
+          -ss (không tính khởi động Python); report ghi rõ phạm vi đo.   
+       27 -3. **`src/metrics/` được đọc ground truth, engine thì không.**
+          - `src/metrics/evaluate.py` (đếm TP/FP/FN/TN, theo pattern, FP 
+          -theo rule, bảng ngưỡng: hàm thuần trên list) + `src/metrics/re
+          -port.py` (dựng markdown). Engine không import `metrics`; S9 hi
+          -ện quét `claims.py`, `rules/`, `scoring/` nên không cần sửa. G
+          -round truth đọc bằng hàm riêng trong `metrics/`, kiểm tối thiể
+          -u: header `claim_id,is_fraud,fraud_pattern`, tập `claim_id` kh
+          -ớp đúng tập claim đã score (lệch => dừng, exit 1, giống ADR-00
+          -2).                                                           
+       28 -4. **Natural FP theo rule:** 1 claim FP dính 2 rule thì đếm ch
+          -o cả 2 rule; bảng có thêm dòng tổng số claim FP (46) để người 
+          -đọc không cộng cột ra 46 sai. Mỗi rule ghi: số flag, số flag t
+          -rên claim fraud, số flag trên claim legit (FP).               
+       29 -5. **Ngoại lệ trong test tích hợp suy từ dữ liệu, không viết c
+          -ứng claim_id:** claim fraud nằm trên `phantom_provider_day` (đ
+          -ọc từ `generation_summary.json`) được phép dính thêm `phantom_
+          -billing`. Mọi rule thừa khác => test fail, message liệt kê `cl
+          -aim_id`, pattern, các rule thừa. Test được đọc ground truth (t
+          -est không phải engine).                                       
+       30 -6. **Format `output/metrics_report.md`:** tiếng Anh (như mọi f
+          -ile output). Đầu file: dataset (số claim, số fraud, seed), wei
+          -ght đang dùng, thời gian chạy. Sau đó 4 phần theo `metrics.md`
+          -, mỗi phần là 1 bảng markdown, % lấy 1 chữ số thập phân, mỗi b
+          -ảng có 1-2 câu đọc số (vd "recall 100% vì dataset sinh ra theo
+          - đúng định nghĩa rule, xem phần hạn chế ở README"). Nội dung t
+          -ất định trừ dòng thời gian.                                   
+       31 -                                                              
+       32 -## Phase 1 - 19 test business                                 
+       33 -                                                              
+       34 -- File `tests/test_business_rules.py`, mỗi dòng của `test-case
+          -s.md` = 1 hàm `test_tcNN_<mô tả>` (NN = số trong bảng), docstr
+          -ing ghi lại kết quả mong đợi của bảng.                        
+       35 -- Unit level: gọi thẳng `RULES[rule](claims, catalog)` với cla
+          -im dựng trong test (giống `make_claim` ở `test_system_rules_co
+          -ntract.py`; có thể chuyển helper này sang `tests/conftest.py` 
+          -nếu dùng chung, không đổi hành vi test cũ). Không đọc `data/`.
+       36 -- Kiểm cả claim nào bị flag lẫn claim nào không (vd TC1: đúng 
+          -2 claim trong cặp, không dư claim khác); evidence chỉ kiểm có 
+          -số / mã then chốt, không so nguyên câu (câu đã có test ở #02).
+       37 -- Dữ liệu cụ thể:                                             
+       38 -  - TC6 / TC7 upcoding: 1 mã có 10 claim (9 claim cùng amount 
+          -+ 1 claim vượt mean + 2 SD) => flag; cùng bố cục với 9 claim =
+          -> không flag.                                                 
+       39 -  - TC10 / TC11 phantom: 31 / 30 claim cùng provider + ngày.  
+       40 -  - TC12 weekend: provider có 30 claim, 1 claim cuối tuần (3.3
+          -%), claim đó có mã surgical (vd P-3001). TC13: cùng tỷ lệ, cla
+          -im cuối tuần không surgical.                                  
+     … 65 more lines (ctrl+o to expand)
+  ⎿  Updated AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs
+     /backlog/README.md (+1 -1)
+      11  |---|---|---|---|---|
+      12  | 01 | [A - Generate the dataset](done/01-dataset-generator.md)
+           | feature | done | 1 |
+      13  | 02 | [B - 8-rule engine + scoring](done/02-rule-engine.md) | 
+          feature | done | 2 |
+      14 -| 03 | [C - Unit tests, metrics, runtime](todo/03-tests-and-met
+         -rics.md) | feature | doing | 3 |                               
+      14 +| 03 | [C - Unit tests, metrics, runtime](done/03-tests-and-met
+         +rics.md) | feature | done | 3 |                                
+      15  | 04 | [D - Writeup and submission](todo/04-writeup-and-submiss
+          ion.md) | chore | todo | 4 |
+  ⎿  Created AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs
+     /backlog/done/03-tests-and-metrics.md (+27 -0)
+       1 +# 03 - C: Unit tests, metrics, runtime                         
+       2 +                                                               
+       3 +**Status:** done                                               
+       4 +**Type:** feature                                              
+       5 +**Priority:** 3                                                
+       6 +**Effort:** M (planned 1.25h)                                  
+       7 +**Plan:** `.claude/docs/plans/done/03-tests-and-metrics.md` (re
+         +po root)                                                       
+       8 +**Related:** #01, #02                                          
+       9 +                                                               
+      10 +## What                                                        
+      11 +                                                               
+      12 +19 unit tests, an integration test on the real dataset, a 4-par
+         +t metrics report, and the runtime of scoring 2,000 claims.     
+      13 +                                                               
+      14 +## Why / value                                                 
+      15 +                                                               
+      16 +The brief grades >= 15 unit tests, recall >= 70% with FPR <= 20
+         +%, and < 30 seconds.                                           
+      17 +                                                               
+      18 +## Acceptance criteria                                         
+      19 +                                                               
+      20 +- The 19 tests in `docs/business-rule/test-cases.md` pass under
+         + pytest.                                                       
+      21 +- Integration test: every fraud claim triggers the rule of its 
+         +own pattern; any extra rule outside the recorded exception is r
+         +eported clearly.                                               
+      22 +- `output/metrics_report.md` has the 4 parts of `metrics.md` an
+         +d the runtime.                                                 
+      23 +- The engine re-check is recorded in `docs/experiences/dataset-
+         +generation-pitfalls.md` (items with a "Real measurement").     
+      24 +                                                               
+      25 +## Notes                                                       
+      26 +                                                               
+      27 +Known test gap, accepted (2026-10-25): no test catches upcoding
+         +'s `>` (amount > mean + 2 SD, `src/rules/upcoding.py`) being ch
+         +anged to `>=`. Catching it needs a claim whose amount equals th
+         +e threshold exactly, and the threshold is a float computed from
+         + the SD, so such a fixture is hard to build and fragile. The `>
+         +` choice follows the brief ("> 2 standard deviations") and is r
+         +ecorded in `docs/business-rule/upcoding.md`. Every other bounda
+         +ry of the 8 rules is pinned by a test (mutation-checked in plan
+         + 03).                                                          
+  ⎿  Deleted AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs
+     /backlog/todo/03-tests-and-metrics.md (+0 -27)
+       1 -# 03 - C: Unit tests, metrics, runtime                         
+       2 -                                                               
+       3 -**Status:** doing                                              
+       4 -**Type:** feature                                              
+       5 -**Priority:** 3                                                
+       6 -**Effort:** M (planned 1.25h)                                  
+       7 -**Plan:** `.claude/docs/plans/todo/03-tests-and-metrics.md` (re
+         -po root)                                                       
+       8 -**Related:** #01, #02                                          
+       9 -                                                               
+      10 -## What                                                        
+      11 -                                                               
+      12 -19 unit tests, an integration test on the real dataset, a 4-par
+         -t metrics report, and the runtime of scoring 2,000 claims.     
+      13 -                                                               
+      14 -## Why / value                                                 
+      15 -                                                               
+      16 -The brief grades >= 15 unit tests, recall >= 70% with FPR <= 20
+         -%, and < 30 seconds.                                           
+      17 -                                                               
+      18 -## Acceptance criteria                                         
+      19 -                                                               
+      20 -- The 19 tests in `docs/business-rule/test-cases.md` pass under
+         - pytest.                                                       
+      21 -- Integration test: every fraud claim triggers the rule of its 
+         -own pattern; any extra rule outside the recorded exception is r
+         -eported clearly.                                               
+      22 -- `output/metrics_report.md` has the 4 parts of `metrics.md` an
+         -d the runtime.                                                 
+      23 -- The engine re-check is recorded in `docs/experiences/dataset-
+         -generation-pitfalls.md` (items with a "Real measurement").     
+      24 -                                                               
+      25 -## Notes                                                       
+      26 -                                                               
+      27 -Known test gap, accepted (2026-10-25): no test catches upcoding
+         -'s `>` (amount > mean + 2 SD, `src/rules/upcoding.py`) being ch
+         -anged to `>=`. Catching it needs a claim whose amount equals th
+         -e threshold exactly, and the threshold is a float computed from
+         - the SD, so such a fixture is hard to build and fragile. The `>
+         -` choice follows the brief ("> 2 standard deviations") and is r
+         -ecorded in `docs/business-rule/upcoding.md`. Every other bounda
+         -ry of the 8 rules is pinned by a test (mutation-checked in plan
+         - 03).                                                          
+
+⏺ 2 file đầu đã sửa xong; dòng TODO trong plans README khác chuỗi tôi dò. Xem
+  nội dung thật rồi chạy tiếp các bước còn lại.
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Bash(python3 - <<'EOF'
+      C='AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/'…)
+  ⎿  8
+     154 passed in 3.02s
+  ⎿  Updated .claude/docs/plans/README.md (+2 -1)
+      10  
+      11  - [01 - A: Sinh dataset](done/01-dataset-generator.md) - ticket
+           #01, xong 2026-10-24. Generator 2,000 claim + 200 fraud theo 8
+           pattern, CLI `generate`, kiểm cấu trúc tự động.
+      12  - [02 - B: Engine 8 rule + scoring](done/02-rule-engine.md) - t
+          icket #02, xong 2026-10-25. Load input + weights, 8 rule có evi
+          dence, scoring 0-100 + xếp hạng, CLI `score`, test hệ thống S1-
+          S9.
+      13 +- [03 - C: Unit test, metrics, đo thời gian](done/03-tests-and-
+         +metrics.md) - ticket #03, xong 2026-10-25. 19 test business, mo
+         +dule + CLI `metrics`, `output/metrics_report.md` (recall 100%, 
+         +FPR 2.6%, 0.018 s), test tích hợp trên dataset thật.           
+      14  
+      15  ## TODO
+      16  
+      16 -- [03 - C: Unit test, metrics, đo thời gian](todo/03-tests-and-
+         -metrics.md) - ticket #03, đã chốt 6 mục, 3 phase xong, chờ comm
+         -it.                                                            
+      17 +Trống. Ticket chưa có plan: xem `docs/backlog/README.md`.      
+  ⎿  Updated
+     AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/AGENTS.md
+     (+6 -6)
+      52  
+      53  - [x] Dataset of 2,000 claims, ~500 members, ~50 providers, yea
+          r 2024, with `is_weekend`.
+      54  - [x] ~200 fraudulent claims (~10%) embedded across 8 patterns 
+          with the brief's counts, with ground-truth labels.
+      55 -- [ ] 8 rules: duplicate, rapid re-submission, upcoding, unbund
+         -ling (>= 5 bundles), phantom billing, weekend anomaly, diagnosi
+         -s-procedure mismatch (>= 10 valid pairs), amount clustering.   
+      56 -- [ ] Output per claim: `claim_id`, `risk_score` 0-100, `flags[
+         -]` with `rule`, `severity`, specific `evidence` (with numbers).
+      57 -- [ ] Configurable severity weight 1-5; score = weighted sum no
+         -rmalized to 0-100; list ranked by score.                       
+      55 +- [x] 8 rules: duplicate, rapid re-submission, upcoding, unbund
+         +ling (>= 5 bundles), phantom billing, weekend anomaly, diagnosi
+         +s-procedure mismatch (>= 10 valid pairs), amount clustering.   
+      56 +- [x] Output per claim: `claim_id`, `risk_score` 0-100, `flags[
+         +]` with `rule`, `severity`, specific `evidence` (with numbers).
+      57 +- [x] Configurable severity weight 1-5; score = weighted sum no
+         +rmalized to 0-100; list ranked by score.                       
+      58  - [ ] Explain the weight choices.
+      59 -- [ ] Metrics: precision, recall; target recall >= 70%, FPR <= 
+         -20%.                                                           
+      60 -- [ ] >= 15 unit tests (each rule + edge cases).               
+      61 -- [ ] Processing 2,000 claims takes < 30 seconds.              
+      59 +- [x] Metrics: precision, recall; target recall >= 70%, FPR <= 
+         +20%.                                                           
+      60 +- [x] >= 15 unit tests (each rule + edge cases).               
+      61 +- [x] Processing 2,000 claims takes < 30 seconds.              
+      62  - [ ] Estimate and report the timeline.
+      63  - [ ] Submit: dataset, scored output, metrics report, writeup (
+          `README.md`), AI conversation logs (`conversations/`).
+      64  
+  ⎿  Updated
+     AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/README.md
+     (+22 -1)
+      2  
+      3  Rule-based fraud scoring engine for health insurance claims: it 
+         analyzes each claim and assigns a risk score (0-100) with itemiz
+         ed evidence for every rule that fires.
+      4  
+      5 -**Status:** work in progress. The dataset generator (part A), th
+        -e 8-rule engine with scoring and the `score` command (part B), a
+        -nd their system tests are done; the 19 business test cases and t
+        -he metrics report are not built yet.                            
+      5 +**Status:** work in progress. The dataset generator (part A), th
+        +e 8-rule engine with scoring and the `score` command (part B), t
+        +he 19 business test cases, the metrics report and the integratio
+        +n test on the real dataset (part C) are done; the writeup (part 
+        +D) is not.                                                      
+      6  
+      7  ## Requirements
+      8  
+     ...
+      143    ...
+      144  ```
+      145  
+      146 +## Evaluate against the ground truth                          
+      147 +                                                              
+      148 +```bash                                                       
+      149 +uv run python src/cli.py metrics          # re-runs score, the
+          +n compares with data/ground_truth.csv                         
+      150 +```                                                           
+      151 +                                                              
+      152 +`metrics` takes the same options as `score`. It re-runs the wh
+          +ole score pipeline (rewriting `output/scored_output.json`) so 
+          +the runtime it reports is measured on the run it evaluates, th
+          +en writes `output/metrics_report.md`: overall precision / reca
+          +ll / FPR, recall by pattern, natural false positives by rule, 
+          +a threshold table, and the fraud claims flagged by an extra ru
+          +le. Why it re-runs scoring: [`docs/decisions/ADR-005-metrics-c
+          +ommand-reruns-the-score-pipeline.md`](docs/decisions/ADR-005-m
+          +etrics-command-reruns-the-score-pipeline.md). An invalid groun
+          +d truth (bad header, unknown pattern, claim IDs that differ fr
+          +om `claims.csv`) stops it with exit code 1 and the full list o
+          +f problems.                                                   
+      153 +                                                              
+      154 +On the committed `data/`: precision 81.3%, recall 100.0%, FPR 
+          +2.6%, 2,000 claims scored in ~0.02 s.                         
+      155 +                                                              
+      156 +## Run the tests                                              
+      157 +                                                              
+      158 +```bash                                                       
+      159 +uv run pytest -q                          # 154 tests, ~3 s   
+      160 +```                                                           
+      161 +                                                              
+      162 +- `tests/test_business_rules.py`: the 19 business test cases o
+          +f `docs/business-rule/test-cases.md`.                         
+      163 +- `tests/test_system_*.py`: input / weights loading, output fo
+          +rmat, ranking, metrics, engine boundary.                      
+      164 +- `tests/test_dataset_check.py`: the `check` command against b
+          +roken copies of the dataset.                                  
+      165 +- `tests/test_integration_dataset.py`: the engine on the commi
+          +tted dataset (own-rule hits, phantom-day exception, recall / F
+          +PR targets, < 30 s).                                          
+      166 +                                                              
+      167  ## Timeline estimate
+      168  
+      169  Total estimate: **5-7 hours** (detailed plan: 6 hours).
+  ⎿  Updated AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs
+     /requirements/challenge-10-requirements.md (+1 -1)
+      112  - B4 output (2026-10-24): `output/scored_output.json` is a ran
+           ked JSON array; each element has exactly the brief's 3 fields;
+            flags inside a claim sorted by severity descending. See `docs
+           /business-rule/scoring.md`.
+      113  - A provider volume (2026-10-24, review of #01): 150 legit cla
+           ims moved from DENTAL to OUTPATIENT codes; all 20 hospitals ge
+           t the same pre-assigned 58-62 OUTPATIENT / INPATIENT claims, s
+           o the weekday-only group is not the 10 largest; fraud provider
+           s are drawn weighted by legit volume, so no provider type has 
+           an outlier fraud rate. Known limitation, accepted: the 20 clin
+           ics get only ~1-15 claims each. Making them larger needs a low
+           er weekday-only floor (< 60) or fewer dental providers; both r
+           ejected. See `docs/decisions/ADR-004-equal-volume-for-all-hosp
+           itals.md`.
+      114  - C2 thresholds (2026-10-25): threshold table rows are `score 
+           > 0` (main metric), `score >= 40`, `score >= 70`. With the cur
+           rent weights scores are discrete (39, 53, 63, 71, ...), so `>`
+            or `>=` at 40 / 70 gives the same result; `>=` reads more nat
+           urally. See `docs/business-rule/metrics.md`.
+      115 -- C4 runtime (2026-10-25): the `metrics` command re-runs the w
+          -hole score pipeline (load -> rules -> score -> write `scored_o
+          -utput.json`), times it with `time.perf_counter()` (one in-proc
+          -ess run, Python startup excluded), then compares with the grou
+          -nd truth. Rejected: reading an existing `scored_output.json`, 
+          -because the output only has the brief's 3 fields and carries n
+          -o runtime.                                                    
+      115 +- C4 runtime (2026-10-25): the `metrics` command re-runs the w
+          +hole score pipeline (load -> rules -> score -> write `scored_o
+          +utput.json`), times it with `time.perf_counter()` (one in-proc
+          +ess run, Python startup excluded), then compares with the grou
+          +nd truth. Rejected: reading an existing `scored_output.json`, 
+          +because the output only has the brief's 3 fields and carries n
+          +o runtime. See `docs/decisions/ADR-005-metrics-command-reruns-
+          +the-score-pipeline.md`.                                       
+      116  - C2 boundary (2026-10-25): only `src/metrics/` reads `ground_
+           truth.csv`; the engine never imports `metrics`. If the ground-
+           truth `claim_id` set differs from the scored claims, `metrics`
+            stops with exit 1 (same stance as ADR-002).
+      117  - C3 natural FP by rule (2026-10-25): an FP claim with 2 rules
+            is counted under both; the table adds a total row of FP claim
+           s so the columns are not summed into a wrong total.
+      118  - C1 integration test (2026-10-25): the allowed exception (fra
+           ud claims on the phantom provider-day may also trigger `phanto
+           m_billing`) is derived from `generation_summary.json`, not har
+           d-coded claim IDs; any other extra rule fails the test with cl
+           aim ID, pattern and extra rules.
+
+⏺ Hoàn tất sweep, 154 test pass và không còn link nào trỏ vào todo/03. Tôi đã
+  tách thành 2 commit theo quy ước cũ: commit log 06 trước, rồi commit #03,
+  không kèm dòng Co-Authored-By.
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin &&
+      C=AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection && \
+      git reset -q && git add $C/conversations/06-code-rule…)
+  ⎿  5ad2dfc feat: add business tests, metrics report and integration test
+     6c0fdc7 docs: add conversation code rule engine
+     cb79841 feat: add risk scoring, ranking and the score command
+     … +25 lines (ctrl+o to expand)
+
+⏺ Đã ghi vấn đề upcoding và commit thành 2 commit. Không còn gì chưa commit, 154
+  test pass.
+
+  Vấn đề upcoding: ghi vào mục Notes của ticket #03, là một lỗ test được chấp
+  nhận. Chưa có test nào bắt được nếu ai đó đổi > thành >= ở ngưỡng upcoding.
+  Muốn bắt phải có một claim có amount bằng đúng ngưỡng, mà ngưỡng là số lẻ tính
+  từ SD nên fixture vừa khó dựng vừa dễ vỡ. Dấu > theo đúng đề ("> 2 standard
+  deviations") và đã ghi trong upcoding.md. Mọi biên khác của 8 rule đều đã có
+  test, kiểm bằng mutation.
+
+  2 commit:
+  1. 6c0fdc7 docs: add conversation code rule engine: log 06 bạn đã stage sẵn,
+     tách riêng như các commit log trước.
+  2. 5ad2dfc feat: add business tests, metrics report and integration test, gồm:
+     - Code: src/metrics/, lệnh metrics trong src/cli.py, 3 file test mới, và
+       output/metrics_report.md.
+     - ADR-005 mới: ghi lý do lệnh metrics chạy lại cả pipeline score thay vì
+       đọc scored_output.json, kèm 3 phương án đã loại.
+     - Ticket và plan #03: chuyển sang done/, Status đổi thành done, cập nhật 2
+       mục lục.
+     - README.md của challenge: cập nhật dòng Status, thêm mục chạy metrics và
+       mục chạy test.
+     - AGENTS.md của challenge: tick 6 mục trong checklist. Trong đó có 3 mục đã
+       xong từ #02 mà trước đây chưa ai tick.
+     - Docs khác: metrics.md, dataset-generation-pitfalls.md, requirements (có
+       link sang ADR-005), ticket #04.
+
+  Chuyện cần sửa ở #04: conversations/README.md chỉ liệt kê log 01 và 02, đang
+  thiếu 03 đến 06. Tôi không tự viết mô tả cho log của bạn. Đây đã là tiêu chí
+  nghiệm thu của #04 ("liệt kê đủ các file log"), nên sửa khi làm #04.
+
+  Nhớ export log của phiên này vào conversations/ (dự kiến là 07-...).
+
+✻ Brewed for 2m 1s · done 10:28

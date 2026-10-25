@@ -117,6 +117,7 @@ Stage: New Task (per Task_Lifecycle). Technology not chosen yet.
 - C3 natural FP by rule (2026-10-25): an FP claim with 2 rules is counted under both; the table adds a total row of FP claims so the columns are not summed into a wrong total.
 - C1 integration test (2026-10-25): the allowed exception (fraud claims on the phantom provider-day may also trigger `phantom_billing`) is derived from `generation_summary.json`, not hard-coded claim IDs; any other extra rule fails the test with claim ID, pattern and extra rules.
 - C3 report format (2026-10-25): `output/metrics_report.md` in English; header with dataset, weights in use and runtime, then the 4 parts of `metrics.md` as tables, percentages with 1 decimal, 1-2 sentences reading each table. Deterministic except the runtime line.
+- D writeup (2026-10-25): no rewrite of the generator into a random dataset (does not fit the remaining time); the fixed, hand-placed seed-2024 dataset is listed under `## Limitations` in `README.md` as a next step. The submission email is handled by the user, outside ticket #04. See `docs/backlog/done/04-writeup-and-submission.md`.
 
 ## Open questions (discussed when each part is detailed)
 

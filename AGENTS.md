@@ -33,7 +33,7 @@ Repository for the Papaya Insurtech hiring test. Two parts, submitted together a
 - General rules of the AI part: `.tmp/pumpkin-main/Hiring/AI_Engineering_Challenges/README.md`
 - Rules of the logic part: `.tmp/pumpkin-main/Hiring/Logical_Questions/README.md`
 - Team handbook: `.tmp/pumpkin-main/Software_Artisan_Handbook/`
-- **Handbook notes filtered for Challenge 10: `AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/handbook-notes.md`.** When the user touches a topic in that file's "Khi nào nhắc" table (analyzing the brief, comparing solutions, timeline, README, reviewing AI output, insurance domain, choosing a stack, the submission email), remind them of the relevant point.
+- **Handbook notes filtered for Challenge 10: `AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/handbook-notes.md`.** When the user touches a topic in that file's "When to remind" table (analyzing the brief, comparing solutions, timeline, README, reviewing AI output, insurance domain, choosing a stack, the submission email), remind them of the relevant point.
 - **Challenge 10 requirement breakdown: `AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/requirements/challenge-10-requirements.md`.** Use it as the A/B/C/D frame when discussing details; update "Settled decisions" and "Open questions" whenever a new decision is made.
 
 ## Working conventions

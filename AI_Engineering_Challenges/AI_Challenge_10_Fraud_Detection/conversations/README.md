@@ -1,11 +1,17 @@
-# Log hội thoại AI
+# AI conversation logs
 
-Log nguyên văn của các phiên làm việc với AI (bắt buộc nộp theo quy định của Papaya). Không chỉnh sửa nội dung log.
+Verbatim logs of the working sessions with AI (mandatory for submission per Papaya's rules). The log content is never edited.
 
-- Đặt tên: `NN-<công cụ>-<chủ đề>.<ext>`; `NN` theo thứ tự thời gian, `<công cụ>` là `chat` hoặc `code`.
-- Claude Code: lệnh `/export`, giữ nguyên file `.txt`. Claude Chat: file `.md`.
+- Naming: `NN-<tool>-<topic>.<ext>`; `NN` in chronological order, `<tool>` is `chat` or `code`.
+- Claude Code: `/export` command, kept as the `.txt` file. Claude Chat: `.md` file, or a `.pdf` print of the chat.
+- The sessions themselves are in Vietnamese.
 
-| # | File | Công cụ | Nội dung chính |
+| # | File | Tool | Main content |
 |---|---|---|---|
-| 01 | `01-chat-research-domain.md` (dự kiến) | Claude Chat | Research domain bảo hiểm |
-| 02 | [02-code-setup-project.txt](02-code-setup-project.txt) | Claude Code | Chốt kỹ thuật (Python, stdlib + pytest), ghi rủi ro, dựng backlog + plan 01, sửa cặp hợp lệ cho B-1001 / B-1002 |
+| 01 | [01-explore-requirement.pdf](01-explore-requirement.pdf) | Claude Chat | Exploring the brief and insurance domain research |
+| 02 | [02-code-setup-project.txt](02-code-setup-project.txt) | Claude Code | Technical choices (Python, stdlib + pytest), risks, backlog + plan 01, fixed valid pairs for B-1001 / B-1002 |
+| 03 | [03-code-phase1-generator.txt](03-code-phase1-generator.txt) | Claude Code | Plan 01: catalog, providers, generator; caught a missing plan step for generating the 2,000 claims; recorded dataset pitfalls |
+| 04 | [04-plan-phase-2-rule-engine-setup-agent.txt](04-plan-phase-2-rule-engine-setup-agent.txt) | Claude Code | Plan 02 (rule engine), business rules settled, `coder` / `reviewer` subagents set up |
+| 05 | [05-review-test-phase-1-generate.txt](05-review-test-phase-1-generate.txt) | Claude Code | `reviewer` reviews the #01 code, findings fixed, deliberately broken datasets turned into `check` tests |
+| 06 | [06-code-rule-engine.txt](06-code-rule-engine.txt) | Claude Code | Rule engine Phase 3: scoring, ranking, `score` command |
+| 07 | [07-code-and-metric.txt](07-code-and-metric.txt) | Claude Code | Ticket #03: 19 business tests, metrics report, integration test, notes for the writeup |
