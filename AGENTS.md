@@ -13,12 +13,13 @@ Repository for the Papaya Insurtech hiring test. Two parts, submitted together a
 
 ```
 .
+|-- README.md                         # submission entry point for reviewers
 |-- AGENTS.md                         # this file: project overview
 |-- .claude/                          # agent config; agents/ = subagent definitions; docs/plans/ = execution plans of Challenge 10 (other docs live in the project's docs/)
 |-- Logical_Questions/                # answers to the logic part, one file per question Q_<n>-<Name>.md
 |-- AI_Engineering_Challenges/
 |   `-- AI_Challenge_10_Fraud_Detection/  # Challenge 10 project
-|       |-- README.md                 # submission writeup (planned)
+|       |-- README.md                 # submission writeup
 |       |-- AGENTS.md                 # instructions specific to the Challenge 10 design
 |       |-- src/                      # source code
 |       `-- conversations/            # AI conversation logs (mandatory for submission)

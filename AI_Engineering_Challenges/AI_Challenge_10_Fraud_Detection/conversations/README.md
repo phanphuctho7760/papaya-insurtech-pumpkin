@@ -15,3 +15,4 @@ Verbatim logs of the working sessions with AI (mandatory for submission per Papa
 | 05 | [05-review-test-phase-1-generate.txt](05-review-test-phase-1-generate.txt) | Claude Code | `reviewer` reviews the #01 code, findings fixed, deliberately broken datasets turned into `check` tests |
 | 06 | [06-code-rule-engine.txt](06-code-rule-engine.txt) | Claude Code | Rule engine Phase 3: scoring, ranking, `score` command |
 | 07 | [07-code-and-metric.txt](07-code-and-metric.txt) | Claude Code | Ticket #03: 19 business tests, metrics report, integration test, notes for the writeup |
+| 08 | [08-writeup.txt](08-writeup.txt) | Claude Code | Ticket #04 review, logs index, writeup (weights, Limitations, timeline, Agent Workflow), final check |

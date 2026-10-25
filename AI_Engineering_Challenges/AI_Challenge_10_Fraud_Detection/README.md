@@ -2,7 +2,9 @@
 
 Rule-based fraud scoring engine for health insurance claims: it analyzes each claim and assigns a risk score (0-100) with itemized evidence for every rule that fires.
 
-**Status:** work in progress. The dataset generator (part A), the 8-rule engine with scoring and the `score` command (part B), the 19 business test cases, the metrics report and the integration test on the real dataset (part C) are done; the writeup (part D) is not.
+**Status:** complete. Dataset generator (part A), 8-rule engine with scoring (part B), tests and metrics (part C), writeup and AI conversation logs (part D).
+
+Results on the committed dataset (2,000 claims, seed 2024): precision 81.3%, recall 100.0%, FPR 2.6%, scored in ~0.02 s. Targets of the brief: recall >= 70%, FPR <= 20%, < 30 s. Read the [Limitations](#limitations) before reading these numbers as an achievement.
 
 ## Requirements
 
@@ -164,14 +166,64 @@ uv run pytest -q                          # 154 tests, ~3 s
 - `tests/test_dataset_check.py`: the `check` command against broken copies of the dataset.
 - `tests/test_integration_dataset.py`: the engine on the committed dataset (own-rule hits, phantom-day exception, recall / FPR targets, < 30 s).
 
-## Timeline estimate
+## Scoring weights
 
-Total estimate: **5-7 hours** (detailed plan: 6 hours).
+Each weight (1-5, in `src/config/weights.json`) is set on two criteria: **how certain the signal is** (is there a legitimate reason that produces the same sign?) and **how much the insurer loses** if it is real fraud. The brief's own example fixes two anchors: upcoding = 4, amount clustering = 2.
 
-| Item | Time | Includes |
+| Rule | Weight | Why |
+|---|---|---|
+| `duplicate_claim` | 5 | The data has passed input validation, so a second claim on the same member, provider, date and diagnosis is almost certainly fraud; the insurer pays twice for one visit. |
+| `phantom_billing` | 4 | > 30 claims in one provider-day is a very clear anomaly with a large loss; not 5 because the rule flags every claim of that day, legitimate ones included. |
+| `upcoding` | 4 | Brief's anchor. Direct financial loss; a statistical threshold, so ~2% of legitimate claims can still exceed mean + 2 SD. |
+| `diagnosis_procedure_mismatch` | 4 | A clear medical inconsistency; sometimes a data-entry error. |
+| `unbundling` | 3 | Deterministic, it is certainly an unbundled bill; but the overcharge is only ~10% of the bundle price. |
+| `rapid_resubmission` | 3 | A follow-up visit for the same diagnosis within 7 days can be legitimate. |
+| `weekend_anomaly` | 2 | Indirect signal; a hospital's schedule can change. |
+| `amount_clustering` | 2 | Brief's anchor. The weakest signal: legitimate claims fall in the 47,500-49,999 band on their own. |
+
+Score = `100 x (1 - e^(-0.25 x sum of weights))`: one weight-2 rule gives 39, `duplicate_claim` alone gives 71, and the curve saturates instead of capping, so two strong rules still rank above one. Full formula and ranking: [`docs/business-rule/scoring.md`](docs/business-rule/scoring.md). Rule thresholds are constants, only weights are configurable: [`ADR-003`](docs/decisions/ADR-003-only-weights-are-configurable.md).
+
+## Limitations
+
+- **Recall 100% is an upper bound, not a result.** The same person wrote the 8 rules and generated the data to match their definitions, so every injected pattern is caught by construction. Real data would score lower: fraud that does not follow the textbook pattern, noisier legitimate claims, several patterns on one claim.
+- **The dataset is hand-placed, not random.** One fixed seed (2024), with constraints that keep each fraud claim inside its own pattern; the tests read that one committed dataset. Next step: a generator that places fraud at random (any seed), so the engine is shown to work on data it was not tuned to.
+- **At a high threshold most fraud is missed.** At `score >= 70` recall drops to 18.0% (FPR 0.0%), because weak rules (weekend, clustering) give 39 points. This is why the main metric predicts fraud at `score > 0`; a claims team that only reviews high scores needs different weights or a second queue.
+- **One pattern per fraud claim.** Deliberate simplification of the generator; in reality a claim can carry several.
+- **Upcoding uses mean and SD over all claims of the code, upcoded ones included** (masking accepted because recall met the target; leave-one-out was the fallback). The `>` vs `>=` boundary of mean + 2 SD has no test, because it needs an amount exactly on a non-integer threshold.
+- **Clinics are small.** The 20 clinics get only ~1-15 claims each, a side effect of giving every hospital the same volume: [`ADR-004`](docs/decisions/ADR-004-equal-volume-for-all-hospitals.md).
+
+## Timeline
+
+| Item | Estimate | Includes |
 |---|---|---|
 | Dataset design | 1.5h | Schema, reference data, fraud injection, ground truth |
 | Logic | 1.75h | 8 rules, evidence, weights, scoring, output |
 | Unit tests | 1.25h | Unit tests for rules and edge cases, metrics (precision / recall / FPR), runtime measurement |
 | Buffer and extra work | 1.5h | Estimation buffer, writeup, AI conversation logs |
-| **Total** | **6h** | |
+| **Total** | **6h** (range 5-7h) | **Real: ~9h** |
+
+Real time was ~9h, about 3h over (not tracked per item). Work that was not in the estimate: the 44-case test suite for the `check` command, the `reviewer` rounds and their fixes, and the decision docs / ADRs written as decisions were made.
+
+## Agent Workflow
+
+Tools: Claude Chat to explore the brief and the insurance domain (log 01); Claude Code for everything else (logs 02-08). Logs: [`conversations/`](conversations/README.md).
+
+How the work was directed:
+
+- The brief was split into 4 parts (A dataset, B engine, C tests and metrics, D writeup), each a backlog ticket with acceptance criteria and an execution plan in phases: [`docs/requirements/challenge-10-requirements.md`](docs/requirements/challenge-10-requirements.md), [`docs/backlog/`](docs/backlog/README.md).
+- Business rules were settled in `docs/business-rule/` before any code for them was written; the AI implemented from those docs, not from the brief directly.
+- The main Claude Code thread is the orchestrator. Two subagents: `coder` (writes code from an exact spec) and `reviewer` (read-only, checks the diff against the business rules). Every reviewer finding was opened at its `file:line` and confirmed or rejected before fixing; tests were re-run before relaying any "done".
+
+Mistakes caught, and by whom:
+
+| What went wrong | Caught by | Log |
+|---|---|---|
+| Plan 01 had no step that actually generates the 2,000 claims | me | 03 |
+| `generate` ran the dataset check inside itself; split into two commands | me | 03, [`ADR-001`](docs/decisions/ADR-001-separate-dataset-check-command.md) |
+| Legitimate amounts rounded to 1,000, clustering fraud to 100: the rounding leaked the label | AI, re-reading the business docs before Phase 2 | 03 |
+| Fraud amount factor clamped to +-15% piled amounts on 2 exact values that leaked the label | `reviewer` | 05 |
+| ~12 hand-broken datasets used to test `check` were one-off; turned into a 44-case test suite | me | 05 |
+| Tests mixed two concerns; split into system tests (does code match the design) and business tests (do the rules give the right result) | me | 04 |
+| A ground truth with a misspelled pattern name was silently ignored by `metrics` | `reviewer` | 07 |
+
+Checked by hand: evidence text of flagged claims read by eye against the rule definitions; the metrics report numbers against the brief's targets; the "too good" recall, which led to the Limitations above.

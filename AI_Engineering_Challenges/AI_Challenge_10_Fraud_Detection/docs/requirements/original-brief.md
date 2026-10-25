@@ -1,14 +1,14 @@
 # Original brief
 
-Đề gốc của Papaya, chép nguyên văn từ repo `papaya-insurtech/pumpkin` (thư mục `Hiring/AI_Engineering_Challenges/`).
+Papaya's original brief, copied verbatim from the repo `papaya-insurtech/pumpkin` (folder `Hiring/AI_Engineering_Challenges/`).
 
-- Phần 1: toàn bộ `AI_Challenge_10.md`.
-- Phần 2: các mục liên quan trích từ `README.md` chung. Đã bỏ: bảng danh sách challenge, How many challenges, Interview day (không thuộc bài nộp).
-- Chỉ thay đổi định dạng: heading hạ cấp để nằm dưới tiêu đề của file. Nội dung giữ nguyên văn.
+- Part 1: the whole of `AI_Challenge_10.md`.
+- Part 2: the relevant sections of the general `README.md`. Left out: the challenge list tables, How many challenges, Interview day (not part of the submission).
+- Only the format changed: headings are demoted to sit under the file title. The content is verbatim.
 
 ---
 
-## Phần 1 - AI_Challenge_10.md
+## Part 1 - AI_Challenge_10.md
 
 ### AI Challenge 10 — Fraud Detection Scoring Engine
 
@@ -119,7 +119,7 @@ Implement all 8 rules:
 
 ---
 
-## Phần 2 - README.md chung (trích)
+## Part 2 - general README.md (excerpt)
 
 #### Why AI-Assisted Challenges?
 

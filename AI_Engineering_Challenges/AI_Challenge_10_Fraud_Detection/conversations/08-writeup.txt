@@ -1,0 +1,1576 @@
+ ▐▛███▛█   Claude Code v2.1.310
+▝▜██████▀  Opus 5.5
+ ▝▝   ▝▝   /…/AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection
+
+
+❯ cùng tôi kiểm tra AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/d 
+  ocs/backlog/todo/04-writeup-and-submission.md. ko cần viết plan               
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin/AI_Engineering_Challenges/AI_Chall
+      enge_10_Fraud_Detection && cat
+      docs/backlog/todo/04-writeup-and-submission.md && echo -…)
+  ⎿  # 04 - D: Writeup and submission
+
+     **Status:** todo
+     … +71 lines (ctrl+o to expand)
+
+⏺ Bash(echo "== README" && cat README.md && echo "== conv README" && cat
+      conversations/README.md && echo "== data" && ls -la data && git -C .
+      ls-files data output conv…)
+  ⎿  == README
+     # AI Challenge 10 - Fraud Detection Scoring Engine
+     … +254 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin && sed -n '100,130p'
+      .tmp/pumpkin-main/Hiring/AI_Engineering_Challenges/AI_Challenge_10.md;
+      echo "== rules"; cat .tmp/pum…)
+  ⎿  - At least 15 unit tests covering individual rules and edge cases
+     - Processing 2,000 claims completes in < 30 seconds
+     … +182 lines (ctrl+o to expand)
+
+⏺ Bash(git remote -v; git log --oneline origin/main..main 2>&1 | head; ls; ls
+      Logical_Questions; grep -rn -i "secret\|api_key\|token" --include=*.txt
+      AI_Engineering_Ch…)
+  ⎿  origin  git@github.com:phanphuctho7760/papaya-insurtech-pumpkin.git
+     (fet
+     ch)
+     origin  git@github.com:phanphuctho7760/papaya-insurtech-pumpkin.git
+     (pus
+     … +10 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin/AI_Engineering_Challenges/AI_Chall
+      enge_10_Fraud_Detection/conversations && grep -n -i -E
+      "sk-ant|api[_-]?key|password|ghp…)
+  ⎿  02-code-setup-project.txt:1347
+     04-plan-phase-2-rule-engine-setup-agent.txt:2588
+     05-review-test-phase-1-generate.txt:2834
+     … +6 lines (ctrl+o to expand)
+
+⏺ Tôi đã đối chiếu ticket 04 với đề, rule chung của phần AI, handbook-notes và
+  trạng thái repo hiện tại. Ticket đúng hướng, nhưng thiếu một số điểm. Mức nặng
+  giảm dần:
+
+  1. Thiếu trong ticket (nên bổ sung)
+
+  - Agent Workflow chưa có trong Acceptance criteria. Mục What có nhắc nhưng
+    criteria thì không. Đề chấm "direct the AI tool effectively", còn handbook
+    (Reviewee Convention) gợi ý README có mục Agent Workflow: agent nào đã dùng
+    (main thread + coder/reviewer), các chỉ đạo chính, những lỗi AI làm mà bạn
+    đã bắt được, các bước đã tự kiểm tra. Đây là chỗ Papaya đọc kỹ nhất. Nên
+    thêm thành một criterion riêng, mỗi ý kèm link tới file log và đoạn tương
+    ứng.
+  - Timeline thật. Mục What có ghi "real timeline", criteria thì không. README
+    hiện chỉ có bảng ước lượng 6h. Cần thêm cột thời gian thực tế so với ước
+    lượng.
+  - Repo root chưa có README.md. Người chấm mở link GitHub sẽ thấy root trống.
+    Cần một README ngắn ở root trỏ tới Logical_Questions/ và
+    AI_Challenge_10_Fraud_Detection/. Ticket chưa nhắc việc này.
+  - Email nộp bài. Ticket ghi "push the repo" nhưng không nhắc email. Theo
+    handbook-notes mục 7: subject dạng [Project Name] Subject, có greeting,
+    sign-off, signature, ghi rõ link repo. Hạn nộp là 5 ngày kể từ email nhận
+    đề. Nên thêm một criterion "email soạn xong và gửi trước hạn".
+
+  2. conversations/README.md đang lệch xa thực tế
+
+  - Bảng mới có dòng 01 (đánh dấu "dự kiến") và dòng 02. Còn thiếu 03 -> 07.
+  - 07-code-and-metric.txt chưa được commit (đang untracked).
+  - 01-chat-research-domain.md vẫn "dự kiến". Cần chốt: nếu có export từ Claude
+    Chat thì thêm vào, nếu không thì bỏ dòng này. Để lại "dự kiến" lúc nộp sẽ
+    trông như thiếu log.
+  - Phiên hiện tại (viết writeup) cũng cần export thành log 08 ở cuối, nếu không
+    thì log không còn "complete".
+  - Tôi đã quét nhanh các log, không thấy key hay password.
+
+  3. Mấy điểm đã khớp
+
+  - Dataset, scored output và metrics report đều đã được commit. Criterion thứ 3
+    coi như xong, chỉ cần chạy lại metrics lần cuối để số trong README khớp với
+    report.
+  - Ghi chú về Limitations (đúng heading mà output/metrics_report.md:14 đang trỏ
+    tới) và ghi chú "recall 100% là too good" đều đúng. Nên đưa thẳng thành
+    criterion: "README có section ## Limitations gồm: data tự sinh khớp rule,
+    recall 18% ở ngưỡng >= 70, dataset hard-code seed 2024".
+  - Logical_Questions có 5 câu (Q1, Q4, Q5, Q8, Q10), đã gồm 2 câu bắt buộc.
+    Ticket không cần quản phần này, nhưng lúc nộp nhớ kiểm lại.
+
+  4. Nhỏ
+
+  - Dòng "Status: work in progress" trong README cần sửa khi xong.
+  - Phần "giải thích trọng số" nên nói lý do chọn từng weight theo nghiệp vụ,
+    không chỉ liệt kê số (handbook-notes mục 5).
+  - Optional "random dataset": tôi khuyên không làm, vì Effort đang là S và thời
+    hạn đã gần. Chỉ cần ghi vào Limitations.
+
+  Bạn muốn tôi sửa thẳng ticket 04 theo các điểm 1 và 2 (thêm criteria, sửa
+  Notes) không?
+
+✻ Cogitated for 48s · done 13:58
+
+❯ 1. duyệt tất cả. phần mail tôi sẽ tự kiểm soát                                
+  2. cập nhật lại                                                               
+     3,4 theo recommend                                                         
+     sửa thẳng ticket 4                                                         
+
+⏺ Bash(for f in 0[3-7]*.txt; do echo "=== $f"; grep -n "^> " $f | grep -v
+      "^[0-9]*:> *$" | head -12 | cut -c1-220; done)
+  ⎿  === 03-code-phase1-generator.txt
+     === 04-plan-phase-2-rule-engine-setup-agent.txt
+     === 05-review-test-phase-1-generate.txt
+     … +2 lines (ctrl+o to expand)
+
+⏺ Bash(sed -n '1,40p' 06-code-rule-engine.txt | cut -c1-200; grep -n "^❯"
+      02-code-setup-project.txt | head -3)
+  ⎿   ▐▛███▛█   Claude Code v2.1.310
+     ▝▜██████▀  Opus 5.5
+      ▝▝   ▝▝   /Volumes/D/papaya-insurtech-pumpkin
+     … +40 lines (ctrl+o to expand)
+
+⏺ Bash(for f in 0[3-7]*.txt; do echo "=== $f"; grep -n "^❯" $f | grep -v
+      "^[0-9]*:❯ */compact\|^[0-9]*:❯ *$" | head -10 | cut -c1-180; done)
+  ⎿  === 03-code-phase1-generator.txt
+     6:❯ bắt đầu Phase 1 của plan 01 (pyproject.toml, src/config/catalog.js
+     on,
+     … +36 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin/AI_Engineering_Challenges/AI_Chall
+      enge_10_Fraud_Detection && python3 - <<'EOF'
+      p='conversations/README.md'…)
+  ⎿  |---|---|---|---|
+     | 01 | `01-chat-research-domain.md` (dự kiến) | Claude Chat | Research
+      domain bảo hiểm |
+     … +14 lines (ctrl+o to expand)
+  ⎿  Updated conversations/README.md (+5 -0)
+       9  |---|---|---|---|
+      10  | 01 | `01-chat-research-domain.md` (dự kiến) | Claude Chat | R
+          esearch domain bảo hiểm |
+      11  | 02 | [02-code-setup-project.txt](02-code-setup-project.txt) |
+           Claude Code | Chốt kỹ thuật (Python, stdlib + pytest), ghi rủi
+           ro, dựng backlog + plan 01, sửa cặp hợp lệ cho B-1001 / B-1002
+           |
+      12 +| 03 | [03-code-phase1-generator.txt](03-code-phase1-generator.
+         +txt) | Claude Code | Plan 01: catalog, providers, generator, bắ
+         +t lỗi thiếu plan sinh 2.000 claim, ghi pitfall dataset |       
+      13 +| 04 | [04-plan-phase-2-rule-engine-setup-agent.txt](04-plan-ph
+         +ase-2-rule-engine-setup-agent.txt) | Claude Code | Viết plan 02
+         + (rule engine), chốt business rule, dựng subagent `coder` / `re
+         +viewer` |                                                      
+      14 +| 05 | [05-review-test-phase-1-generate.txt](05-review-test-pha
+         +se-1-generate.txt) | Claude Code | `reviewer` review code #01, 
+         +sửa finding, biến các dataset cố ý làm hỏng thành test `check` 
+         +|                                                              
+      15 +| 06 | [06-code-rule-engine.txt](06-code-rule-engine.txt) | Cla
+         +ude Code | Rule engine Phase 3: tính điểm, xếp hạng, lệnh `scor
+         +e` |                                                           
+      16 +| 07 | [07-code-and-metric.txt](07-code-and-metric.txt) | Claud
+         +e Code | Ticket #03: 19 business test, metrics report, integrat
+         +ion test, lưu ý cho writeup |                                  
+
+⏺ Giờ tôi sửa ticket 04.
+
+⏺ Write(docs/backlog/todo/04-writeup-and-submission.md)
+  ⎿  Added 24 lines, removed 8 lines
+       9  
+      10  ## What
+      11  
+      12 -Submission `README.md` (approach, decisions, weights, metrics, 
+         -real timeline, agent workflow), complete conversation logs in `
+         -conversations/`, push the repo.                                
+      12 +Submission `README.md` (approach, decisions, weights, metrics, 
+         +real timeline, agent workflow, limitations), a repo-root `READM
+         +E.md`, complete conversation logs in `conversations/`, push the
+         + repo.                                                         
+      13  
+      14  ## Why / value
+      15  
+      16 -Missing conversation logs is an automatic fail; the writeup is 
+         -where Papaya reads the reason behind every decision.           
+      16 +Missing conversation logs is an automatic fail; the writeup is 
+         +where Papaya reads the reason behind every decision, and the "A
+         +gent Workflow" section is where they see how the AI was directe
+         +d (the brief grades "direct the AI tool effectively").         
+      17  
+      18  ## Acceptance criteria
+      19  
+      20 -- `README.md` has the run commands, the weight explanation, the
+         - real metrics and the remaining limitations.                   
+      21 -- `conversations/README.md` lists every log file.              
+      20 +- `README.md` (Challenge 10) has:                              
+      21 +  - the run commands, with numbers matching a final `uv run pyt
+         +hon src/cli.py metrics` run on the committed `data/`;          
+      22 +  - the weight explanation: the business reason for each rule's
+         + weight, not only the numbers;                                 
+      23 +  - the real metrics (from the final `output/metrics_report.md`
+         +);                                                             
+      24 +  - a **`## Limitations`** section (exact heading, `output/metr
+         +ics_report.md` links to it) covering at least: the dataset is g
+         +enerated from the same rule definitions the engine applies (rec
+         +all 100% is an upper bound), recall drops to 18% at threshold >
+         += 70, and the dataset is hand-placed with a fixed seed 2024 (no
+         +t random);                                                     
+      25 +  - an **Agent Workflow** section: tools and agents used (main 
+         +thread + `coder` / `reviewer`), the key instructions given, the
+         + AI mistakes caught and how, what was verified by hand; each po
+         +int links to the log file where it happened;                   
+      26 +  - the timeline: estimate vs real time per item;              
+      27 +  - the status line no longer says "work in progress".         
+      28 +- Repo root has a short `README.md` pointing to `Logical_Questi
+         +ons/` and `AI_Engineering_Challenges/AI_Challenge_10_Fraud_Dete
+         +ction/`.                                                       
+      29 +- `conversations/README.md` lists every log file, including the
+         + log of this writeup session (exported last); the `01-chat-rese
+         +arch-domain.md` row is either backed by a real file or removed 
+         +(no "dự kiến" left).                                           
+      30 +- Every log file in `conversations/` is committed.             
+      31  - The repo holds the dataset, the scored output and the metrics
+           report.
+      32 +- Everything is pushed to `origin/main`.                       
+      33  
+      34 +Out of scope: the submission email (the user handles it).      
+      35 +                                                               
+      36  ## Notes
+      37  
+      38  From #03 (2026-10-25, rough measurement on seed 2024; use the f
+          inal numbers in `output/metrics_report.md`):
+     ...
+      40  - **Recall 100% / FPR 2.6% is "too good".** The same person wro
+          te the rules and generated the data to fit the rule definitions
+          , so the engine catches every injected pattern by construction.
+           The writeup must state this limitation (real data would score 
+          lower: fraud that does not match the textbook pattern, noisier 
+          legit data) instead of presenting the numbers as an achievement
+          .
+      41  - **At threshold >= 70 recall drops to 18%.** If claim adjuster
+          s only review high-score claims, they miss most of the fraud (w
+          eak rules such as weekend and clustering give 39 points). This 
+          is the reason the main metric predicts fraud at `score > 0`.
+      42  
+      31 -Optional, only if time remains (noted 2026-10-25, not committed
+         - to):                                                          
+      43 +Decided 2026-10-25: **no random dataset rewrite.** Today the ge
+         +nerator places fraud on purpose (fixed seed 2024, constraints t
+         +hat keep each fraud claim inside its own pattern) and the tests
+         + read that one committed dataset. Rewriting generation to be ra
+         +ndom would show the engine works on data it was not tuned to, b
+         +ut it does not fit an S ticket this close to the deadline. The 
+         +writeup lists it under Limitations next to the "too good" recal
+         +l note, as a next step.                                        
+      44  
+      33 -- **Random dataset instead of a hard-coded one.** Today the gen
+         -erator places fraud on purpose (fixed seed 2024, constraints th
+         -at keep each fraud claim inside its own pattern) and the tests 
+         -read that one committed dataset. Rewriting generation to be ran
+         -dom (any seed, fraud not hand-placed) would make the tests more
+         - transparent: the engine would be shown to work on data it was 
+         -not tuned to. If done, the writeup explains the change; if not,
+         - the writeup lists it as a known limitation next to the "too go
+         -od" recall note above.                                         
+      34 -                                                               
+      45  From #03 Phase 2 review (2026-10-25):
+      46  
+      37 -- `output/metrics_report.md` (Overall section) says "see Limita
+         -tions in README.md". The README must get a **Limitations** sect
+         -ion with that exact heading, or the report sentence must change
+         -.                                                              
+      47 +- `output/metrics_report.md` (Overall section) says "see Limita
+         +tions in README.md". The README must get a **Limitations** sect
+         +ion with that exact heading.                                   
+      48 +                                                               
+      49 +From the ticket review (2026-10-25):                           
+      50 +                                                               
+      51 +- `conversations/README.md` updated with logs 03-07; `07-code-a
+         +nd-metric.txt` still needs committing.                         
+      52 +- No secrets found in the logs (quick scan for keys / passwords
+         +).                                                             
+      53 +- Logical_Questions has 5 answers (Q1, Q4, Q5, Q8, Q10), both m
+         +andatory ones included; check again before submitting.         
+
+⏺ Bạn vừa chốt bỏ việc viết lại dataset theo kiểu random. Theo AGENTS.md, quyết
+  định mới cần ghi vào file requirements, nên tôi xem file đó trước khi ghi.
+
+  Searched for 1 pattern (ctrl+o to expand)
+
+⏺ Bash(sed -n '53,135p' docs/requirements/challenge-10-requirements.md)
+  ⎿  ## Settled decisions
+
+     - Current stage: New Task. Technology chosen later (possibly in Claude
+     … +161 lines (ctrl+o to expand)
+
+⏺ Update(docs/requirements/challenge-10-requirements.md)
+  ⎿  Added 1 line
+      117  - C3 natural FP by rule (2026-10-25): an FP claim with 2 rules
+            is counted under both; the table adds a total row of FP claim
+           s so the columns are not summed into a wrong total.
+      118  - C1 integration test (2026-10-25): the allowed exception (fra
+           ud claims on the phantom provider-day may also trigger `phanto
+           m_billing`) is derived from `generation_summary.json`, not har
+           d-coded claim IDs; any other extra rule fails the test with cl
+           aim ID, pattern and extra rules.
+      119  - C3 report format (2026-10-25): `output/metrics_report.md` in
+            English; header with dataset, weights in use and runtime, the
+           n the 4 parts of `metrics.md` as tables, percentages with 1 de
+           cimal, 1-2 sentences reading each table. Deterministic except 
+           the runtime line.
+      120 +- D writeup (2026-10-25): no rewrite of the generator into a r
+          +andom dataset (does not fit the remaining time); the fixed, ha
+          +nd-placed seed-2024 dataset is listed under `## Limitations` i
+          +n `README.md` as a next step. The submission email is handled 
+          +by the user, outside ticket #04. See `docs/backlog/todo/04-wri
+          +teup-and-submission.md`.                                      
+      121  
+      122  ## Open questions (discussed when each part is detailed)
+      123  
+
+⏺ Tôi đã sửa ticket 04 và cập nhật conversations/README.md. Chưa commit gì.
+
+  Ticket 04 (docs/backlog/todo/04-writeup-and-submission.md)
+  - Acceptance criteria giờ ghi cụ thể những gì README phải có:
+    - run commands, với số khớp lần chạy metrics cuối;
+    - lý do nghiệp vụ cho từng trọng số;
+    - metrics thật;
+    - section ## Limitations gồm 3 ý: data sinh từ chính các rule, recall chỉ
+      còn 18% ở ngưỡng >= 70, dataset cố định seed 2024;
+    - section Agent Workflow, mỗi ý có link tới file log;
+    - timeline ước lượng so với thực tế;
+    - bỏ dòng "work in progress".
+  - Thêm criteria:
+    - README.md ở root repo;
+    - log của phiên viết writeup được export cuối cùng;
+    - dòng log 01 phải có file thật hoặc bị bỏ;
+    - mọi log đều được commit;
+    - push lên origin/main.
+  - Email ghi rõ là ngoài phạm vi ticket, do bạn tự lo.
+  - Mục optional random dataset đổi thành quyết định không làm, sẽ ghi vào
+    Limitations như bước tiếp theo.
+
+  conversations/README.md: thêm 5 dòng cho các log 03-07, phần nội dung chính
+  tóm tắt từ các prompt của bạn trong từng log. Dòng 01 ("dự kiến") tôi giữ
+  nguyên để bạn quyết khi làm ticket.
+
+  Thêm một việc ngoài yêu cầu: theo quy định của AGENTS.md, tôi ghi quyết định
+  "không làm random dataset, email ngoài ticket" vào mục "Settled decisions" của
+  docs/requirements/challenge-10-requirements.md.
+
+  07-code-and-metric.txt vẫn chưa được commit. Khi bạn bảo commit, tôi sẽ chạy
+  pre-commit sweep rồi commit nó cùng các thay đổi trên.
+
+✻ Cooked for 1m 12s · done 14:12
+
+❯ AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/handbook-notes 
+  .md viết lại thành tiếng Anh toàn bộ.                                         
+  cập nhật AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/conversati 
+  ons/README.md                                                                 
+
+  Searched for 2 patterns (ctrl+o to expand)
+
+⏺ Write(docs/handbook-notes.md)  ⎿  Added 59 lines, removed 59 lines
+       1 -# Handbook notes cho Challenge 10 (Chat / Cowork)              
+       1 +# Handbook notes for Challenge 10 (Chat / Cowork)              
+       2  
+       3 -Tóm tắt các phần trong Software_Artisan_Handbook (repo papaya-i
+         -nsurtech/pumpkin, không kèm trong project) dùng được khi làm AI
+         - Challenge 10 - Fraud Detection Scoring Engine.                
+       4 -Phạm vi: chỉ phần áp dụng cho Claude Chat và Claude Cowork. Phầ
+         -n Claude Code xem mục "Để dành cho Claude Code" ở cuối.        
+       3 +Summary of the parts of the Software_Artisan_Handbook (repo pap
+         +aya-insurtech/pumpkin, not included in this project) that are u
+         +seful for AI Challenge 10 - Fraud Detection Scoring Engine.    
+       4 +Scope: only the parts that apply to Claude Chat and Claude Cowo
+         +rk. For Claude Code, see "Kept for Claude Code" at the end.    
+       5  
+       6 -> Cho agent: khi người dùng chạm tới chủ đề trong bảng "Khi nào
+         - nhắc" dưới đây, hãy nhắc ngắn gọn ý liên quan và dẫn đường fil
+         -e gốc.                                                         
+       6 +> For agents: when the user touches a topic in the "When to rem
+         +ind" table below, briefly remind them of the related point and 
+         +give the path of the source file.                              
+       7  
+       8 -## Khi nào nhắc                                                
+       8 +## When to remind                                              
+       9  
+      10 -| Người dùng đang làm | Nhắc mục |                             
+      10 +| The user is | Remind section |                               
+      11  |---|---|
+      12 -| Đọc đề, phân tích yêu cầu, liệt kê chỗ mơ hồ | 1, 2 |        
+      13 -| Chọn hướng giải pháp, thiết kế, so sánh phương án | 1, 2 |   
+      14 -| Ước lượng timeline | 2 |                                     
+      15 -| Viết README, writeup, mô tả cách dùng AI | 3 |               
+      16 -| Commit, đặt tên branch | 3 |                                 
+      17 -| Review code / output do AI sinh ra | 4 |                     
+      18 -| Đặt tên field, viết evidence, giải thích trọng số rule | 5 | 
+      19 -| Chọn ngôn ngữ / stack | 6 |                                  
+      20 -| Soạn email nộp bài | 7 |                                     
+      12 +| Reading the brief, analyzing requirements, listing ambiguitie
+         +s | 1, 2 |                                                     
+      13 +| Choosing a solution, designing, comparing options | 1, 2 |   
+      14 +| Estimating the timeline | 2 |                                
+      15 +| Writing the README, the writeup, describing how AI was used |
+         + 3 |                                                           
+      16 +| Committing, naming a branch | 3 |                            
+      17 +| Reviewing AI-generated code / output | 4 |                   
+      18 +| Naming fields, writing evidence, explaining rule weights | 5 
+         +|                                                              
+      19 +| Choosing a language / stack | 6 |                            
+      20 +| Writing the submission email | 7 |                           
+      21  
+      22  ## 1. AI Agent Philosophy
+      23  
+      24 -Nguồn Handbook: `Software_Artisan_Handbook/resources/AI_Agent_W
+         -orkflow/AI_Agent_Philosophy.md`                                
+      24 +Handbook source: `Software_Artisan_Handbook/resources/AI_Agent_
+         +Workflow/AI_Agent_Philosophy.md`                               
+      25  
+      26 -- Three-tool model: Chat = research, brainstorm, rubber-duck, n
+         -hờ tìm lỗi giải pháp. Cowork = phân tích yêu cầu, test plan, tà
+         -i liệu. Code = viết code, git, test.                           
+      27 -- Ask What and Why before How: đưa context What/Why, để agent đ
+         -ề xuất How; nếu đã có hướng thì đưa như gợi ý, yêu cầu agent đá
+         -nh giá rủi ro và so sánh phương án.                            
+      28 -- Review plans more than raw code: người review 100% plan/spec/
+         -assumption; agent review code trước, người tập trung vùng rủi r
+         -o (business logic, chỗ agent tự giả định).                     
+      29 -- Autonomous is not Automation: engine rule-based là automation
+         -; AI chỉ dùng để thiết kế và xây nó.                           
+      26 +- Three-tool model: Chat = research, brainstorming, rubber-duck
+         +ing, finding flaws in a solution. Cowork = requirement analysis
+         +, test plans, documents. Code = writing code, git, tests.      
+      27 +- Ask What and Why before How: give the What/Why context and le
+         +t the agent propose the How; if you already have a direction, g
+         +ive it as a suggestion and ask the agent to assess risks and co
+         +mpare options.                                                 
+      28 +- Review plans more than raw code: the human reviews 100% of pl
+         +ans / specs / assumptions; the agent reviews code first, the hu
+         +man focuses on risky areas (business logic, places where the ag
+         +ent made its own assumptions).                                 
+      29 +- Autonomous is not Automation: the rule-based engine is automa
+         +tion; AI is only used to design and build it.                  
+      30  - Iterate, don't restart; Stay in control.
+      31  
+      32 -Liên hệ đề: Papaya chấm "decompose the problem, direct the AI t
+         -ool effectively" và bắt buộc nộp log hội thoại AI nguyên văn. C
+         -ách làm việc với AI cũng là đối tượng bị chấm.                 
+      32 +Link to the brief: Papaya grades "decompose the problem, direct
+         + the AI tool effectively" and requires the verbatim AI conversa
+         +tion log. How you work with AI is graded too.                  
+      33  
+      34  ## 2. Task Lifecycle
+      35  
+      36 -Nguồn Handbook: `Software_Artisan_Handbook/resources/Developmen
+         -t_Process/resources/Task_Lifecycle.md`                         
+      36 +Handbook source: `Software_Artisan_Handbook/resources/Developme
+         +nt_Process/resources/Task_Lifecycle.md`                        
+      37  
+      38 -- New Task: description phải rõ What + Why. Dán đề vào Chat để 
+         -tìm ambiguity, thông tin thiếu.                                
+      39 -- Research: không nhảy vào code ngay; giải pháp phải end-to-end
+         -, bao hết use case.                                            
+      40 -- Solution Review: luôn đưa ra >= 2 giải pháp kèm pros/cons; ta
+         -sk phức tạp thì có diagram. Dùng Cowork soạn tài liệu so sánh, 
+         -Chat để pressure-test.                                         
+      41 -- Code priorities: [1] chạy đúng, [2] sạch, dễ đọc, đúng conven
+         -tion, [3] tối ưu.                                              
+      42 -- Có thể dùng các phase này làm khung timeline mà đề yêu cầu ướ
+         -c lượng.                                                       
+      38 +- New Task: the description must state What + Why clearly. Past
+         +e the brief into Chat to find ambiguities and missing informati
+         +on.                                                            
+      39 +- Research: do not jump straight into code; the solution must b
+         +e end-to-end and cover every use case.                         
+      40 +- Solution Review: always present >= 2 solutions with pros/cons
+         +; add a diagram for complex tasks. Use Cowork to draft the comp
+         +arison document, Chat to pressure-test it.                     
+      41 +- Code priorities: [1] works correctly, [2] clean, readable, fo
+         +llows conventions, [3] optimized.                              
+      42 +- These phases can serve as the frame for the timeline estimate
+         + the brief asks for.                                           
+      43  
+      44  ## 3. Reviewee Convention
+      45  
+      46 -Nguồn Handbook: `Software_Artisan_Handbook/resources/Developmen
+         -t_Process/resources/Code_Review/resources/Reviewee_Convention.m
+         -d`                                                             
+      46 +Handbook source: `Software_Artisan_Handbook/resources/Developme
+         +nt_Process/resources/Code_Review/resources/Reviewee_Convention.
+         +md`                                                            
+      47  
+      48 -- Mục "Agent Workflow" trong mô tả: agent nào đã dùng, các prom
+         -pt/chỉ đạo chính, đã tự kiểm tra gì, giới hạn còn lại. Nên đưa 
+         -vào README nộp bài.                                            
+      49 -- Commit theo Conventional Commits: `feat:`, `fix:`, `docs:`, `
+         -test:`, `refactor:`, `chore:` ...                              
+      50 -- Branch: `feat/`, `fix/`, `docs/`, `test/` ...                
+      51 -- Mô tả có checklist việc đã làm + summary What/Why.           
+      48 +- "Agent Workflow" section in the description: which agents wer
+         +e used, the key prompts / instructions, what was self-checked, 
+         +remaining limitations. Should go into the submission README.   
+      49 +- Commits follow Conventional Commits: `feat:`, `fix:`, `docs:`
+         +, `test:`, `refactor:`, `chore:` ...                           
+      50 +- Branches: `feat/`, `fix/`, `docs/`, `test/` ...              
+      51 +- The description has a checklist of the work done + a What/Why
+         + summary.                                                      
+      52  
+      53  ## 4. Reviewing AI Generated Code + Code Review Checklist
+      54  
+      55 -Nguồn Handbook: `Software_Artisan_Handbook/resources/Developmen
+         -t_Process/resources/Code_Review/resources/Reviewing_AI_Generate
+         -d_Code.md`, `.../Code_Review_Checklist.md`                     
+      55 +Handbook source: `Software_Artisan_Handbook/resources/Developme
+         +nt_Process/resources/Code_Review/resources/Reviewing_AI_Generat
+         +ed_Code.md`, `.../Code_Review_Checklist.md`                    
+      56  
+      57 -Checklist tự review output AI:                                 
+      58 -- Hallucinated API: import, signature có thật không.           
+      59 -- Scope creep: mọi thay đổi phải truy về yêu cầu của đề.       
+      60 -- Wrong business logic: thuật ngữ, luồng claim đúng chưa; hỏi "
+         -có hợp lý với nghiệp vụ không", không chỉ "có chạy không".     
+      61 -- Over-engineering: có phải giải pháp đơn giản nhất không.     
+      62 -- Không để lại TODO, placeholder (lưu ý: dataset synthetic là y
+         -êu cầu của đề, không phải mock thừa).                          
+      63 -- Code sạch: không code thừa, không code comment-out, không pri
+         -nt debug; comment chỉ để giải thích WHY / TODO / Warning.      
+      64 -- Phải có test.                                                
+      57 +Checklist for self-reviewing AI output:                        
+      58 +- Hallucinated API: do the imports and signatures really exist?
+      59 +- Scope creep: every change must trace back to a requirement of
+         + the brief.                                                    
+      60 +- Wrong business logic: are the terms and the claim flow right?
+         + Ask "does this make business sense", not only "does it run".  
+      61 +- Over-engineering: is this the simplest solution?             
+      62 +- No leftover TODOs or placeholders (note: the synthetic datase
+         +t is required by the brief, it is not a leftover mock).        
+      63 +- Clean code: no dead code, no commented-out code, no debug pri
+         +nts; comments only explain WHY / TODO / Warning.               
+      64 +- Tests are required.                                          
+      65  
+      66  ## 5. Medical Insurance 101 (domain)
+      67  
+      68 -Nguồn Handbook: `Software_Artisan_Handbook/resources/Medical_In
+         -surance_101.md`                                                
+      68 +Handbook source: `Software_Artisan_Handbook/resources/Medical_I
+         +nsurance_101.md`                                               
+      69  
+      70 -- Thực thể: Policy Owner, Insured Person, Medical Provider (CSY
+         -T), Insurer, TPA.                                              
+      71 -- Claim method: Reimbursement (theo chi phí thực tế, có trần Li
+         -mit) và Lump Sum.                                              
+      72 -- Health claim: Cashless / Direct Billing và Reimbursement Clai
+         -m.                                                             
+      73 -- Tiền: Sum Insured / Limit, Balance, Deductible, Co-payment.  
+      74 -- Dùng để đặt tên, viết evidence, giải thích trọng số rule đúng
+         - ngữ cảnh bảo hiểm (vd ngưỡng auto-approval 50,000 gắn với luồn
+         -g thẩm định claim).                                            
+      75 -- KHÔNG có: fraud pattern, ICD-10, procedure code, bundling. Ph
+         -ần này cần research riêng.                                     
+      70 +- Entities: Policy Owner, Insured Person, Medical Provider, Ins
+         +urer, TPA.                                                     
+      71 +- Claim method: Reimbursement (actual cost, capped by a Limit) 
+         +and Lump Sum.                                                  
+      72 +- Health claims: Cashless / Direct Billing and Reimbursement Cl
+         +aim.                                                           
+      73 +- Money: Sum Insured / Limit, Balance, Deductible, Co-payment. 
+      74 +- Use these to name things, write evidence and explain rule wei
+         +ghts in the right insurance context (e.g. the 50,000 auto-appro
+         +val threshold belongs to the claim assessment flow).           
+      75 +- NOT covered: fraud patterns, ICD-10, procedure codes, bundlin
+         +g. These need separate research.                               
+      76  
+      77  ## 6. Tech Stack
+      78  
+      79 -Nguồn Handbook: `Software_Artisan_Handbook/resources/Tech_Stack
+         -.md`                                                           
+      79 +Handbook source: `Software_Artisan_Handbook/resources/Tech_Stac
+         +k.md`                                                          
+      80  
+      81 -- AI/ML của team: Python (Pytorch, Keras, OpenAI, Vertex AI, Ge
+         -mini). Backend: Node.js / TypeScript.                          
+      81 +- Team AI/ML: Python (Pytorch, Keras, OpenAI, Vertex AI, Gemini
+         +). Backend: Node.js / TypeScript.                              
+      82  
+      83 -## 7. Communication Convention (chỉ cho email nộp bài)         
+      83 +## 7. Communication Convention (submission email only)         
+      84  
+      85 -Nguồn Handbook: `Software_Artisan_Handbook/resources/Communicat
+         -ion_Convention.md`                                             
+      85 +Handbook source: `Software_Artisan_Handbook/resources/Communica
+         +tion_Convention.md`                                            
+      86  
+      87 -- Email trang trọng; subject dạng `[Project Name] Subject`; luô
+         -n có greeting, sign-off, signature; nhắc tới đính kèm / link tr
+         -ong thân email.                                                
+      87 +- Formal email; subject in the form `[Project Name] Subject`; a
+         +lways a greeting, sign-off and signature; mention the attachmen
+         +t / link in the email body.                                    
+      88  
+      89 -## Bỏ qua                                                      
+      89 +## Skipped                                                     
+      90  
+      91 -Git_Workflow (Gitflow nhiều nhánh môi trường), Release_Process,
+         - System_Environment, Monorepo, VS_Code_Recommended_Extensions, 
+         -OS_Softwares_And_Tools.                                        
+      91 +Git_Workflow (Gitflow with several environment branches), Relea
+         +se_Process, System_Environment, Monorepo, VS_Code_Recommended_E
+         +xtensions, OS_Softwares_And_Tools.                             
+      92  
+      93 -## Để dành cho Claude Code (đọc khi chuyển sang Claude Code)   
+      93 +## Kept for Claude Code (read when moving to Claude Code)      
+      94  
+      95  - `Software_Artisan_Handbook/resources/AI_Agent_Workflow/Claude
+          _Code_Best_Practices.md`: prompting, Plan Mode, session managem
+          ent.
+      96 -- `Software_Artisan_Handbook/resources/AI_Agent_Workflow/Claude
+         -_Code_Workflow_Setup.md`: Superpowers flow, branch/worktree/PR,
+         - harness, reviewer agents.                                     
+      97 -- `Software_Artisan_Handbook/resources/AI_Agent_Workflow/Agent_
+         -Troubleshooting.md`: loop, hallucination, context limit, scope 
+         -creep, khi nào restart.                                        
+      98 -- Các mục "With Claude Code" trong Git_Workflow và phase Coding
+         - / Testing / Code Review của Task_Lifecycle.                   
+      96 +- `Software_Artisan_Handbook/resources/AI_Agent_Workflow/Claude
+         +_Code_Workflow_Setup.md`: Superpowers flow, branch / worktree /
+         + PR, harness, reviewer agents.                                 
+      97 +- `Software_Artisan_Handbook/resources/AI_Agent_Workflow/Agent_
+         +Troubleshooting.md`: loops, hallucination, context limits, scop
+         +e creep, when to restart.                                      
+      98 +- The "With Claude Code" sections of Git_Workflow and the Codin
+         +g / Testing / Code Review phases of Task_Lifecycle.            
+
+⏺ Write(conversations/README.md)
+  ⎿  Added 13 lines, removed 12 lines
+       1 -# Log hội thoại AI                                             
+       1 +# AI conversation logs                                         
+       2  
+       3 -Log nguyên văn của các phiên làm việc với AI (bắt buộc nộp theo
+         - quy định của Papaya). Không chỉnh sửa nội dung log.           
+       3 +Verbatim logs of the working sessions with AI (mandatory for su
+         +bmission per Papaya's rules). The log content is never edited. 
+       4  
+       5 -- Đặt tên: `NN-<công cụ>-<chủ đề>.<ext>`; `NN` theo thứ tự thời
+         - gian, `<công cụ>` là `chat` hoặc `code`.                      
+       6 -- Claude Code: lệnh `/export`, giữ nguyên file `.txt`. Claude C
+         -hat: file `.md`.                                               
+       5 +- Naming: `NN-<tool>-<topic>.<ext>`; `NN` in chronological orde
+         +r, `<tool>` is `chat` or `code`.                               
+       6 +- Claude Code: `/export` command, kept as the `.txt` file. Clau
+         +de Chat: `.md` file.                                           
+       7 +- The sessions themselves are in Vietnamese.                   
+       8  
+       8 -| # | File | Công cụ | Nội dung chính |                        
+       9 +| # | File | Tool | Main content |                             
+      10  |---|---|---|---|
+      10 -| 01 | `01-chat-research-domain.md` (dự kiến) | Claude Chat | R
+         -esearch domain bảo hiểm |                                      
+      11 -| 02 | [02-code-setup-project.txt](02-code-setup-project.txt) |
+         - Claude Code | Chốt kỹ thuật (Python, stdlib + pytest), ghi rủi
+         - ro, dựng backlog + plan 01, sửa cặp hợp lệ cho B-1001 / B-1002
+         - |                                                             
+      12 -| 03 | [03-code-phase1-generator.txt](03-code-phase1-generator.
+         -txt) | Claude Code | Plan 01: catalog, providers, generator, bắ
+         -t lỗi thiếu plan sinh 2.000 claim, ghi pitfall dataset |       
+      13 -| 04 | [04-plan-phase-2-rule-engine-setup-agent.txt](04-plan-ph
+         -ase-2-rule-engine-setup-agent.txt) | Claude Code | Viết plan 02
+         - (rule engine), chốt business rule, dựng subagent `coder` / `re
+         -viewer` |                                                      
+      14 -| 05 | [05-review-test-phase-1-generate.txt](05-review-test-pha
+         -se-1-generate.txt) | Claude Code | `reviewer` review code #01, 
+         -sửa finding, biến các dataset cố ý làm hỏng thành test `check` 
+         -|                                                              
+      15 -| 06 | [06-code-rule-engine.txt](06-code-rule-engine.txt) | Cla
+         -ude Code | Rule engine Phase 3: tính điểm, xếp hạng, lệnh `scor
+         -e` |                                                           
+      16 -| 07 | [07-code-and-metric.txt](07-code-and-metric.txt) | Claud
+         -e Code | Ticket #03: 19 business test, metrics report, integrat
+         -ion test, lưu ý cho writeup |                                  
+      11 +| 01 | `01-chat-research-domain.md` (planned) | Claude Chat | I
+         +nsurance domain research |                                     
+      12 +| 02 | [02-code-setup-project.txt](02-code-setup-project.txt) |
+         + Claude Code | Technical choices (Python, stdlib + pytest), ris
+         +ks, backlog + plan 01, fixed valid pairs for B-1001 / B-1002 | 
+      13 +| 03 | [03-code-phase1-generator.txt](03-code-phase1-generator.
+         +txt) | Claude Code | Plan 01: catalog, providers, generator; ca
+         +ught a missing plan step for generating the 2,000 claims; recor
+         +ded dataset pitfalls |                                         
+      14 +| 04 | [04-plan-phase-2-rule-engine-setup-agent.txt](04-plan-ph
+         +ase-2-rule-engine-setup-agent.txt) | Claude Code | Plan 02 (rul
+         +e engine), business rules settled, `coder` / `reviewer` subagen
+         +ts set up |                                                    
+      15 +| 05 | [05-review-test-phase-1-generate.txt](05-review-test-pha
+         +se-1-generate.txt) | Claude Code | `reviewer` reviews the #01 c
+         +ode, findings fixed, deliberately broken datasets turned into `
+         +check` tests |                                                 
+      16 +| 06 | [06-code-rule-engine.txt](06-code-rule-engine.txt) | Cla
+         +ude Code | Rule engine Phase 3: scoring, ranking, `score` comma
+         +nd |                                                           
+      17 +| 07 | [07-code-and-metric.txt](07-code-and-metric.txt) | Claud
+         +e Code | Ticket #03: 19 business tests, metrics report, integra
+         +tion test, notes for the writeup |                             
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin && sed -i '' 's/"Khi nào nhắc"
+      table/"When to remind" table/' AGENTS.md
+      AI_Engineering_Challenges/AI_Challenge_10_Fraud_D…)
+  ⎿  AGENTS.md:36:- **Handbook notes filtered for Challenge 10: `AI_Enginee
+     ring_Challenges/AI_Challenge_10_Fraud_Detection/docs/handbook-notes.md
+     `.** When the user touches a topic in that file's "When to remind" tab
+     … +11 lines (ctrl+o to expand)
+  ⎿  Updated /Volumes/D/papaya-insurtech-pumpkin/AGENTS.md (+1 -1)
+      33  - General rules of the AI part: `.tmp/pumpkin-main/Hiring/AI_En
+          gineering_Challenges/README.md`
+      34  - Rules of the logic part: `.tmp/pumpkin-main/Hiring/Logical_Qu
+          estions/README.md`
+      35  - Team handbook: `.tmp/pumpkin-main/Software_Artisan_Handbook/`
+      36 -- **Handbook notes filtered for Challenge 10: `AI_Engineering_C
+         -hallenges/AI_Challenge_10_Fraud_Detection/docs/handbook-notes.m
+         -d`.** When the user touches a topic in that file's "Khi nào nhắ
+         -c" table (analyzing the brief, comparing solutions, timeline, R
+         -EADME, reviewing AI output, insurance domain, choosing a stack,
+         - the submission email), remind them of the relevant point.     
+      36 +- **Handbook notes filtered for Challenge 10: `AI_Engineering_C
+         +hallenges/AI_Challenge_10_Fraud_Detection/docs/handbook-notes.m
+         +d`.** When the user touches a topic in that file's "When to rem
+         +ind" table (analyzing the brief, comparing solutions, timeline,
+         + README, reviewing AI output, insurance domain, choosing a stac
+         +k, the submission email), remind them of the relevant point.   
+      37  - **Challenge 10 requirement breakdown: `AI_Engineering_Challen
+          ges/AI_Challenge_10_Fraud_Detection/docs/requirements/challenge
+          -10-requirements.md`.** Use it as the A/B/C/D frame when discus
+          sing details; update "Settled decisions" and "Open questions" w
+          henever a new decision is made.
+      38  
+      39  ## Working conventions
+  ⎿  Updated AGENTS.md (+1 -1)
+      34  ## Required reading
+      35  
+      36  - Original brief (Challenge 10 + general rules, verbatim): `doc
+          s/requirements/original-brief.md`
+      37 -- Handbook notes for Challenge 10: `docs/handbook-notes.md`. Re
+         -mind the user per its "Khi nào nhắc" table when they analyze th
+         -e brief, choose a solution, estimate the timeline, write the RE
+         -ADME, review AI output, or name things / write evidence in insu
+         -rance-domain terms.                                            
+      37 +- Handbook notes for Challenge 10: `docs/handbook-notes.md`. Re
+         +mind the user per its "When to remind" table when they analyze 
+         +the brief, choose a solution, estimate the timeline, write the 
+         +README, review AI output, or name things / write evidence in in
+         +surance-domain terms.                                          
+      38  - Business terms (single source; other docs link here instead o
+          f redefining terms): `docs/business-rule/glossary.md`.
+      39  - A/B/C/D requirement breakdown, settled decisions, open questi
+          ons: `docs/requirements/challenge-10-requirements.md`. Update i
+          t whenever a new decision is made.
+      40  
+
+⏺ Bash(sed -i '' 's/(no "dự kiến" left)/(no "planned" left)/'
+      AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/backlog/tod
+      o/04-writeup-and-submission.md…)
+  ⎿  29:- `conversations/README.md` lists every log file, including the log
+      of this writeup session (exported last); the `01-chat-research-domain
+     .md` row is either backed by a real file or removed (no "planned" left
+     ).
+  ⎿  Updated docs/backlog/todo/04-writeup-and-submission.md (+1 -1)
+      26    - the timeline: estimate vs real time per item;
+      27    - the status line no longer says "work in progress".
+      28  - Repo root has a short `README.md` pointing to `Logical_Questi
+          ons/` and `AI_Engineering_Challenges/AI_Challenge_10_Fraud_Dete
+          ction/`.
+      29 -- `conversations/README.md` lists every log file, including the
+         - log of this writeup session (exported last); the `01-chat-rese
+         -arch-domain.md` row is either backed by a real file or removed 
+         -(no "dự kiến" left).                                           
+      29 +- `conversations/README.md` lists every log file, including the
+         + log of this writeup session (exported last); the `01-chat-rese
+         +arch-domain.md` row is either backed by a real file or removed 
+         +(no "planned" left).                                           
+      30  - Every log file in `conversations/` is committed.
+      31  - The repo holds the dataset, the scored output and the metrics
+           report.
+      32  - Everything is pushed to `origin/main`.
+
+⏺ Tôi đã chuyển docs/handbook-notes.md và conversations/README.md sang tiếng Anh
+  toàn bộ. Chưa commit.
+
+  docs/handbook-notes.md
+  - Dịch đủ 7 mục, nội dung giữ nguyên.
+  - Tên bảng "Khi nào nhắc" đổi thành "When to remind". Hai file AGENTS.md (ở
+    root và trong Challenge 10) đang trỏ tới bảng này theo tên, nên tôi sửa luôn
+    tên trong cả hai.
+
+  conversations/README.md
+  - Dịch toàn file. Đây là doc trong folder Challenge 10, nên theo AGENTS.md của
+    Challenge 10 phải viết tiếng Anh. Quy định này cũng không cho để hai ngôn
+    ngữ trong một file.
+  - Thêm một dòng ghi rằng bản thân các phiên chat là tiếng Việt, để người chấm
+    biết trước khi mở log.
+  - Dòng 01 đổi "(dự kiến)" thành "(planned)". Tôi sửa luôn chữ này trong
+    criteria của ticket 04 cho khớp.
+
+✻ Baked for 1m 0s · done 18:42
+
+❯ move AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/backlog/t 
+  odo/04-writeup-and-submission.md sang done luôn rồi commit                    
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin/AI_Engineering_Challenges/AI_Chall
+      enge_10_Fraud_Detection && cat docs/backlog/README.md; grep -rn
+      "todo/04\|04-writeup" -…)
+  ⎿  # Backlog
+
+     **Read when:** you need to know which Challenge 10 work is in progress
+     … +17 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin/AI_Engineering_Challenges/AI_Chall
+      enge_10_Fraud_Detection && git mv
+      docs/backlog/todo/04-writeup-and-submission.md docs/b…)
+  ⎿  # 04 - D: Writeup and submission
+
+     **Status:** done
+     … +17 lines (ctrl+o to expand)
+  ⎿  Updated docs/backlog/README.md (+1 -1)
+      12  | 01 | [A - Generate the dataset](done/01-dataset-generator.md)
+           | feature | done | 1 |
+      13  | 02 | [B - 8-rule engine + scoring](done/02-rule-engine.md) | 
+          feature | done | 2 |
+      14  | 03 | [C - Unit tests, metrics, runtime](done/03-tests-and-met
+          rics.md) | feature | done | 3 |
+      15 -| 04 | [D - Writeup and submission](todo/04-writeup-and-submiss
+         -ion.md) | chore | todo | 4 |                                   
+      15 +| 04 | [D - Writeup and submission](done/04-writeup-and-submiss
+         +ion.md) | chore | done | 4 |                                   
+  ⎿  Created docs/backlog/done/04-writeup-and-submission.md (+53 -0)
+       1 +# 04 - D: Writeup and submission                               
+       2 +                                                               
+       3 +**Status:** done                                               
+       4 +**Type:** chore                                                
+       5 +**Priority:** 4                                                
+       6 +**Effort:** S                                                  
+       7 +**Plan:** none yet                                             
+       8 +**Related:** #01, #02, #03                                     
+       9 +                                                               
+      10 +## What                                                        
+      11 +                                                               
+      12 +Submission `README.md` (approach, decisions, weights, metrics, 
+         +real timeline, agent workflow, limitations), a repo-root `READM
+         +E.md`, complete conversation logs in `conversations/`, push the
+         + repo.                                                         
+      13 +                                                               
+      14 +## Why / value                                                 
+      15 +                                                               
+      16 +Missing conversation logs is an automatic fail; the writeup is 
+         +where Papaya reads the reason behind every decision, and the "A
+         +gent Workflow" section is where they see how the AI was directe
+         +d (the brief grades "direct the AI tool effectively").         
+      17 +                                                               
+      18 +## Acceptance criteria                                         
+      19 +                                                               
+      20 +- `README.md` (Challenge 10) has:                              
+      21 +  - the run commands, with numbers matching a final `uv run pyt
+         +hon src/cli.py metrics` run on the committed `data/`;          
+      22 +  - the weight explanation: the business reason for each rule's
+         + weight, not only the numbers;                                 
+      23 +  - the real metrics (from the final `output/metrics_report.md`
+         +);                                                             
+      24 +  - a **`## Limitations`** section (exact heading, `output/metr
+         +ics_report.md` links to it) covering at least: the dataset is g
+         +enerated from the same rule definitions the engine applies (rec
+         +all 100% is an upper bound), recall drops to 18% at threshold >
+         += 70, and the dataset is hand-placed with a fixed seed 2024 (no
+         +t random);                                                     
+      25 +  - an **Agent Workflow** section: tools and agents used (main 
+         +thread + `coder` / `reviewer`), the key instructions given, the
+         + AI mistakes caught and how, what was verified by hand; each po
+         +int links to the log file where it happened;                   
+      26 +  - the timeline: estimate vs real time per item;              
+      27 +  - the status line no longer says "work in progress".         
+      28 +- Repo root has a short `README.md` pointing to `Logical_Questi
+         +ons/` and `AI_Engineering_Challenges/AI_Challenge_10_Fraud_Dete
+         +ction/`.                                                       
+      29 +- `conversations/README.md` lists every log file, including the
+         + log of this writeup session (exported last); the `01-chat-rese
+         +arch-domain.md` row is either backed by a real file or removed 
+         +(no "planned" left).                                           
+      30 +- Every log file in `conversations/` is committed.             
+      31 +- The repo holds the dataset, the scored output and the metrics
+         + report.                                                       
+      32 +- Everything is pushed to `origin/main`.                       
+      33 +                                                               
+      34 +Out of scope: the submission email (the user handles it).      
+      35 +                                                               
+      36 +## Notes                                                       
+      37 +                                                               
+      38 +From #03 (2026-10-25, rough measurement on seed 2024; use the f
+         +inal numbers in `output/metrics_report.md`):                   
+      39 +                                                               
+      40 +- **Recall 100% / FPR 2.6% is "too good".** The same person wro
+         +te the rules and generated the data to fit the rule definitions
+         +, so the engine catches every injected pattern by construction.
+         + The writeup must state this limitation (real data would score 
+         +lower: fraud that does not match the textbook pattern, noisier 
+         +legit data) instead of presenting the numbers as an achievement
+         +.                                                              
+     … 13 more lines (ctrl+o to expand)
+  ⎿  Deleted docs/backlog/todo/04-writeup-and-submission.md (+0 -53)
+       1 -# 04 - D: Writeup and submission                               
+       2 -                                                               
+       3 -**Status:** todo                                               
+       4 -**Type:** chore                                                
+       5 -**Priority:** 4                                                
+       6 -**Effort:** S                                                  
+       7 -**Plan:** none yet                                             
+       8 -**Related:** #01, #02, #03                                     
+       9 -                                                               
+      10 -## What                                                        
+      11 -                                                               
+      12 -Submission `README.md` (approach, decisions, weights, metrics, 
+         -real timeline, agent workflow, limitations), a repo-root `READM
+         -E.md`, complete conversation logs in `conversations/`, push the
+         - repo.                                                         
+      13 -                                                               
+      14 -## Why / value                                                 
+      15 -                                                               
+      16 -Missing conversation logs is an automatic fail; the writeup is 
+         -where Papaya reads the reason behind every decision, and the "A
+         -gent Workflow" section is where they see how the AI was directe
+         -d (the brief grades "direct the AI tool effectively").         
+      17 -                                                               
+      18 -## Acceptance criteria                                         
+      19 -                                                               
+      20 -- `README.md` (Challenge 10) has:                              
+      21 -  - the run commands, with numbers matching a final `uv run pyt
+         -hon src/cli.py metrics` run on the committed `data/`;          
+      22 -  - the weight explanation: the business reason for each rule's
+         - weight, not only the numbers;                                 
+      23 -  - the real metrics (from the final `output/metrics_report.md`
+         -);                                                             
+      24 -  - a **`## Limitations`** section (exact heading, `output/metr
+         -ics_report.md` links to it) covering at least: the dataset is g
+         -enerated from the same rule definitions the engine applies (rec
+         -all 100% is an upper bound), recall drops to 18% at threshold >
+         -= 70, and the dataset is hand-placed with a fixed seed 2024 (no
+         -t random);                                                     
+      25 -  - an **Agent Workflow** section: tools and agents used (main 
+         -thread + `coder` / `reviewer`), the key instructions given, the
+         - AI mistakes caught and how, what was verified by hand; each po
+         -int links to the log file where it happened;                   
+      26 -  - the timeline: estimate vs real time per item;              
+      27 -  - the status line no longer says "work in progress".         
+      28 -- Repo root has a short `README.md` pointing to `Logical_Questi
+         -ons/` and `AI_Engineering_Challenges/AI_Challenge_10_Fraud_Dete
+         -ction/`.                                                       
+      29 -- `conversations/README.md` lists every log file, including the
+         - log of this writeup session (exported last); the `01-chat-rese
+         -arch-domain.md` row is either backed by a real file or removed 
+         -(no "planned" left).                                           
+      30 -- Every log file in `conversations/` is committed.             
+      31 -- The repo holds the dataset, the scored output and the metrics
+         - report.                                                       
+      32 -- Everything is pushed to `origin/main`.                       
+      33 -                                                               
+      34 -Out of scope: the submission email (the user handles it).      
+      35 -                                                               
+      36 -## Notes                                                       
+      37 -                                                               
+      38 -From #03 (2026-10-25, rough measurement on seed 2024; use the f
+         -inal numbers in `output/metrics_report.md`):                   
+      39 -                                                               
+      40 -- **Recall 100% / FPR 2.6% is "too good".** The same person wro
+         -te the rules and generated the data to fit the rule definitions
+         -, so the engine catches every injected pattern by construction.
+         - The writeup must state this limitation (real data would score 
+         -lower: fraud that does not match the textbook pattern, noisier 
+         -legit data) instead of presenting the numbers as an achievement
+         -.                                                              
+     … 13 more lines (ctrl+o to expand)
+  ⎿  Updated docs/requirements/challenge-10-requirements.md (+1 -1)
+      117  - C3 natural FP by rule (2026-10-25): an FP claim with 2 rules
+            is counted under both; the table adds a total row of FP claim
+           s so the columns are not summed into a wrong total.
+      118  - C1 integration test (2026-10-25): the allowed exception (fra
+           ud claims on the phantom provider-day may also trigger `phanto
+           m_billing`) is derived from `generation_summary.json`, not har
+           d-coded claim IDs; any other extra rule fails the test with cl
+           aim ID, pattern and extra rules.
+      119  - C3 report format (2026-10-25): `output/metrics_report.md` in
+            English; header with dataset, weights in use and runtime, the
+           n the 4 parts of `metrics.md` as tables, percentages with 1 de
+           cimal, 1-2 sentences reading each table. Deterministic except 
+           the runtime line.
+      120 -- D writeup (2026-10-25): no rewrite of the generator into a r
+          -andom dataset (does not fit the remaining time); the fixed, ha
+          -nd-placed seed-2024 dataset is listed under `## Limitations` i
+          -n `README.md` as a next step. The submission email is handled 
+          -by the user, outside ticket #04. See `docs/backlog/todo/04-wri
+          -teup-and-submission.md`.                                      
+      120 +- D writeup (2026-10-25): no rewrite of the generator into a r
+          +andom dataset (does not fit the remaining time); the fixed, ha
+          +nd-placed seed-2024 dataset is listed under `## Limitations` i
+          +n `README.md` as a next step. The submission email is handled 
+          +by the user, outside ticket #04. See `docs/backlog/done/04-wri
+          +teup-and-submission.md`.                                      
+      121  
+      122  ## Open questions (discussed when each part is detailed)
+      123  
+
+⏺ Bạn đã tự stage thêm vài file: 01-explore-requirement.pdf và lệnh xoá
+  .claude/docs/plans/done/.keep. Tôi xem lại diff trước khi chạy pre-commit
+  sweep.
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin && git diff --cached --stat; git
+      diff HEAD -- AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/doc
+      s/requirements…)
+  ⎿   .claude/docs/plans/done/.keep                      |    0
+      AGENTS.md                                          |    2 +-
+      .../AI_Challenge_10_Fraud_Detection/AGENTS.md      |    2 +-
+     … +38 lines (ctrl+o to expand)
+
+⏺ Log 01 giờ đã có file thật là 01-explore-requirement.pdf, nên tôi cập nhật
+  dòng 01 trong index để trỏ tới nó.
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin/AI_Engineering_Challenges/AI_Chall
+      enge_10_Fraud_Detection/conversations && python3 - <<'EOF'
+      p='README.md'…)
+  ⎿  6:- Claude Code: `/export` command, kept as the `.txt` file. Claude Ch
+     at: `.md` file, or a `.pdf` print of the chat.
+     11:| 01 | [01-explore-requirement.pdf](01-explore-requirement.pdf) | C
+     … +11 lines (ctrl+o to expand)
+  ⎿  Updated conversations/README.md (+2 -2)
+       3  Verbatim logs of the working sessions with AI (mandatory for su
+          bmission per Papaya's rules). The log content is never edited.
+       4  
+       5  - Naming: `NN-<tool>-<topic>.<ext>`; `NN` in chronological orde
+          r, `<tool>` is `chat` or `code`.
+       6 -- Claude Code: `/export` command, kept as the `.txt` file. Clau
+         -de Chat: `.md` file.                                           
+       6 +- Claude Code: `/export` command, kept as the `.txt` file. Clau
+         +de Chat: `.md` file, or a `.pdf` print of the chat.            
+       7  - The sessions themselves are in Vietnamese.
+       8  
+       9  | # | File | Tool | Main content |
+      10  |---|---|---|---|
+      11 -| 01 | `01-chat-research-domain.md` (planned) | Claude Chat | I
+         -nsurance domain research |                                     
+      11 +| 01 | [01-explore-requirement.pdf](01-explore-requirement.pdf)
+         + | Claude Chat | Exploring the brief and insurance domain resea
+         +rch |                                                          
+      12  | 02 | [02-code-setup-project.txt](02-code-setup-project.txt) |
+           Claude Code | Technical choices (Python, stdlib + pytest), ris
+          ks, backlog + plan 01, fixed valid pairs for B-1001 / B-1002 |
+      13  | 03 | [03-code-phase1-generator.txt](03-code-phase1-generator.
+          txt) | Claude Code | Plan 01: catalog, providers, generator; ca
+          ught a missing plan step for generating the 2,000 claims; recor
+          ded dataset pitfalls |
+      14  | 04 | [04-plan-phase-2-rule-engine-setup-agent.txt](04-plan-ph
+          ase-2-rule-engine-setup-agent.txt) | Claude Code | Plan 02 (rul
+          e engine), business rules settled, `coder` / `reviewer` subagen
+          ts set up |
+
+⏺ Tôi chạy pre-commit sweep theo đúng quy định trong AGENTS.md.
+
+⏺ Skill(pjdoc-mgmt-claco-bunhy)
+  ⎿  Successfully loaded skill · claude-sonnet-5-5
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin && git ls-files
+      .claude/docs/plans/done | head; git add
+      AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/convers…)
+  ⎿  .claude/docs/plans/done/01-dataset-generator.md
+     .claude/docs/plans/done/02-rule-engine.md
+     .claude/docs/plans/done/03-tests-and-metrics.md
+     … +16 lines (ctrl+o to expand)
+
+⏺ backlog/todo/ giờ trống. Theo quy ước của layout, folder trống phải có file
+  .keep.
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin/AI_Engineering_Challenges/AI_Chall
+      enge_10_Fraud_Detection/docs/backlog && ls -A todo idea; [ -z "$(ls -A
+      todo)" ] && touc…)
+  ⎿  idea:
+     .keep
+     … +3 lines (ctrl+o to expand)
+  ⎿  Created docs/backlog/todo/.keep (+0 -0)
+
+⏺ Tôi đã chuyển ticket 04 sang done/ và commit: 8909f09 docs: close ticket 04, 
+  index all conversation logs, translate handbook notes. Chưa push.
+
+  Lưu ý: ticket 04 giờ ghi done, nhưng các criteria của nó phần lớn chưa làm:
+  README chưa có section Limitations, Agent Workflow và timeline thật; chưa có
+  README ở root; chưa có log của phiên này; chưa push. Nếu bạn định làm tiếp
+  phần writeup, nên chuyển ticket về todo/ hoặc nhớ đối chiếu theo danh sách
+  criteria trong file.
+
+  Commit gồm:
+  - Ticket 04 chuyển sang done/, sửa Status:, cập nhật dòng trong
+    docs/backlog/README.md và đường dẫn trong challenge-10-requirements.md.
+  - docs/backlog/todo/ giờ trống nên tôi thêm .keep để folder không mất khi
+    clone.
+  - conversations/README.md bằng tiếng Anh, có đủ log 01-07. Dòng 01 trỏ tới
+    01-explore-requirement.pdf mà bạn vừa thêm. Tôi cũng ghi thêm rằng log
+    Claude Chat có thể ở dạng .pdf.
+  - docs/handbook-notes.md bằng tiếng Anh, và tên bảng mới trong hai file
+    AGENTS.md.
+  - Các file bạn đã tự stage: 01-explore-requirement.pdf,
+    07-code-and-metric.txt, và lệnh xoá .claude/docs/plans/done/.keep. Xoá file
+    đó không sao vì folder đã có 3 plan.
+
+  Kết quả pre-commit sweep:
+  - Commit chỉ có docs nên không cần changelog. Ticket này không có plan nên
+    cũng không phải chuyển plan.
+  - Không viết ADR. Quyết định bỏ random dataset là chuyện phạm vi, không phải
+    kiến trúc, và lý do đã ghi trong "Settled decisions".
+  - Commit không có dòng Co-Authored-By, theo quy định trong AGENTS.md.
+
+✻ Cooked for 1m 0s · done 18:45
+
+❯ /export AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/conversatio 
+ns/08-writeup.txt                                                               
+  ⎿  Conversation exported to: /Volumes/D/papaya-insurtech-pumpkin/AI_Engineerin
+     g_Challenges/AI_Challenge_10_Fraud_Detection/conversations/08-writeup.txt
+
+❯ kiểm tra lại lần cuối còn thiếu sót gì ko                                     
+
+⏺ Bash(git status --short; git fetch -q && git log --oneline origin/main..main;
+      ls README.md 2>&1; cd
+      AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection && grep…)
+  ⎿   D AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/docs/back
+     log/done/.keep
+     ?? AI_Engineering_Challenges/AI_Challenge_10_Fraud_Detection/conversat
+     … +19 lines (ctrl+o to expand)
+  ⎿  Updated output/metrics_report.md (+1 -1)
+      2  
+      3  - Dataset: 2,000 claims, 200 fraudulent, seed 2024
+      4  - Severity weights: duplicate_claim 5, rapid_resubmission 3, upc
+         oding 4, unbundling 3, phantom_billing 4, weekend_anomaly 2, dia
+         gnosis_procedure_mismatch 4, amount_clustering 2
+      5 -- Runtime: Scored 2,000 claims in 0.018 s (load -> rules -> scor
+        -e -> write, measured in-process with time.perf_counter; Python s
+        -tartup excluded)                                                
+      5 +- Runtime: Scored 2,000 claims in 0.017 s (load -> rules -> scor
+        +e -> write, measured in-process with time.perf_counter; Python s
+        +tartup excluded)                                                
+      6  - Prediction rule: a claim is predicted fraud when risk_score > 
+         0 (at least one flag)
+      7  
+      8  ## 1. Overall
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin && git diff AI_Engineering_Challen
+      ges/AI_Challenge_10_Fraud_Detection/output/metrics_report.md | grep
+      "^[-+][^-+]"; git c…)
+  ⎿  ## main...origin/main
+     8909f09 docs: close ticket 04, index all conversation logs, translate
+     handbook notes
+  ⎿  Updated output/metrics_report.md (+1 -1)
+  ⎿  (a git step in this command can move the working tree, so these may be
+     its changes, not edits) (ctrl+o to expand)
+
+⏺ Kiểm tra lần cuối: phần code, dữ liệu và metrics ổn. Bài vẫn chưa sẵn sàng để 
+  nộp vì phần writeup chưa viết.
+
+  Đã ổn:
+  - 154 test pass.
+  - Chạy lại metrics vẫn ra precision 81.3%, recall 100%, FPR 2.6%, khớp với
+    README. Lần chạy này chỉ làm đổi dòng runtime trong
+    output/metrics_report.md, nên tôi đã khôi phục file về bản đã commit.
+  - Dataset, scored output và metrics report đều đã commit. Log 01-07 đã commit.
+  - Commit 8909f09 đã có trên origin/main.
+
+  Còn thiếu, xếp theo mức nặng:
+  1. Section ## Limitations chưa có trong README Challenge 10.
+     output/metrics_report.md:14 đang ghi "see Limitations in README.md", nên
+     người chấm bấm theo sẽ không thấy gì.
+  2. Chưa có section Agent Workflow. Đây là phần Papaya đọc để chấm "direct the
+     AI tool effectively".
+  3. Timeline mới chỉ có ước lượng 6h, chưa có thời gian thực tế.
+  4. README vẫn ghi "work in progress ... the writeup (part D) is not" ở dòng 5.
+     Người chấm sẽ hiểu là bài chưa xong.
+  5. Ở root repo chưa có README.md. Mở link GitHub sẽ chỉ thấy danh sách folder.
+  6. Log 08-writeup.txt chưa commit và chưa có trong conversations/README.md.
+     Nếu bạn còn viết writeup trong phiên này thì nên export lại ở cuối, ghi đè
+     file 08.
+  7. Nhỏ: docs/backlog/done/.keep đã bị xoá trên đĩa nhưng chưa commit. Xoá là
+     đúng vì folder đã có ticket, chỉ cần commit cùng lần sau.
+
+  Mục 1-4 là nội dung README, tôi có thể viết nháp cho bạn duyệt. Lý do trọng số
+  lấy từ docs/business-rule/scoring-weights.md, các lỗi AI mắc mà bạn bắt được
+  lấy từ các log. Riêng thời gian thực tế thì bạn phải cho tôi số, vì tôi không
+  đo được.
+
+  Bạn muốn tôi làm tiếp không?
+✻ Cogitated for 37s · done 19:07
+
+❯ 3. thời gian thực tế khoảng 9h.                                               
+     còn lại theo recommend                                                     
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin/AI_Engineering_Challenges/AI_Chall
+      enge_10_Fraud_Detection && cat docs/business-rule/scoring-weights.md; echo
+      =====; sed -…)
+  ⎿  Error: Exit code 1
+     # Trọng số rule (B3)
+
+     Đề yêu cầu: "Each rule has a configurable severity weight (1-5)" và 
+     "Scoring weights are justified".
+
+     ## Tiêu chí chấm trọng số
+
+     1. **Độ chắc chắn của tín hiệu**: có lý do hợp lệ nào tạo ra cùng dấu hiệu 
+     không.
+     2. **Thiệt hại tài chính**: nếu là fraud thật, insurer mất bao nhiêu.
+
+     … +17 lines (ctrl+o to expand)
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin/AI_Engineering_Challenges/AI_Chall
+      enge_10_Fraud_Detection/conversations && for f in 0[2-8]*.txt; do echo "##
+      $f"; grep -n…)
+  ⎿  ## 02-code-setup-project.txt
+     ## 03-code-phase1-generator.txt
+     331:❯ khoan đã chúng ta có miss plan để "Generate a dataset of 2,000 c
+     … +16 lines (ctrl+o to expand)
+
+⏺ Bash(sed -n '331,336p;2982,2986p' 03-code-phase1-generator.txt; echo ===; sed
+      -n '2303,2308p' 05-review-test-phase-1-generate.txt; echo ===; sed -n
+      '2240,2300p' 07-c…)
+  ⎿  Error: Exit code 1
+     ❯ khoan đã chúng ta có miss plan để "Generate a dataset of 2,000 claims 
+     with    
+       these columns" ko                                                        
+         
+
+     ⏺ Bash(cd 
+     /Volumes/D/papaya-insurtech-pumpkin/AI_Engineering_Challenges/AI_Chall
+           enge_10_Fraud_Detection/docs && grep -n -i -A25 "2,000 claims"
+           requirements/original-br…)
+     ❯ tại sao lại viết check_dataset vào trong cmd_generate.                   
+         
+       tôi nghĩ nó nên là 1 hàm riêng, mỗi hàm 1 chức năng. generate và check là
+     2   
+       quá trình tách bạch                                                      
+         
+     … +3 lines (ctrl+o to expand)
+
+⏺ Bash(sed -n '2303,2310p' 05-review-test-phase-1-generate.txt; echo '---'; sed
+      -n '2200,2300p' 07-code-and-metric.txt | grep -v "^\s*$" | tail -25 | cut
+      -c1-180; echo…)
+  ⎿  ❯ đã thử khoảng 12 bản dataset cố ý làm hỏng. cách thử này nên tạo thà
+     nh test
+       cases để tái sử dụng khi cần
+     … +45 lines (ctrl+o to expand)
+
+⏺ Bash(sed -n '820,856p' 03-code-phase1-generator.txt | cut -c1-180; echo '---';
+      grep -n -i "clamp\|kẹp" 05-review-test-phase-1-generate.txt | head -5 |
+      cut -c1-180; e…)
+  ⎿            .py` kiểm nó trùng với claim_type của mọi thành phần.
+           28  - `catalog.py` kiểm thêm ràng buộc "diagnosis hợp lệ của bun
+     dle
+     … +52 lines (ctrl+o to expand)
+
+⏺ Tôi đã có đủ dữ liệu từ các log. Giờ tôi viết các section còn thiếu vào
+  README.
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin/AI_Engineering_Challenges/AI_Chall
+      enge_10_Fraud_Detection && sed -n '1,6p;156,200p' README.md; ls
+      docs/decisions; cat src…)
+  ⎿  # AI Challenge 10 - Fraud Detection Scoring Engine
+
+     Rule-based fraud scoring engine for health insurance claims: it analyz
+     … +43 lines (ctrl+o to expand)
+
+⏺ Bash(python3 - <<'EOF'
+      p='README.md'…)
+  ⎿  9:## Requirements
+     16:## Generate the dataset
+     113:## Score the claims
+     … +6 lines (ctrl+o to expand)
+  ⎿  Updated README.md (+57 -5)
+       2  
+       3  Rule-based fraud scoring engine for health insurance claims: it
+           analyzes each claim and assigns a risk score (0-100) with item
+          ized evidence for every rule that fires.
+       4  
+       5 -**Status:** work in progress. The dataset generator (part A), t
+         -he 8-rule engine with scoring and the `score` command (part B),
+         - the 19 business test cases, the metrics report and the integra
+         -tion test on the real dataset (part C) are done; the writeup (p
+         -art D) is not.                                                 
+       5 +**Status:** complete. Dataset generator (part A), 8-rule engine
+         + with scoring (part B), tests and metrics (part C), writeup and
+         + AI conversation logs (part D).                                
+       6 +                                                               
+       7 +Results on the committed dataset (2,000 claims, seed 2024): pre
+         +cision 81.3%, recall 100.0%, FPR 2.6%, scored in ~0.02 s. Targe
+         +ts of the brief: recall >= 70%, FPR <= 20%, < 30 s. Read the [L
+         +imitations](#limitations) before reading these numbers as an ac
+         +hievement.                                                     
+       8  
+       9  ## Requirements
+      10  
+     ...
+      166  - `tests/test_dataset_check.py`: the `check` command against b
+           roken copies of the dataset.
+      167  - `tests/test_integration_dataset.py`: the engine on the commi
+           tted dataset (own-rule hits, phantom-day exception, recall / F
+           PR targets, < 30 s).
+      168  
+      167 -## Timeline estimate                                          
+      169 +## Scoring weights                                            
+      170 +                                                              
+      171 +Each weight (1-5, in `src/config/weights.json`) is set on two 
+          +criteria: **how certain the signal is** (is there a legitimate
+          + reason that produces the same sign?) and **how much the insur
+          +er loses** if it is real fraud. The brief's own example fixes 
+          +two anchors: upcoding = 4, amount clustering = 2.             
+      172 +                                                              
+      173 +| Rule | Weight | Why |                                       
+      174 +|---|---|---|                                                 
+      175 +| `duplicate_claim` | 5 | The data has passed input validation
+          +, so a second claim on the same member, provider, date and dia
+          +gnosis is almost certainly fraud; the insurer pays twice for o
+          +ne visit. |                                                   
+      176 +| `phantom_billing` | 4 | > 30 claims in one provider-day is a
+          + very clear anomaly with a large loss; not 5 because the rule 
+          +flags every claim of that day, legitimate ones included. |    
+      177 +| `upcoding` | 4 | Brief's anchor. Direct financial loss; a st
+          +atistical threshold, so ~2% of legitimate claims can still exc
+          +eed mean + 2 SD. |                                            
+      178 +| `diagnosis_procedure_mismatch` | 4 | A clear medical inconsi
+          +stency; sometimes a data-entry error. |                       
+      179 +| `unbundling` | 3 | Deterministic, it is certainly an unbundl
+          +ed bill; but the overcharge is only ~10% of the bundle price. 
+          +|                                                             
+      180 +| `rapid_resubmission` | 3 | A follow-up visit for the same di
+          +agnosis within 7 days can be legitimate. |                    
+      181 +| `weekend_anomaly` | 2 | Indirect signal; a hospital's schedu
+          +le can change. |                                              
+      182 +| `amount_clustering` | 2 | Brief's anchor. The weakest signal
+          +: legitimate claims fall in the 47,500-49,999 band on their ow
+          +n. |                                                          
+      183 +                                                              
+      184 +Score = `100 x (1 - e^(-0.25 x sum of weights))`: one weak rul
+          +e gives 39, a strong rule 71, and the curve saturates instead 
+          +of capping, so two strong rules still rank above one. Full for
+          +mula and ranking: [`docs/business-rule/scoring.md`](docs/busin
+          +ess-rule/scoring.md). Rule thresholds are constants, only weig
+          +hts are configurable: [`ADR-003`](docs/decisions/ADR-003-only-
+          +weights-are-configurable.md).                                 
+      185 +                                                              
+      186 +## Limitations                                                
+      187  
+      169 -Total estimate: **5-7 hours** (detailed plan: 6 hours).       
+      188 +- **Recall 100% is an upper bound, not a result.** The same pe
+          +rson wrote the 8 rules and generated the data to match their d
+          +efinitions, so every injected pattern is caught by constructio
+          +n. Real data would score lower: fraud that does not follow the
+          + textbook pattern, noisier legitimate claims, several patterns
+          + on one claim.                                                
+      189 +- **The dataset is hand-placed, not random.** One fixed seed (
+          +2024), with constraints that keep each fraud claim inside its 
+          +own pattern; the tests read that one committed dataset. Next s
+          +tep: a generator that places fraud at random (any seed), so th
+          +e engine is shown to work on data it was not tuned to.        
+      190 +- **At a high threshold most fraud is missed.** At `score >= 7
+          +0` recall drops to 18.0% (FPR 0.0%), because weak rules (weeke
+          +nd, clustering) give 39 points. This is why the main metric pr
+          +edicts fraud at `score > 0`; a claims team that only reviews h
+          +igh scores needs different weights or a second queue.         
+      191 +- **One pattern per fraud claim.** Deliberate simplification o
+          +f the generator; in reality a claim can carry several.        
+      192 +- **Upcoding uses mean and SD over all claims of the code, upc
+          +oded ones included** (masking accepted because recall met the 
+          +target; leave-one-out was the fallback). The `>` vs `>=` bound
+          +ary of mean + 2 SD has no test, because it needs an amount exa
+          +ctly on an irrational threshold.                              
+      193 +- **Clinics are small.** The 20 clinics get only ~1-15 claims 
+          +each, a side effect of giving every hospital the same volume: 
+          +[`ADR-004`](docs/decisions/ADR-004-equal-volume-for-all-hospit
+          +als.md).                                                      
+     … 38 more lines (ctrl+o to expand)
+
+⏺ Bash(python3 - <<'EOF'
+      p='README.md'…)
+  ⎿  [
+       39,
+       53,
+     … +4 lines (ctrl+o to expand)
+  ⎿  Updated README.md (+3 -3)
+      181  | `weekend_anomaly` | 2 | Indirect signal; a hospital's schedu
+           le can change. |
+      182  | `amount_clustering` | 2 | Brief's anchor. The weakest signal
+           : legitimate claims fall in the 47,500-49,999 band on their ow
+           n. |
+      183  
+      184 -Score = `100 x (1 - e^(-0.25 x sum of weights))`: one weak rul
+          -e gives 39, a strong rule 71, and the curve saturates instead 
+          -of capping, so two strong rules still rank above one. Full for
+          -mula and ranking: [`docs/business-rule/scoring.md`](docs/busin
+          -ess-rule/scoring.md). Rule thresholds are constants, only weig
+          -hts are configurable: [`ADR-003`](docs/decisions/ADR-003-only-
+          -weights-are-configurable.md).                                 
+      184 +Score = `100 x (1 - e^(-0.25 x sum of weights))`: one weight-2
+          + rule gives 39, `duplicate_claim` alone gives 71, and the curv
+          +e saturates instead of capping, so two strong rules still rank
+          + above one. Full formula and ranking: [`docs/business-rule/sco
+          +ring.md`](docs/business-rule/scoring.md). Rule thresholds are 
+          +constants, only weights are configurable: [`ADR-003`](docs/dec
+          +isions/ADR-003-only-weights-are-configurable.md).             
+      185  
+      186  ## Limitations
+      187  
+     ...
+      189  - **The dataset is hand-placed, not random.** One fixed seed (
+           2024), with constraints that keep each fraud claim inside its 
+           own pattern; the tests read that one committed dataset. Next s
+           tep: a generator that places fraud at random (any seed), so th
+           e engine is shown to work on data it was not tuned to.
+      190  - **At a high threshold most fraud is missed.** At `score >= 7
+           0` recall drops to 18.0% (FPR 0.0%), because weak rules (weeke
+           nd, clustering) give 39 points. This is why the main metric pr
+           edicts fraud at `score > 0`; a claims team that only reviews h
+           igh scores needs different weights or a second queue.
+      191  - **One pattern per fraud claim.** Deliberate simplification o
+           f the generator; in reality a claim can carry several.
+      192 -- **Upcoding uses mean and SD over all claims of the code, upc
+          -oded ones included** (masking accepted because recall met the 
+          -target; leave-one-out was the fallback). The `>` vs `>=` bound
+          -ary of mean + 2 SD has no test, because it needs an amount exa
+          -ctly on an irrational threshold.                              
+      192 +- **Upcoding uses mean and SD over all claims of the code, upc
+          +oded ones included** (masking accepted because recall met the 
+          +target; leave-one-out was the fallback). The `>` vs `>=` bound
+          +ary of mean + 2 SD has no test, because it needs an amount exa
+          +ctly on a non-integer threshold.                              
+      193  - **Clinics are small.** The 20 clinics get only ~1-15 claims 
+           each, a side effect of giving every hospital the same volume: 
+           [`ADR-004`](docs/decisions/ADR-004-equal-volume-for-all-hospit
+           als.md).
+      194  
+      195  ## Timeline
+     ...
+      202  | Buffer and extra work | 1.5h | Estimation buffer, writeup, A
+           I conversation logs |
+      203  | **Total** | **6h** (range 5-7h) | **Real: ~9h** |
+      204  
+      205 -Real time was ~9h, about 3h over (not tracked per item). Work 
+          -that was not in the estimate: the 44-case test suite for the `
+          -check` command, two `reviewer` rounds per phase with their fix
+          -es, and the decision docs / ADRs written as decisions were mad
+          -e.                                                            
+      205 +Real time was ~9h, about 3h over (not tracked per item). Work 
+          +that was not in the estimate: the 44-case test suite for the `
+          +check` command, the `reviewer` rounds and their fixes, and the
+          + decision docs / ADRs written as decisions were made.         
+      206  
+      207  ## Agent Workflow
+      208  
+
+⏺ Tiếp theo là README ở root và dòng 08 trong conversations/README.md.
+
+⏺ Bash(cd /Volumes/D/papaya-insurtech-pumpkin && cat > README.md <<'EOF'
+      # Papaya Insurtech hiring test…)
+  ⎿  | 07 | [07-code-and-metric.txt](07-code-and-metric.txt) | Claude Code
+     | Ticket #03: 19 business tests, metrics report, integration test, not
+     es for the writeup |
+     … +8 lines (ctrl+o to expand)
+  ⎿  Updated conversations/README.md (+1 -0)
+      15  | 05 | [05-review-test-phase-1-generate.txt](05-review-test-pha
+          se-1-generate.txt) | Claude Code | `reviewer` reviews the #01 c
+          ode, findings fixed, deliberately broken datasets turned into `
+          check` tests |
+      16  | 06 | [06-code-rule-engine.txt](06-code-rule-engine.txt) | Cla
+          ude Code | Rule engine Phase 3: scoring, ranking, `score` comma
+          nd |
+      17  | 07 | [07-code-and-metric.txt](07-code-and-metric.txt) | Claud
+          e Code | Ticket #03: 19 business tests, metrics report, integra
+          tion test, notes for the writeup |
+      18 +| 08 | [08-writeup.txt](08-writeup.txt) | Claude Code | Ticket 
+         +#04 review, logs index, writeup (weights, Limitations, timeline
+         +, Agent Workflow), final check |                               
+  ⎿  Created /Volumes/D/papaya-insurtech-pumpkin/README.md (+11 -0)
+       1 +# Papaya Insurtech hiring test                                 
+       2 +                                                               
+       3 +Submission of Phan Phuc Tho.                                   
+       4 +                                                               
+       5 +| Part | Where |                                               
+       6 +|---|---|                                                      
+       7 +| Logical questions (Q1, Q4, Q5, Q8, Q10) | [`Logical_Questions
+         +/`](Logical_Questions/) |                                      
+       8 +| AI Engineering Challenge (3 points): **Challenge 10 - Fraud D
+         +etection Scoring Engine** (advanced) | [`AI_Engineering_Challen
+         +ges/AI_Challenge_10_Fraud_Detection/`](AI_Engineering_Challenge
+         +s/AI_Challenge_10_Fraud_Detection/README.md) |                 
+       9 +| AI conversation logs of Challenge 10 | [`AI_Engineering_Chall
+         +enges/AI_Challenge_10_Fraud_Detection/conversations/`](AI_Engin
+         +eering_Challenges/AI_Challenge_10_Fraud_Detection/conversations
+         +/README.md) |                                                  
+      10 +                                                               
+      11 +The Challenge 10 README holds the run commands, the scoring wei
+         +ghts, the metrics, the limitations, the timeline and the agent 
+         +workflow.                                                      
+
+⏺ Cây thư mục trong AGENTS.md ở root vẫn ghi README của Challenge 10 là
+  "(planned)" và chưa có README ở root, nên tôi sửa cho khớp.
+
+⏺ Bash(python3 - <<'EOF'
+      p='AGENTS.md'…)
+  ⎿  ```
+     .
+     |-- README.md                         # submission entry point for rev
+     … +17 lines (ctrl+o to expand)
+  ⎿  Updated /Volumes/D/papaya-insurtech-pumpkin/AGENTS.md (+2 -1)
+      13  
+      14  ```
+      15  .
+      16 +|-- README.md                         # submission entry point 
+         +for reviewers                                                  
+      17  |-- AGENTS.md                         # this file: project over
+          view
+      18  |-- .claude/                          # agent config; agents/ =
+           subagent definitions; docs/plans/ = execution plans of Challen
+          ge 10 (other docs live in the project's docs/)
+      19  |-- Logical_Questions/                # answers to the logic pa
+          rt, one file per question Q_<n>-<Name>.md
+      20  |-- AI_Engineering_Challenges/
+      21  |   `-- AI_Challenge_10_Fraud_Detection/  # Challenge 10 projec
+          t
+      21 -|       |-- README.md                 # submission writeup (pla
+         -nned)                                                          
+      22 +|       |-- README.md                 # submission writeup     
+      23  |       |-- AGENTS.md                 # instructions specific t
+          o the Challenge 10 design
+      24  |       |-- src/                      # source code
+      25  |       `-- conversations/            # AI conversation logs (m
+          andatory for submission)
+
+⏺ Tôi đã viết xong phần writeup và README ở root. Chưa commit và chưa push.
+
+  AI_Challenge_10_Fraud_Detection/README.md:
+  - Status: đổi thành "complete". Thêm một dòng kết quả (precision 81.3%, recall
+    100%, FPR 2.6%) kèm link tới Limitations, để người chấm đọc phần giới hạn
+    trước khi coi số này là thành tích.
+  - Scoring weights: 2 tiêu chí chọn trọng số, bảng lý do cho từng rule, và công
+    thức score. Nguồn là docs/business-rule/scoring-weights.md.
+  - Limitations: 6 ý:
+    - recall 100% chỉ là cận trên;
+    - dataset đặt fraud bằng tay, không random;
+    - ở ngưỡng >= 70 recall còn 18%;
+    - mỗi claim fraud chỉ có 1 pattern;
+    - upcoding bị masking, và mốc > / >= chưa có test;
+    - clinic có ít claim.
+  - Timeline: ước lượng 6h so với thực tế ~9h. Tôi ghi rõ là không đo theo từng
+    mục, và liệt kê các việc nằm ngoài ước lượng.
+  - Agent Workflow: cách chia đề và cách dùng coder / reviewer, kèm bảng 7 lỗi
+    đã bắt được, ghi ai bắt (bạn, AI hay reviewer) và ở log nào. Tôi đã đối
+    chiếu từng lỗi với chính log đó.
+
+  Các file khác:
+  - README.md ở root: ghi tên bạn, chỉ tới Logical_Questions, Challenge 10 và
+    các log.
+  - conversations/README.md: thêm dòng 08.
+  - AGENTS.md ở root: cây thư mục có thêm README ở root, bỏ chữ "(planned)".
+
+  Bạn nên đọc lại:
+  - Bảng "Mistakes caught" viết ở ngôi thứ nhất ("me" là bạn). Nếu có dòng nào
+    bạn nhớ khác, cứ sửa.
+  - Câu giải thích vì sao lố 3h là tôi suy ra từ log. Nếu lý do thật khác thì
+    bạn chỉnh lại.
+
+  Thứ tự còn lại:
+  1. Bạn duyệt README.
+  2. Export lại phiên này, ghi đè 08-writeup.txt. File 08 hiện tại được export
+     trước khi viết writeup nên chưa có đoạn này.
+  3. Commit (gồm cả việc xoá docs/backlog/done/.keep) rồi push.
+
+  Bạn duyệt xong thì báo tôi commit.
+
+✻ Baked for 1m 58s · done 19:10
