@@ -2,7 +2,7 @@
 
 Rule-based fraud scoring engine for health insurance claims: it analyzes each claim and assigns a risk score (0-100) with itemized evidence for every rule that fires.
 
-**Status:** work in progress. The dataset generator (part A), the 8-rule engine with scoring and the `score` command (part B), and their system tests are done; the 19 business test cases and the metrics report are not built yet.
+**Status:** work in progress. The dataset generator (part A), the 8-rule engine with scoring and the `score` command (part B), the 19 business test cases, the metrics report and the integration test on the real dataset (part C) are done; the writeup (part D) is not.
 
 ## Requirements
 
@@ -142,6 +142,27 @@ Top 10 by risk score:
   CLM-01940   86  phantom_billing, diagnosis_procedure_mismatch
   ...
 ```
+
+## Evaluate against the ground truth
+
+```bash
+uv run python src/cli.py metrics          # re-runs score, then compares with data/ground_truth.csv
+```
+
+`metrics` takes the same options as `score`. It re-runs the whole score pipeline (rewriting `output/scored_output.json`) so the runtime it reports is measured on the run it evaluates, then writes `output/metrics_report.md`: overall precision / recall / FPR, recall by pattern, natural false positives by rule, a threshold table, and the fraud claims flagged by an extra rule. Why it re-runs scoring: [`docs/decisions/ADR-005-metrics-command-reruns-the-score-pipeline.md`](docs/decisions/ADR-005-metrics-command-reruns-the-score-pipeline.md). An invalid ground truth (bad header, unknown pattern, claim IDs that differ from `claims.csv`) stops it with exit code 1 and the full list of problems.
+
+On the committed `data/`: precision 81.3%, recall 100.0%, FPR 2.6%, 2,000 claims scored in ~0.02 s.
+
+## Run the tests
+
+```bash
+uv run pytest -q                          # 154 tests, ~3 s
+```
+
+- `tests/test_business_rules.py`: the 19 business test cases of `docs/business-rule/test-cases.md`.
+- `tests/test_system_*.py`: input / weights loading, output format, ranking, metrics, engine boundary.
+- `tests/test_dataset_check.py`: the `check` command against broken copies of the dataset.
+- `tests/test_integration_dataset.py`: the engine on the committed dataset (own-rule hits, phantom-day exception, recall / FPR targets, < 30 s).
 
 ## Timeline estimate
 

@@ -3,6 +3,7 @@
     uv run python src/cli.py generate [--seed 2024] [--out data]
     uv run python src/cli.py check [--data data]
     uv run python src/cli.py score [--data data] [--weights src/config/weights.json] [--out output]
+    uv run python src/cli.py metrics [--data data] [--weights src/config/weights.json] [--out output]
 """
 
 import argparse
@@ -15,6 +16,8 @@ from catalog import CatalogError, load_catalog
 from claims import ClaimsError, load_claims
 from generator.checks import check_dataset
 from generator.dataset import DEFAULT_SEED, build_dataset, summary, write_dataset
+from metrics.evaluate import GroundTruthError, evaluate, load_ground_truth, load_phantom_day_claims
+from metrics.report import build_report, write_report
 from rule_names import ALL_RULES
 from scoring.score import score_claims, write_scored
 from scoring.weights import DEFAULT_PATH as DEFAULT_WEIGHTS, WeightsError, load_weights
@@ -50,7 +53,8 @@ def cmd_check(args: argparse.Namespace) -> None:
     print(f"  duplicate groups {stats['duplicate_groups']}, phantom day {stats['phantom_day']}")
 
 
-def cmd_score(args: argparse.Namespace) -> None:
+def run_score(args: argparse.Namespace) -> tuple[list[dict], float, dict]:
+    """Load -> rules -> score -> write scored_output.json. Returns (results, elapsed seconds, weights); exits 1 on error."""
     start = time.perf_counter()
     try:
         catalog = load_catalog()
@@ -67,10 +71,14 @@ def cmd_score(args: argparse.Namespace) -> None:
         print(f"Cannot write {args.out}: {exc}", file=sys.stderr)
         sys.exit(1)
     elapsed = time.perf_counter() - start
+    print(f"Scored {len(results)} claims in {elapsed:.3f} s; wrote {path}")
+    return results, elapsed, weights
 
+
+def cmd_score(args: argparse.Namespace) -> None:
+    results, _, _ = run_score(args)
     flagged = [r for r in results if r["flags"]]
     per_rule = Counter(f["rule"] for r in results for f in r["flags"])
-    print(f"Scored {len(results)} claims in {elapsed:.3f} s; wrote {path}")
     print(f"Claims with at least one flag: {len(flagged)} of {len(results)}")
     print("Claims per rule:")
     for rule in ALL_RULES:
@@ -78,6 +86,22 @@ def cmd_score(args: argparse.Namespace) -> None:
     print("Top 10 by risk score:")
     for r in results[:10]:
         print(f"  {r['claim_id']}  {r['risk_score']:>3}  {', '.join(f['rule'] for f in r['flags'])}")
+
+
+def cmd_metrics(args: argparse.Namespace) -> None:
+    results, elapsed, weights = run_score(args)
+    try:
+        truth = load_ground_truth(args.data / "ground_truth.csv")
+        evaluation = evaluate(results, truth, load_phantom_day_claims(args.data))
+        path = write_report(build_report(evaluation, weights, elapsed, args.data), args.out)
+    except (GroundTruthError, OSError) as exc:
+        print("Cannot evaluate:", file=sys.stderr)
+        for line in str(exc).splitlines():
+            print(f"  {line}", file=sys.stderr)
+        sys.exit(1)
+    overall = evaluation["overall"]
+    print(f"Precision {overall['precision']:.1%}, recall {overall['recall']:.1%}, FPR {overall['fpr']:.1%}")
+    print(f"Wrote {path}")
 
 
 def main() -> None:
@@ -98,6 +122,12 @@ def main() -> None:
     score.add_argument("--weights", type=Path, default=DEFAULT_WEIGHTS, help="severity weights JSON (default: src/config/weights.json)")
     score.add_argument("--out", type=Path, default=PROJECT_ROOT / "output", help="output directory (default: output/)")
     score.set_defaults(func=cmd_score)
+
+    metrics = commands.add_parser("metrics", help="score claims, then compare with ground_truth.csv and write metrics_report.md")
+    metrics.add_argument("--data", type=Path, default=DATA_DIR, help="directory holding claims.csv and ground_truth.csv (default: data/)")
+    metrics.add_argument("--weights", type=Path, default=DEFAULT_WEIGHTS, help="severity weights JSON (default: src/config/weights.json)")
+    metrics.add_argument("--out", type=Path, default=PROJECT_ROOT / "output", help="output directory (default: output/)")
+    metrics.set_defaults(func=cmd_metrics)
 
     args = parser.parse_args()
     args.func(args)

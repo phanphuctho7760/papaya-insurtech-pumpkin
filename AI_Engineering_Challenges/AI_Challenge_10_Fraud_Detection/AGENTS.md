@@ -52,13 +52,13 @@ AI_Challenge_10_Fraud_Detection/
 
 - [x] Dataset of 2,000 claims, ~500 members, ~50 providers, year 2024, with `is_weekend`.
 - [x] ~200 fraudulent claims (~10%) embedded across 8 patterns with the brief's counts, with ground-truth labels.
-- [ ] 8 rules: duplicate, rapid re-submission, upcoding, unbundling (>= 5 bundles), phantom billing, weekend anomaly, diagnosis-procedure mismatch (>= 10 valid pairs), amount clustering.
-- [ ] Output per claim: `claim_id`, `risk_score` 0-100, `flags[]` with `rule`, `severity`, specific `evidence` (with numbers).
-- [ ] Configurable severity weight 1-5; score = weighted sum normalized to 0-100; list ranked by score.
+- [x] 8 rules: duplicate, rapid re-submission, upcoding, unbundling (>= 5 bundles), phantom billing, weekend anomaly, diagnosis-procedure mismatch (>= 10 valid pairs), amount clustering.
+- [x] Output per claim: `claim_id`, `risk_score` 0-100, `flags[]` with `rule`, `severity`, specific `evidence` (with numbers).
+- [x] Configurable severity weight 1-5; score = weighted sum normalized to 0-100; list ranked by score.
 - [ ] Explain the weight choices.
-- [ ] Metrics: precision, recall; target recall >= 70%, FPR <= 20%.
-- [ ] >= 15 unit tests (each rule + edge cases).
-- [ ] Processing 2,000 claims takes < 30 seconds.
+- [x] Metrics: precision, recall; target recall >= 70%, FPR <= 20%.
+- [x] >= 15 unit tests (each rule + edge cases).
+- [x] Processing 2,000 claims takes < 30 seconds.
 - [ ] Estimate and report the timeline.
 - [ ] Submit: dataset, scored output, metrics report, writeup (`README.md`), AI conversation logs (`conversations/`).
 

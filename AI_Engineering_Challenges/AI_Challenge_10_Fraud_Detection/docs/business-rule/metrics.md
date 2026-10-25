@@ -12,7 +12,7 @@ Definitions of TP / FP / FN / TN, precision, recall, FPR, natural FP: see `gloss
 
 ## Extra table by threshold
 
-- Also report recall and FPR at score thresholds 0, 40 and 70 to show the trade-off.
+- Also report recall and FPR at score thresholds `> 0`, `>= 40` and `>= 70` to show the trade-off (`> 0` rather than "0": `>= 0` would flag every claim).
 - Practical meaning: if claim adjusters only review high-score claims, how much fraud is missed.
 
 ## Metrics report (C3)
@@ -22,4 +22,4 @@ The report has 4 parts:
 1. **Overall**: TP, FP, FN, TN, precision, recall, FPR; compared with the targets recall >= 70%, FPR <= 20%.
 2. **By pattern**: for each pattern, how many fraudulent claims and how many were caught (shows weak rules, e.g. upcoding hit by masking).
 3. **Natural FP by rule**: false alarms counted per rule (shows the data has real noise).
-4. **Threshold table**: recall / FPR at score thresholds 0, 40, 70.
+4. **Threshold table**: recall / FPR at score thresholds `> 0`, `>= 40`, `>= 70`.

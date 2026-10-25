@@ -3,7 +3,7 @@
 **Found:** 2026-10-24 (estimated before coding, then measured)
 **Scope:** generator (A) and how metrics are read (C): amount distribution, code choice for fraud, `claim_id` assignment, provider volume, natural FPs.
 **Artifact at time of discovery:** `src/generator/`; cross-checked against the rules in #03
-**Status:** measured on the full 2,000-claim dataset (seed 2024) with a rough script following each rule's definition. Last re-measured 2026-10-24 after the #01 review fixes (amount truncation, provider volume). Re-checked by the engine in #03.
+**Status:** measured on the full 2,000-claim dataset (seed 2024) with a rough script following each rule's definition. Last re-measured 2026-10-24 after the #01 review fixes (amount truncation, provider volume). Re-checked by the engine on 2026-10-25 (#03, `output/metrics_report.md`): the engine numbers in items 1, 3, 8, 9 (and 30/30 upcoding recall in item 2) match; items 4-7 are generator properties the engine does not measure.
 
 Each item: prediction -> how generation handles it -> real measurement.
 
@@ -14,6 +14,7 @@ Each item: prediction -> how generation handles it -> real measurement.
 - **Handling:** accepted (the "natural FPs are allowed" decision); reported in section 3 of the metrics report and in the writeup.
 - **Lesson:** the first rough measurement on clean data gave 57 claims (3.2%), above the prediction. The log-normal is right-skewed, so its upper tail is heavier than a normal one and more than 2.5% exceed mean + 2 SD.
 - **Real measurement (2,000 claims):** 18 legit claims exceed mean + 2 SD (1.0% of 1,800), because the 30 upcoded claims push each code's SD up. No fraud claim of another pattern exceeds the threshold (their amount factor stays within +-15%).
+- **Engine (2026-10-25):** upcoding raises 48 flags, 30 on fraud and 18 on legit claims. Matches.
 - **Further lesson:** the natural FPs of a statistical rule must be measured on the dataset with fraud already in it; clean data gives a number that is off in the wrong direction.
 
 ## 2. Masking lowers upcoding recall
@@ -28,6 +29,7 @@ Each item: prediction -> how generation handles it -> real measurement.
 - **Prediction:** 500 members with about 3-4 claims each => some random pairs share a diagnosis within <= 7 days, about 10-20 legit claims flagged.
 - **Handling:** accepted and reported. If the count is far above the estimate, revisit how one member's visit dates are spread.
 - **Real measurement (2,000 claims):** 24 legit claims sit in a pair with the same member + diagnosis <= 7 days apart (excluding the duplicate key), next to the 30 injected rapid claims. No fraud claim of another pattern is caught (the generator blocks it when placing fraud). Every re-generation changes the random sequence, so this number moves (20-32 seen so far).
+- **Engine (2026-10-25):** rapid re-submission raises 54 flags, 30 on fraud and 24 on legit claims. Matches.
 
 ## 4. Label leak through `claim_id` order
 
@@ -65,12 +67,14 @@ Each item: prediction -> how generation handles it -> real measurement.
 
 - **Prediction (`../business-rule/amount-clustering.md`):** about 6% of legit P-1003 claims fall into 47,500-49,999 on their own.
 - **Real measurement (2,000 claims):** 4/90 legit P-1003 claims (4.4%) are in the band, next to the 20 injected clustering claims. Small sample (90 claims): earlier generations gave 2/90 and 6/90.
+- **Engine (2026-10-25):** amount clustering raises 24 flags, 20 on fraud and 4 on legit claims. Matches.
 
 ## 9. Fraud claims accidentally caught by another rule
 
 - **Risk:** a randomly placed fraud claim can form a rapid pair with another claim, repeat a unique key, fall on a weekend at a weekday-only hospital, or have an amount above the upcoding threshold / inside the clustering band => the #03 cross-check sees 1 claim caught by 2 rules.
 - **Handling:** when placing each fraud claim the generator checks the unique key, the member + diagnosis 7-day window, and weekdays at weekday-only hospitals; non-amount patterns keep their amount factor within +-15%; phantom is generated last so no other claim lands on the 31-claim provider-day.
 - **Real measurement (2,000 claims):** `check` passes: only 1 provider-day > 30 (31 claims), exactly 15 duplicate groups, the only weekend claims at weekday-only hospitals are the 20 weekend claims, multi-code claims are only the 25 unbundling claims, and no fraud claim is caught by rapid / upcoding / clustering outside its own pattern. Known exception (the 6 claims on the phantom day): see `../business-rule/fraud-injection.md`.
+- **Engine (2026-10-25):** every fraud claim is flagged by its own pattern's rule; the only fraud claims with an extra rule are the 6 phantom-day claims (3 upcoding, 3 diagnosis-procedure mismatch), each with `phantom_billing` only; both facts are guarded by `tests/test_integration_dataset.py`. Natural FPs come only from rapid (24), upcoding (18) and clustering (4): 46 legit claims, FPR 2.6% (the test only checks FPR <= 20%).
 
 ## Rule derived
 
